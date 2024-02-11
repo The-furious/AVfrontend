@@ -1,52 +1,107 @@
 .Patient {
-  max-width: 400px;
+  max-width: 800px;
   margin: 0 auto; /* Center horizontally */
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   background-color: #f5f5f5; /* Set background color */
+  font-family: Arial, sans-serif; /* Add font family */
 }
 
-  
-  
-  
-  h1 {
-    text-align: center;
-  }
-  
-  form {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  label {
-    margin-bottom: 10px;
-  }
-  
-  input, select {
-    padding: 8px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-  }
-  
-  button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
+h1 {
+  text-align: center;
+}
 
-  .loginback
-  {
-    margin-top: 10px;
-  }
-  
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+.name-container,
+.sex-dob-container,
+.city-state-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+label {
+  margin-bottom: 10px;
+}
+
+input,
+select {
+  padding: 8px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+/* Adjustments for pincode and phone number */
+input[name="pincode"],
+input[name="phoneNumber"] {
+  width: 150px; /* Adjust the width as needed */
+}
+
+button[type="button"] {
+  padding: 8px 15px; /* Adjust padding to make the button smaller */
+  font-size: 14px; /* Adjust font size as needed */
+  width: 100px; /* Set the width of the button */
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.loginback {
+  margin-top: 10px;
+}
+
+.otp-container,
+.email-container {
+  display: flex;
+  align-items: center;
+}
+
+.otp-container label,
+.email-container label {
+  margin-right: 10px; /* Add right margin to the label for spacing */
+}
+
+.otp-button {
+  margin-left: 10px; /* Add left margin to the button for spacing */
+}
+
+.username-password-container {
+  display: flex;
+  align-items: center;
+}
+
+.username-password-container label {
+  flex: 1;
+  margin-right: 10px;
+}
+
+.username-password-container input[type="text"],
+.username-password-container input[type="password"] {
+  width: 200px; /* Adjust the width as needed */
+  flex: 2;
+}
+
+.required {
+  color: red;
+}
+
+.error {
+  color: red;
+}

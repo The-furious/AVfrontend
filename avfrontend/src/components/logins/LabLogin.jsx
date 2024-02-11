@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Login.css';
 
-function LabLogin() {
+function LabLogin({ setShowForgotPassword }) {
   const [formData, setFormData] = useState({
     userId: '',
     password: ''
@@ -19,6 +19,9 @@ function LabLogin() {
     e.preventDefault();
     console.log(formData); // You can do further processing with the form data here
   };
+  const handleForgotPasswordClick = () => {
+    setShowForgotPassword(true); // Set showForgotPassword to true when the "Forgot Password" button is clicked
+  };
 
   return (
     <div className="login-container">
@@ -33,6 +36,8 @@ function LabLogin() {
           <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} />
         </div>
         <button type="submit">Login</button>
+        <button type="button" className="forgot-password-button" onClick={handleForgotPasswordClick}>Forgot Password</button>
+
       </form>
     </div>
   );

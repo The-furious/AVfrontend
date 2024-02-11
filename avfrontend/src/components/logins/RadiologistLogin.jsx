@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Login.css';
 
-function RadiologistLogin() {
+function RadiologistLogin({ setShowForgotPassword }) {
   const [formData, setFormData] = useState({
     userId: '',
     password: ''
@@ -13,6 +13,9 @@ function RadiologistLogin() {
       ...prevState,
       [name]: value
     }));
+  };
+  const handleForgotPasswordClick = () => {
+    setShowForgotPassword(true); // Set showForgotPassword to true when the "Forgot Password" button is clicked
   };
 
   const handleSubmit = (e) => {
@@ -33,6 +36,8 @@ function RadiologistLogin() {
           <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} />
         </div>
         <button type="submit">Login</button>
+        <button type="button" className="forgot-password-button" onClick={handleForgotPasswordClick}>Forgot Password</button>
+
       </form>
     </div>
   );

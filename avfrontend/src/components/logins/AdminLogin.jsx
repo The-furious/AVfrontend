@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import './Login.css';
+import ForgotPassword from './ForgotPassword/ForgotPassword'; // Import the ForgotPassword component
 
-function AdminLogin() {
+function AdminLogin({ setShowForgotPassword }) {
   const [formData, setFormData] = useState({
     userId: '',
     password: ''
@@ -20,6 +21,10 @@ function AdminLogin() {
     console.log(formData); // You can do further processing with the form data here
   };
 
+  const handleForgotPasswordClick = () => {
+    setShowForgotPassword(true); // Set showForgotPassword to true when the "Forgot Password" button is clicked
+  };
+
   return (
     <div className="login-container">
       <h2> Admin Login</h2>
@@ -33,6 +38,7 @@ function AdminLogin() {
           <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} />
         </div>
         <button type="submit">Login</button>
+        <button type="button" className="forgot-password-button" onClick={handleForgotPasswordClick}>Forgot Password</button>
       </form>
     </div>
   );
