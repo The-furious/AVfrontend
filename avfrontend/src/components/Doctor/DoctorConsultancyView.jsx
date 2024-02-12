@@ -48,7 +48,7 @@ export const DoctorConsultancyView = () => {
     };
   
     return (
-      <div className="App">
+      <div className="doctor-consulancy-view">
         <header>
           <h1>Arogya Vartha</h1>
         </header>
