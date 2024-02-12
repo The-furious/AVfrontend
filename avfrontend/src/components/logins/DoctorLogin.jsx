@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Login.css';
 
-function DoctorLogin({ setShowForgotPassword }) { // Pass setShowForgotPassword as a parameter
+function DoctorLogin({ setShowForgotPassword, setDoctorLoggedIn }) {
   const [formData, setFormData] = useState({
     userId: '',
     password: ''
@@ -17,7 +17,14 @@ function DoctorLogin({ setShowForgotPassword }) { // Pass setShowForgotPassword 
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData); // You can do further processing with the form data here
+    // For demo purposes, check if the username and password match hardcoded values
+    if (formData.userId === 'demoUser' && formData.password === 'demoPassword') {
+      console.log('Login successful'); // For demo, log successful login
+      setDoctorLoggedIn(true); // Set doctorLoggedIn to true when login is successful
+    } else {
+      console.log('Invalid username or password'); // For demo, log invalid login attempt
+      // You can handle displaying error message to the user here
+    }
   };
   
   const handleForgotPasswordClick = () => {
@@ -38,7 +45,6 @@ function DoctorLogin({ setShowForgotPassword }) { // Pass setShowForgotPassword 
         </div>
         <button type="submit">Login</button>
         <button type="button" className="forgot-password-button" onClick={handleForgotPasswordClick}>Forgot Password</button>
-
       </form>
     </div>
   );

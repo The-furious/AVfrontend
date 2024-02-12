@@ -54,11 +54,17 @@ footer {
 }
 
 .tab-buttons button {
-  margin: 10px 25px; /* Adjust vertical margin for spacing */
+  margin: 10px 0; /* Adjust vertical margin for spacing */
   padding: 10px;
-  width:300px;
+  width: 300px;
   cursor: pointer;
   background-color: #2196F3; /* Blue for the tab buttons */
   color: white;
   border: none;
+  transition: background-color 0.3s; /* Smooth transition for the hover effect */
 }
+
+.tab-buttons button:hover {
+  background-color: #0d8aea; /* Darker shade of blue on hover */
+}
+
