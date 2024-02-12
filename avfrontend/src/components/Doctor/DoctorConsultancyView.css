@@ -17,14 +17,7 @@ body {
     width: 100%;
   }
   
-  footer {
-    background-color: #4CAF50; /* Green for the footer */
-    color: white;
-    padding: 20px;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-  }
+
   
   main {
     display: flex;

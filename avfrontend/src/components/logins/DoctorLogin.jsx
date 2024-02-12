@@ -6,6 +6,7 @@ function DoctorLogin({ setShowForgotPassword, setDoctorLoggedIn }) {
     userId: '',
     password: ''
   });
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,7 +24,7 @@ function DoctorLogin({ setShowForgotPassword, setDoctorLoggedIn }) {
       setDoctorLoggedIn(true); // Set doctorLoggedIn to true when login is successful
     } else {
       console.log('Invalid username or password'); // For demo, log invalid login attempt
-      // You can handle displaying error message to the user here
+      setErrorMessage('Invalid username or password'); // Set error message
     }
   };
   
@@ -43,6 +44,7 @@ function DoctorLogin({ setShowForgotPassword, setDoctorLoggedIn }) {
           <label htmlFor="password">Password:</label>
           <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} />
         </div>
+        {errorMessage && <div className="error-message">{errorMessage}</div>} {/* Render error message */}
         <button type="submit">Login</button>
         <button type="button" className="forgot-password-button" onClick={handleForgotPasswordClick}>Forgot Password</button>
       </form>
