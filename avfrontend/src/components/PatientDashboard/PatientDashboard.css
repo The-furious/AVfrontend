@@ -1,0 +1,227 @@
+.form-container {
+    width: 300px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .form-container h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 10px;
+    color: #495057;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  }
+  
+  .form-group input:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  }
+  
+  button[type="submit"] {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button[type="submit"]:hover {
+    background-color: #218838;
+  }
+  
+  
+  
+  body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background-color: #f5f5f5;
+    }
+    
+    header {
+      background-color: #4CAF50;
+      color: white;
+      padding: 25px; /* Increase padding for more space around buttons */
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 9999;
+      display: flex; /* Make the header flex container */
+      align-items: center; /* Center items vertically */
+    }
+    
+    .header-buttons {
+      margin-left: auto; /* Push the buttons to the right */
+    }
+    
+    .header-buttons button {
+      padding: 8px 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-left: 10px; /* Add margin between buttons */
+    }
+    
+    .header-buttons button:first-child {
+      margin-left: 0; /* Remove margin from first button */
+    }
+    
+    .header-buttons button:hover {
+      background-color: #0056b3;
+    }
+    
+    
+    
+    
+    .dashboard-main {
+      display: flex;
+      flex-direction: column;
+      padding-top: 110px;
+      padding-bottom: 60px;
+      background-color: #f5f5f5;
+      overflow-y: auto;
+    }
+    
+    .dashboard-sidebar {
+      width: 20%;
+      background-color: #f5f5f5;
+      border-right: 4px solid #ccc;
+      padding-right: 10px;
+      padding-top: 38px;
+      position: fixed;
+      height: 100%;
+      overflow-y: auto;
+    }
+    
+    .dashboard-content {
+      flex: 1;
+      padding: 1px;
+      margin-left: 24%;
+      overflow-y: auto;
+      padding-top: 20px;
+    }
+    
+  
+    
+    .tab-buttons {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .tab-buttons button {
+      margin: 10px 25px;
+      padding: 10px;
+      width: 200px;
+      cursor: pointer;
+      background-color: #2196F3;
+      color: white;
+      border: none;
+    }
+    
+    button:hover {
+      background-color: #0056b3;
+    }
+    
+    .active {
+      background-color: #0056b3;
+    }
+    
+    
+    .tile {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+    
+    .consultancy-details {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .attribute-tile {
+      display: flex;
+      
+      border-bottom: 1px solid #ccc; /* Add border to separate attribute and value tiles */
+      overflow-x: auto; /* Enable horizontal scrolling if attributes exceed the width */
+    }
+    
+    .value-tile {
+      display: flex;
+     
+    }
+    
+    .attribute-name {
+      flex: 0 0 25%; /* Each attribute takes up 25% of the width */
+      font-weight: bold;
+      padding: 5px;
+      white-space: nowrap; /* Prevent attribute names from wrapping */
+      overflow: hidden; /* Hide any overflow */
+      text-overflow: ellipsis; /* Show ellipsis for overflowed text */
+    }
+    
+    .value-tile > div {
+      flex: 0 0 25%; /* Each value takes up 25% of the width */
+      padding: 5px;
+      color: black;
+    }
+    
+    .value-tile {
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 10px;
+      margin: 5px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: row;
+      text-align: left;
+      width: calc(100% - 22px);
+    }
+    
+    .value-tile:hover {
+      background-color: #f0f0f0;
+    }
+    .active {
+      background-color: green;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
