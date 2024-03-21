@@ -36,7 +36,7 @@ function LabLogin({ setShowForgotPassword }) {
           <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} />
         </div>
         <button type="submit">Login</button>
-        <button type="button" className="forgot-password-button" onClick={handleForgotPasswordClick}>Forgot Password</button>
+        <button type="button-85 " className="forgot-password-button" onClick={handleForgotPasswordClick}>Forgot Password</button>
 
       </form>
     </div>

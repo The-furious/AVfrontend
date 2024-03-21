@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import './Login.css';
 
-function RadiologistLogin({ setShowForgotPassword }) {
+function RadiologistLogin({ setShowForgotPassword,setRadiologistLoggedIn }) {
   const [formData, setFormData] = useState({
     userId: '',
     password: ''
   });
-
+ 
+  const [errorMessage, setErrorMessage] = useState('');
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prevState => ({
@@ -21,6 +23,14 @@ function RadiologistLogin({ setShowForgotPassword }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(formData); // You can do further processing with the form data here
+     // For demo purposes, check if the username and password match hardcoded values
+     if (formData.userId === 'demoUser' && formData.password === 'demoPassword') {
+      console.log('Login successful'); // For demo, log successful login
+      setRadiologistLoggedIn(true); // Set doctorLoggedIn to true when login is successful
+    } else {
+      console.log('Invalid username or password'); // For demo, log invalid login attempt
+      setErrorMessage('Invalid username or password'); // Set error message
+    }
   };
 
   return (

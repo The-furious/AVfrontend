@@ -1,90 +1,44 @@
-body {
-    margin: 0;
-    padding: 0;
+.container-fluid {
     display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    background-color: #f5f5f5;
+    flex-wrap: wrap;
   }
   
-  header {
-    background-color: #4CAF50;
-    color: white;
-    padding: 25px; /* Increase padding for more space around buttons */
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 9999;
-    display: flex; /* Make the header flex container */
-    align-items: center; /* Center items vertically */
-  }
-  
-  .header-buttons {
-    margin-left: auto; /* Push the buttons to the right */
-  }
-  
-  .header-buttons button {
-    padding: 8px 16px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-left: 10px; /* Add margin between buttons */
-  }
-  
-  .header-buttons button:first-child {
-    margin-left: 0; /* Remove margin from first button */
-  }
-  
-  .header-buttons button:hover {
-    background-color: #0056b3;
-  }
-  
-  
-  
-  
-  .dashboard-main {
-    display: flex;
-    flex-direction: column;
-    padding-top: 110px;
-    padding-bottom: 60px;
-    background-color: #f5f5f5;
-    overflow-y: auto;
-  }
-  
-  .dashboard-sidebar {
+  .doctor-dashboard-sidebar {
+    list-style: none; 
     width: 20%;
-    background-color: #f5f5f5;
-    border-right: 4px solid #ccc;
-    padding-right: 10px;
-    padding-top: 38px;
-    position: fixed;
-    height: 100%;
-    overflow-y: auto;
+    /* Sidebar background color */
+    background-color: #404040;
+    height: calc(100vh - 120px); /* Subtract the height of the navbar */
+    position: sticky; /* Make the sidebar fixed */
+    top: 120px; /* Position the sidebar below the navbar */
+    overflow-y: auto; /* Enable vertical scrolling if content exceeds the height */
+  
+   
+    
+   
   }
   
-  .dashboard-content {
-    flex: 1;
-    padding: 1px;
-    margin-left: 24%;
-    overflow-y: auto;
-    padding-top: 20px;
+  .doctor-dashboard-content {
+    max-width:80%;
+    width: 80%;
+    background-color: #ffffff; /* Content background color */
   }
-  
-
   
   .tab-buttons {
+    width: 300px;
+    margin-top: 30px;
     display: flex;
     flex-direction: column;
+    background-color: #00b7ac;
   }
   
   .tab-buttons button {
+    margin-top: 40px;
     margin: 10px 25px;
     padding: 10px;
-    width: 200px;
+    width: 300px;
     cursor: pointer;
-    background-color: #2196F3;
+    background-color: #00b7ac;
     color: white;
     border: none;
   }
@@ -155,14 +109,20 @@ body {
     background-color: #f0f0f0;
   }
   .active {
-    background-color: green;
+    background-color: #00b7ac;
   }
   
   
-  
-  
-  
-  
-  
-  
-  
+  @media screen and (min-width: 768px) {
+    /* Apply styles only for screens larger than 768px width */
+    .doctor-dashboard-content {
+      width: 80%;
+      max-width: none; /* Reset max-width */
+    margin-left: 0;
+    }
+    .tab-button {
+        margin-top: 30px;
+        width:80%; /* Override width to 100% for screens narrower than 992px */
+      }
+    
+  }     

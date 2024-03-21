@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import Navbar from '../Navbar/Navbar';
-import "./DoctorDashboard.css";
+import "./RadiologistDashboard.css";
 import EditCalendarIcon from '@mui/icons-material/EditCalendar';
 
-const DoctorDashboard= ({handleValueTileClick}) => {
+const RadiologistDashboard= ({handleValueTileClick}) => {
     const [selectedTab, setSelectedTab] = useState(1);
     const [content, setContent] = useState(null);
     const [consultancyDetails, setConsultancyDetails] = useState(null);
     const [historyDetails, setHistoryDetails] = useState(null);
-    const [showConsultancyView, setShowConsultancyView] = useState(false); // State to manage visibility of DoctorConsultancyView
+    const [showConsultancyView, setShowConsultancyView] = useState(false); // State to manage visibility of RadiologistConsultancyView
     const [isLoggedIn, setIsLoggedIn] = useState(false); // State to manage user's authentication status
     const [newConsultancyUpdates, setNewConsultancyUpdates] = useState(false);
     const [newHistoryUpdates, setNewHistoryUpdates] = useState(false);
@@ -105,9 +105,9 @@ const DoctorDashboard= ({handleValueTileClick}) => {
       return (
         <>
          
-         <div className="container-fluid" >
-            <div className="doctor-dashboard-sidebar">
-            <ul className="dashboard-sidebar-list" style={{ listStyle: 'none'}}>
+         <div className="container-fluid">
+            <div className="radiologist-dashboard-sidebar">
+            <ul className="dashboard-sidebar-list">
                   <li>
                     <button
                       onClick={handleConsultancyClick}
@@ -144,10 +144,10 @@ const DoctorDashboard= ({handleValueTileClick}) => {
      
     
             </div>
-            <div className="doctor-dashboard-content">
+            <div className="radiologist-dashboard-content">
              {/* Main content goes here */}
 
-            
+             Main Content
              {selectedTab === 1 && content && (
                   <div>
                     <h2>Consultancy</h2>
@@ -220,4 +220,4 @@ const DoctorDashboard= ({handleValueTileClick}) => {
       );
 }
 
-export default DoctorDashboard;
+export default RadiologistDashboard;

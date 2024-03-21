@@ -22,6 +22,8 @@ function PatientLogin({ setShowForgotPassword, setShowSignUp }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(formData); // You can do further processing with the form data here
+
+    
   };
 
   const handleSignUpClick = () => {

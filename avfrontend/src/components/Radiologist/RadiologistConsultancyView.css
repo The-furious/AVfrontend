@@ -1,0 +1,249 @@
+/* App.css */
+
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background-color: #f5f5f5;
+    overflow-y: auto; /* Allow vertical scrolling for the entire page */
+  }
+  
+  header {
+    background-color: #4CAF50; /* Green for the header */
+    color: white;
+    padding: 20px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+  }
+  
+
+  
+  main {
+    display: flex;
+    flex: 1;
+    padding-top: 140px; /* Adjusted padding-top to provide space for fixed header */
+    padding-bottom: 60px; /* Adjusted padding-bottom to provide space for fixed footer */
+  }
+  
+  .sidebar1 {
+    width: 20%;
+    background-color: #f5f5f5;
+    border-right: 4px solid #ccc;
+    padding: 20px;
+    position: fixed; /* Fix the sidebar 1 */
+    height: 100%; /* Set the height to occupy the full viewport height */
+    overflow-y: auto; /* Allow vertical scrolling for sidebar 1 */
+  }
+  .sidebar1 button {
+    margin-bottom: 10px; /* Add space between buttons */
+  }
+  
+  .content {
+    flex: 1;
+    padding: 77px;
+    position: relative; /* Ensure relative positioning for absolutely positioned elements */
+  }
+  
+  .chat-box {
+    position: absolute; /* Position chat box absolutely within content */
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    overflow-y: auto; /* Enable vertical scrolling when content overflows */
+    max-height: calc(100% - 40px); /* Limit chat box height to fill available space within content and leave room for padding */
+  }
+  
+  .sidebar2 {
+    width: 20%;
+    background-color: #f5f5f5;
+    border-left: 4px solid #ccc;
+    padding: 20px;
+    overflow-y: auto; /* Allow vertical scrolling for sidebar2 */
+  }
+  
+  .image-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .image-container img {
+    width: 100px; /* Fixed width for images */
+    height: 100px; /* Fixed height for images */
+    margin-bottom: 10px;
+  }
+  
+  .chat-box {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  
+  .message-history {
+    flex: 1;
+    overflow-y: auto; /* Allow vertical scrolling for message history */
+  }
+  
+  .message {
+    margin-bottom: 10px;
+    padding: 5px;
+    background-color: #f0f0f0;
+  }
+  
+  textarea {
+    resize: none;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .tab-buttons {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .tab-buttons button {
+    margin: 10px 0; /* Adjust vertical margin for spacing */
+    padding: 10px;
+    width: 300px;
+    cursor: pointer;
+    background-color: #2196F3; /* Blue for the tab buttons */
+    color: white;
+    border: none;
+    transition: background-color 0.3s; /* Smooth transition for the hover effect */
+  }
+  
+  .tab-buttons button:hover {
+    background-color: #0d8aea; /* Darker shade of blue on hover */
+  }
+  
+  .image-overlay-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .image-overlay {
+    position: relative;
+  }
+  
+  .overlay-content {
+    margin-bottom: 20px;
+  }
+  
+  .overlay-image {
+    width: 500px; /* Set the width of the image */
+    height: 400px; /* Set the height of the image */
+  }
+  
+  .overlay-buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+  }
+  
+  .tab-buttons2 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+.tab-buttons2 button {
+  margin-bottom: 10px; /* Add space between buttons */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 200px; /* Set the width of the button */
+  height: 200px; /* Set the height of the button */
+  background-color: transparent; /* Set treyhe background color to transparent */
+  border: none; /* Remove border */
+  padding: 0; /* Remove padding */
+  overflow: hidden; /* Hide any overflow from the image */
+}
+
+.tab-buttons2 button img {
+  width: 100%; /* Make the image width 100% of the button width */
+  height: 100%; /* Allow the image height to adjust proportionally */
+}
+  
+  .prev-btn,
+  .next-btn {
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    cursor: pointer;
+    padding: 10px 20px;
+    border: none;
+    transition: background 0.3s;
+  }
+  
+  .prev-btn {
+    left: 0;
+  }
+  
+  .next-btn {
+    right: 0;
+  }
+  
+  .prev-btn {
+    left: 20px;
+  }
+  
+  .next-btn {
+    right: 20px;
+  }
+  
+  .prev-btn:hover,
+  .next-btn:hover {
+    background: rgba(0, 0, 0, 0.7);
+  }
+  .overlay-buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    position: relative;
+  }
+
+  .scrollable-main {
+    display: flex;
+    flex: 1;
+    overflow-y: auto; /* Allow vertical scrolling for main content */
+  }
+  
+  .sidebar2 {
+    width: 20%;
+    background-color: #f5f5f5;
+    border-left: 4px solid #ccc;
+    padding: 20px;
+  }
+
+  .text-input {
+    display: flex;
+    align-items: center; /* Center items horizontally */
+    margin-top: 20px; /* Adjust the top margin */
+}
+
+.text-input input {
+    padding: 10px;
+    margin-right: 10px; /* Add space between input and button */
+}
+  
