@@ -1,0 +1,79 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #00b7ac;
+    color: black;
+    font-family: "Roboto", sans-serif;
+    position: sticky;
+    top: 0;
+    z-index: 1000S;
+  }
+  
+  .navbar__left {
+    display: flex;
+    align-items: center;
+  }
+  
+  .navbar__logo {
+    width: 100px; /* Adjust as needed */
+    height: auto; /* Ensures aspect ratio is maintained */
+    margin-right: 10px;
+  }
+  
+  .navbar__title {
+    font-family: "Roboto", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+    font-size: xx-large;
+  }
+  
+  .navbar__right {
+    display: flex;
+    align-items: center;
+  }
+  
+  .navbar__user {
+    position: relative; /* Required for positioning the dropdown */
+    cursor: pointer;
+  }
+  
+  .navbar__username {
+    margin-right: 10px;
+  }
+  
+  .navbar__user-icon {
+    font-size: 24px;
+  }
+  
+  .navbar__dropdown {
+    position: absolute;
+    top: 100%; /* Position below the user icon */
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000; /* Ensure it appears above other content */
+    display: none; /* Initially hide the dropdown */
+  }
+  
+  .navbar__user:hover .navbar__dropdown {
+    display: block; /* Show the dropdown on hover */
+  }
+  
+  .navbar__dropdown ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .navbar__dropdown li {
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  .navbar__dropdown li:hover {
+    background-color: #f0f0f0;
+  }
+  

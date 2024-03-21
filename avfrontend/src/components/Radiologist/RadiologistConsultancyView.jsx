@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import './DoctorConsultancyView.css';
+import './RadiologistConsultancyView.css';
 import image1 from "../images/image1.jpg";
 import image2 from "../images/image2.jpg";
 import image3 from "../images/image3.jpg";
 
 
-export const DoctorConsultancyView = () => {
+export const RadiologistConsultancyView = () => {
     const [selectedTab, setSelectedTab] = useState('patient');
     const [selectedImage, setSelectedImage] = useState(null);
     const [textInputValue, setTextInputValue] = useState('');
@@ -48,7 +48,10 @@ export const DoctorConsultancyView = () => {
     };
   
     return (
-      <div className="doctor-consulancy-view">
+      <div className="radiologist-consulancy-view">
+        <header>
+          <h1>Arogya Vartha</h1>
+        </header>
         <div className="scrollable-main">
         <main>
           <div className="sidebar1">
@@ -104,4 +107,4 @@ export const DoctorConsultancyView = () => {
     );
   }
   
-export default DoctorConsultancyView;
+export default RadiologistConsultancyView;

@@ -6,7 +6,9 @@ import PatientSignUp from './PatientSignUp';
 import RadiologistLogin from '../logins/RadiologistLogin';
 import LabLogin from '../logins/LabLogin';
 import ForgotPassword from '../logins/ForgotPassword/ForgotPassword';
-import "./SignUpHomePage.css"
+import "./SignUpHomePage.css";
+import Navbar from '../Navbar/Navbar';
+import NavbarHome from '../NavbarHome/NavbarHome.jsx'
 
 export const SignupHomepage = ({setDoctorLoggedIn}) => {
   const [selectedTab, setSelectedTab] = useState(1);
@@ -47,41 +49,52 @@ export const SignupHomepage = ({setDoctorLoggedIn}) => {
   };
 
   return (
-    <div className="main">
-      <div className="sidebar">
-        {/* Sidebar content goes here */}
-        <div className="tab-buttons">
-          <button onClick={() => changeTab(1)} className={selectedTab === 1 ? 'active' : ''}>Admin</button>
-          <button onClick={() => changeTab(2)} className={selectedTab === 2 ? 'active' : ''}>Doctor</button>
-          <button onClick={() => changeTab(3)} className={selectedTab === 3 ? 'active' : ''}>Patient</button>
-          <button onClick={() => changeTab(4)} className={selectedTab === 4 ? 'active' : ''}>Radiologist</button>
-          <button onClick={() => changeTab(5)} className={selectedTab === 5 ? 'active' : ''}>LAB</button>
+    <>
+    
+    <div className="signup-page">
+        {/* Container fluid takes entire screen width */}
+        <div className="row">
+          <div className="col-lg-3 col-md-4 col-sm-12">
+            <div className="sidebar">
+              {/* Sidebar content goes here */}
+              <ul className='sidebar-list'>
+              <li className='sidebar-row'><button onClick={() => changeTab(1)} className={`sidebar-button ${selectedTab === 1 ? 'active' : ''}`}>Admin</button></li>
+              <li className='sidebar-row'><button onClick={() => changeTab(2)} className={`sidebar-button ${selectedTab === 2 ? 'active' : ''}`}>Doctor</button></li>
+              <li className='sidebar-row'><button onClick={() => changeTab(3)} className={`sidebar-button ${selectedTab === 3 ? 'active' : ''}`}>Patient</button></li>
+              <li className='sidebar-row'><button onClick={() => changeTab(4)} className={`sidebar-button ${selectedTab === 4 ? 'active' : ''}`}>Radiologist</button></li>
+              <li className='sidebar-row'><button onClick={() => changeTab(5)} className={`sidebar-button ${selectedTab === 5 ? 'active' : ''}`}>Lab</button></li>
+              </ul>
+              
+            </div>
+          </div>
+          <div className="col-lg-9 col-md-8 col-sm-12">
+            <div className='content'>
+              {/* Main content goes here */}
+              {passwordResetSuccess ? (
+                // Render the respective login component after password reset
+                <div>
+                  <h2>Password Reset Successful!</h2>
+                  {renderLoginComponent()}
+                </div>
+              ) : (
+                <div>
+                  {selectedTab === 1 && !showForgotPassword && <AdminLogin setShowForgotPassword={setShowForgotPassword} />}
+                  {selectedTab === 1 && showForgotPassword && <ForgotPassword onPasswordReset={() => handlePasswordResetSuccess('admin')} />}
+                  {selectedTab === 2 && !showForgotPassword && <DoctorLogin setShowForgotPassword={setShowForgotPassword} setDoctorLoggedIn={setDoctorLoggedIn}  />}
+                  {selectedTab === 2 && showForgotPassword && <ForgotPassword onPasswordReset={() => handlePasswordResetSuccess('doctor')} />}
+                  {selectedTab === 3 && !showForgotPassword && !showSignUp && <PatientLogin setShowForgotPassword={setShowForgotPassword} setShowSignUp={setShowSignUp} />}
+                  {selectedTab === 3 && showSignUp && <PatientSignUp setShowSignUp={setShowSignUp} />}
+                  {selectedTab === 3 && showForgotPassword && <ForgotPassword onPasswordReset={() => handlePasswordResetSuccess('patient')} />}
+                  {selectedTab === 4 && !showForgotPassword && <RadiologistLogin setShowForgotPassword={setShowForgotPassword} />}
+                  {selectedTab === 4 && showForgotPassword && <ForgotPassword onPasswordReset={() => handlePasswordResetSuccess('radiologist')} />}
+                  {selectedTab === 5 && !showForgotPassword && <LabLogin setShowForgotPassword={setShowForgotPassword} />}
+                  {selectedTab === 5 && showForgotPassword && <ForgotPassword onPasswordReset={() => handlePasswordResetSuccess('lab')} />}
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
-      <div className="content">
-        {/* Main content goes here */}
-        {passwordResetSuccess ? (
-          // Render the respective login component after password reset
-          <div>
-            <h2>Password Reset Successful!</h2>
-            {renderLoginComponent()}
-          </div>
-        ) : (
-          <div>
-            {selectedTab === 1 && !showForgotPassword && <AdminLogin setShowForgotPassword={setShowForgotPassword} />}
-            {selectedTab === 1 && showForgotPassword && <ForgotPassword onPasswordReset={() => handlePasswordResetSuccess('admin')} />}
-            {selectedTab === 2 && !showForgotPassword && <DoctorLogin setShowForgotPassword={setShowForgotPassword} setDoctorLoggedIn={setDoctorLoggedIn}  />}
-            {selectedTab === 2 && showForgotPassword && <ForgotPassword onPasswordReset={() => handlePasswordResetSuccess('doctor')} />}
-            {selectedTab === 3 && !showForgotPassword && !showSignUp && <PatientLogin setShowForgotPassword={setShowForgotPassword} setShowSignUp={setShowSignUp} />}
-            {selectedTab === 3 && showSignUp && <PatientSignUp setShowSignUp={setShowSignUp} />}
-            {selectedTab === 3 && showForgotPassword && <ForgotPassword onPasswordReset={() => handlePasswordResetSuccess('patient')} />}
-            {selectedTab === 4 && !showForgotPassword && <RadiologistLogin setShowForgotPassword={setShowForgotPassword} />}
-            {selectedTab === 4 && showForgotPassword && <ForgotPassword onPasswordReset={() => handlePasswordResetSuccess('radiologist')} />}
-            {selectedTab === 5 && !showForgotPassword && <LabLogin setShowForgotPassword={setShowForgotPassword} />}
-            {selectedTab === 5 && showForgotPassword && <ForgotPassword onPasswordReset={() => handlePasswordResetSuccess('lab')} />}
-          </div>
-        )}
-      </div>
-    </div>
-  );
+      </>
+    );
 };

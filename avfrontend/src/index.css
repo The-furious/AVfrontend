@@ -11,3 +11,37 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #333;
+  color: #fff;
+  padding: 10px 20px;
+}
+
+.navbar__left {
+  display: flex;
+  align-items: center;
+}
+
+.navbar__logo {
+  width: 40px; /* Adjust as needed */
+  height: auto; /* Ensures aspect ratio is maintained */
+  margin-right: 10px;
+}
+
+.navbar__title {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.navbar__right {
+  display: flex;
+  align-items: center;
+}
+
+.navbar__user-icon {
+  font-size: 1.5rem;
+  margin-left: 20px;
+}
