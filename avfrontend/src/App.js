@@ -9,7 +9,8 @@ import RadiologistDashboard from './components/Radiologist/RadiologistDashboard'
 import RadiologistConsultancyView from './components/Radiologist/RadiologistConsultancyView';
 import Navbar from './components/Navbar/Navbar';
 import NavbarHome from './components/NavbarHome/NavbarHome';
-import DoctorDashboard from './components/Doctor/DoctorDashboard';
+// import DoctorDashboard from './components/Doctor/DoctorDashboard';
+import PatientDashboard from './components/Patient/PatientDashboard';
 function App() {
   const [showDoctorDashboard, setShowDoctorDashboard] = useState(false);
   const [showDoctorConsultancyView, setShowDoctorConsultancyView] = useState(false);
@@ -26,35 +27,10 @@ function App() {
     setShowRadiologistConsultancyView(true);
   };
 
-  return (
-     <>     
-     
-      {/* If neither dashboard nor consultancy view is shown, show the signup homepage */}
-      {!showDoctorDashboard && !showDoctorConsultancyView && (
-        <>
-          <div>
-            <NavbarHome></NavbarHome>
-          <SignupHomepage setDoctorLoggedIn={() => setShowDoctorDashboard(true)} />
-          </div>
-          
-        </>
-      )}
-       
-      {/* Show DoctorDashboard when DoctorLoggedIn */}
-      {showDoctorDashboard && (
-        <>
-         <Navbar/>
-        <DoctorDashboard handleValueTileClick={handleValueTileClick} />
-        </>
-        
-      )}
-
-      {/* Show DoctorConsultancyView when value tile button is clicked */}
-      {showDoctorConsultancyView && <><Navbar/><DoctorConsultancyView /></>}
-
-       {/* Show RadiologistDashboard when RadiologistLoggedIn */}
-       {showRadiologistDashboard && <RadiologistDashboard handleValueTileClick={handleValueTileClickRadiologist} />}
-      </>
+  return (    
+     <div className="App">
+      <PatientDashboard/>   
+    </div>
 
   );
 }

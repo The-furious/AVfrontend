@@ -201,7 +201,7 @@ const PatientDashboard = ({ handleValueTileClick }) => {
                                                                 <div>{detail.status}</div>
                                                             </button>
                                                         </div>
-                                                    </div>
+                                                    </div> /* */
                                                 ))}
                                         </div>
                                     )}
