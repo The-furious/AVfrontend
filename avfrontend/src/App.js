@@ -10,6 +10,7 @@ import RadiologistDashboard from './components/Radiologist/RadiologistDashboard'
 import RadiologistConsultancyView from './components/Radiologist/RadiologistConsultancyView';
 import Navbar from './components/Navbar/Navbar';
 
+
 function App() {
   
   return (
@@ -27,6 +28,7 @@ function App() {
          
       </div>
     </Router>
+
   );
 }
 
