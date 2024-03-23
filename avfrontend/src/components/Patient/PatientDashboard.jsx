@@ -91,7 +91,7 @@ const PatientDashboard = ({ handleValueTileClick }) => {
                         <li>
                             <button
                                 onClick={handleRequestClick}
-                                className={`tab-button ${selectedTab === 1 && activeButton === 1 ? "active" : ""}`}
+                                className={`tab-buttons ${selectedTab === 1 && activeButton === 1 ? "active" : ""}`}
                             >
                                 <span>
                                     <EditCalendarIcon />
@@ -105,7 +105,7 @@ const PatientDashboard = ({ handleValueTileClick }) => {
                         <li>
                             <button
                                 onClick={handleHistoryClick}
-                                className={`tab-button ${selectedTab === 2 && activeButton === 2 ? "active" : ""}`}
+                                className={`tab-buttons ${selectedTab === 2 && activeButton === 2 ? "active" : ""}`}
                             >
                                 <span>
                                     <EditCalendarIcon />
@@ -119,7 +119,7 @@ const PatientDashboard = ({ handleValueTileClick }) => {
                         <li>
                             <button
                                 onClick={handleStartConsultationClick}
-                                className={`tab-button ${content === 'form' && activeButton === 3 ? "active" : ""}`}
+                                className={`tab-buttons ${content === 'form' && activeButton === 3 ? "active" : ""}`}
                             >
                                 <span>
                                     <EditCalendarIcon />

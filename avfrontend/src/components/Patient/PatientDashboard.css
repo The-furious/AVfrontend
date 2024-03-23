@@ -22,7 +22,7 @@
 }
 
 .tab-buttons {
-  width: 300px;
+  width: 220px;
   margin-top: 30px;
   display: flex;
   flex-direction: column;
@@ -32,7 +32,7 @@
 
 
 
-.tab-buttons button {
+.tab-buttons>button {
   margin-top: 40px;
   margin: 10px 25px;
   padding: 10px;
@@ -48,7 +48,7 @@ button:hover {
 }
 
 .active {
-  background-color: #0056b3;
+  background-color:#0056b3;
 }
 
 
@@ -109,7 +109,7 @@ button:hover {
   background-color: #f0f0f0;
 }
 .active {
-  background-color: #00b7ac;
+  background-color: #0056b3;
 }
 
 
@@ -154,7 +154,7 @@ button:hover {
     }
     
     button[type="submit"] {
-      background-color: #036fe2;
+      background-color: #00b7ac;
       color: white;
       padding: 10px 20px;
       border: none; /* */
