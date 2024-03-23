@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import './RadiologistConsultancyView.css';
 import image1 from "../images/image1.jpg";
 import image2 from "../images/image2.jpg";
 import image3 from "../images/image3.jpg";
+import { useNavigate } from 'react-router-dom';
 
 
 export const RadiologistConsultancyView = () => {
@@ -11,6 +12,16 @@ export const RadiologistConsultancyView = () => {
     const [textInputValue, setTextInputValue] = useState('');
     const [overlayImages, setOverlayImages] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
+
+    const navigate = useNavigate();
+    const isRadiologistLoggedIn = sessionStorage.getItem('isRadiologistLoggedIn') === 'true';
+    
+
+    useEffect(() => {
+      if (!isRadiologistLoggedIn) {
+          navigate('/');
+      }
+  }, [isRadiologistLoggedIn, navigate]);
   
     const handleTabClick = (tab) => {
       setSelectedTab(tab);
@@ -49,19 +60,18 @@ export const RadiologistConsultancyView = () => {
   
     return (
       <div className="radiologist-consulancy-view">
-        <header>
-          <h1>Arogya Vartha</h1>
-        </header>
+       
         <div className="scrollable-main">
         <main>
           <div className="sidebar1">
             <div className="tab-buttons">
               <button onClick={() => handleTabClick('patient')} className={selectedTab === 'patient' ? 'active' : ''}>Patient</button>
-              <button onClick={() => handleTabClick('radiologist1')} className={selectedTab === 'radiologist1' ? 'active' : ''}>Radiologist 1</button>
-              <button onClick={() => handleTabClick('radiologist2')} className={selectedTab === 'radiologist2' ? 'active' : ''}>Radiologist 2</button>
+              <button onClick={() => handleTabClick('doctor1')} className={selectedTab === 'doctor1' ? 'active' : ''}>DOCTOR 1</button>
+              <button onClick={() => handleTabClick('doctor2')} className={selectedTab === 'doctor2' ? 'active' : ''}>DOCTOR 2</button>
+           
             </div>
           </div>
-          <div className="content">
+          <div className="content1">
           
    {selectedImage && (
     <div className="image-overlay-container">
@@ -77,10 +87,23 @@ export const RadiologistConsultancyView = () => {
       </div>
     </div>
   )}
-  
-  
-  
-            <div className="text-input">
+  {!selectedImage && (
+    <div className="chat-box">
+              {/* Render chat messages here */}
+              <div className="message">Chat message 1</div>
+              <div className="message">Chat message 2</div>
+              <div className="message">Chat message 2</div>
+              <div className="message">Chat message 2</div>
+              <div className="message">Chat message 2</div>
+              <div className="message">Chat message 2</div>
+              <div className="message">Chat message 2</div>
+              <div className="message">Chat message 2</div>
+
+              {/* Add more chat messages as needed */}
+    </div>
+    )}
+
+       <div className="text-input">
               <input
                 type="text"
                 placeholder="Type your message here..."
@@ -89,13 +112,17 @@ export const RadiologistConsultancyView = () => {
               />
               <button onClick={handleSendMessage}>Send</button>
             </div>
-          </div>
+      </div>
           <div className="sidebar2">
             <div className="image-container">
               <div className="tab-buttons2">
                 <button onClick={() => handleImageClick([image1, image2, image3], 0)}><img src={image1} alt="Image 1" /></button>
                 <button onClick={() => handleImageClick([image1, image2, image3], 1)}><img src={image2} alt="Image 2" /></button>
                 <button onClick={() => handleImageClick([image1, image2, image3], 2)}><img src={image3} alt="Image 3" /></button>
+                <button onClick={() => handleImageClick([image1, image2, image3], 0)}><img src={image1} alt="Image 1" /></button>
+                <button onClick={() => handleImageClick([image1, image2, image3], 1)}><img src={image2} alt="Image 2" /></button>
+                <button onClick={() => handleImageClick([image1, image2, image3], 2)}><img src={image3} alt="Image 3" /></button>
+
               </div>
             </div>
           </div>

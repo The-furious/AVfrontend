@@ -1,12 +1,13 @@
 /* Your existing styles */
 
 .login-container {
-  margin-left: 250px;
+  margin-left: 382px;
   max-width: 400px;
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-top: 30px;
 }
 
 h2 {
@@ -47,7 +48,13 @@ button:hover {
 }
 
 .signup {
-  margin-top: 10px;
+  
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .forgot-password-button {

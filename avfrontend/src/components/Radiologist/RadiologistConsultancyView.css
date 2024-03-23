@@ -1,249 +1,291 @@
 /* App.css */
 
 body {
-    margin: 0;
-    padding: 0;
-    min-height: 100vh;
-    background-color: #f5f5f5;
-    overflow-y: auto; /* Allow vertical scrolling for the entire page */
-  }
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  overflow-y: auto; /* Allow vertical scrolling for the entire page */
+}
+
+
+
+
+
+
+main {
+  display: flex;
+  flex: 1;
+  padding-top: 0px; /* Adjusted padding-top to provide space for fixed header */
+  padding-bottom: 0px; /* Adjusted padding-bottom to provide space for fixed footer */
+}
+.scrollable-main {
+  flex: 1; /* Make the main content area take up remaining space */
+  overflow-y: auto; /* Add vertical scrolling for content overflow */
+}
+
+.sidebar1 {
+  list-style: none; 
+  width: 20%;
+  /* Sidebar background color */
+  background-color: #404040;
+ 
   
-  header {
-    background-color: #4CAF50; /* Green for the header */
-    color: white;
-    padding: 20px;
-    position: fixed;
-    top: 0;
-    width: 100%;
-  }
+  position: sticky; /* Make the sidebar fixed */
+  /* Position the sidebar below the navbar */
+  overflow-y: auto; /* Enable vertical scrolling if content exceeds the height */
+  display: flex;
+  height: 100%;
+}
+.sidebar1 button {
+  margin-bottom: 10px; /* Add space between buttons */
+}
+
+.content1 {
+  display:flex;
+ align-items: end;
+  position: relative; /* Ensure relative positioning for absolutely positioned elements */
+}
+
+
+
+.sidebar2 {
+  width: 20%;
+  background-color: #f5f5f5;
+  border-left: 4px solid #ccc;
+  padding: 20px;
+  overflow-y: auto; /* Allow vertical scrolling for sidebar2 */
+  height: 716px;;
+}
+
+.image-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.image-container img {
+  width: 100px; /* Fixed width for images */
+  height: 100px; /* Fixed height for images */
+  margin-bottom: 10px;
+}
+
+
+
+.message-history {
+  flex: 1;
+  overflow-y: auto; /* Allow vertical scrolling for message history */
+}
+
+
+.tab-buttons {
+  width: 300px;
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap:2;
+  align-items: center;
   
 
-  
-  main {
-    display: flex;
-    flex: 1;
-    padding-top: 140px; /* Adjusted padding-top to provide space for fixed header */
-    padding-bottom: 60px; /* Adjusted padding-bottom to provide space for fixed footer */
-  }
-  
-  .sidebar1 {
-    width: 20%;
-    background-color: #f5f5f5;
-    border-right: 4px solid #ccc;
-    padding: 20px;
-    position: fixed; /* Fix the sidebar 1 */
-    height: 100%; /* Set the height to occupy the full viewport height */
-    overflow-y: auto; /* Allow vertical scrolling for sidebar 1 */
-  }
-  .sidebar1 button {
-    margin-bottom: 10px; /* Add space between buttons */
-  }
-  
-  .content {
-    flex: 1;
-    padding: 77px;
-    position: relative; /* Ensure relative positioning for absolutely positioned elements */
-  }
-  
-  .chat-box {
-    position: absolute; /* Position chat box absolutely within content */
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 20px;
-    overflow-y: auto; /* Enable vertical scrolling when content overflows */
-    max-height: calc(100% - 40px); /* Limit chat box height to fill available space within content and leave room for padding */
-  }
-  
-  .sidebar2 {
-    width: 20%;
-    background-color: #f5f5f5;
-    border-left: 4px solid #ccc;
-    padding: 20px;
-    overflow-y: auto; /* Allow vertical scrolling for sidebar2 */
-  }
-  
-  .image-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .image-container img {
-    width: 100px; /* Fixed width for images */
-    height: 100px; /* Fixed height for images */
-    margin-bottom: 10px;
-  }
-  
-  .chat-box {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
-  
-  .message-history {
-    flex: 1;
-    overflow-y: auto; /* Allow vertical scrolling for message history */
-  }
-  
-  .message {
-    margin-bottom: 10px;
-    padding: 5px;
-    background-color: #f0f0f0;
-  }
-  
-  textarea {
-    resize: none;
-    padding: 10px;
-    margin-bottom: 10px;
-  }
-  
-  .tab-buttons {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .tab-buttons button {
-    margin: 10px 0; /* Adjust vertical margin for spacing */
-    padding: 10px;
-    width: 300px;
-    cursor: pointer;
-    background-color: #2196F3; /* Blue for the tab buttons */
-    color: white;
-    border: none;
-    transition: background-color 0.3s; /* Smooth transition for the hover effect */
-  }
-  
-  .tab-buttons button:hover {
-    background-color: #0d8aea; /* Darker shade of blue on hover */
-  }
-  
-  .image-overlay-container {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .image-overlay {
-    position: relative;
-  }
-  
-  .overlay-content {
-    margin-bottom: 20px;
-  }
-  
-  .overlay-image {
-    width: 500px; /* Set the width of the image */
-    height: 400px; /* Set the height of the image */
-  }
-  
-  .overlay-buttons {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-  }
-  
-  .close-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    color: white;
-    font-size: 24px;
-    cursor: pointer;
-  }
-  
-  .tab-buttons2 {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-.tab-buttons2 button {
-  margin-bottom: 10px; /* Add space between buttons */
+}
+
+.tab-buttons button {
+  margin-top: 40px;
+  margin: 10px 25px;
+  padding: 10px;
+  width: 250px;
+  cursor: pointer;
+  background-color: #00b7ac;
+  color: white;
+  border: none;
+}
+
+.tab-buttons button:hover {
+  background-color: #0d8aea; /* Darker shade of blue on hover */
+}
+
+.image-overlay-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  width: 200px; /* Set the width of the button */
-  height: 200px; /* Set the height of the button */
-  background-color: transparent; /* Set treyhe background color to transparent */
-  border: none; /* Remove border */
-  padding: 0; /* Remove padding */
-  overflow: hidden; /* Hide any overflow from the image */
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.image-overlay {
+  position: relative;
+}
+
+.overlay-content {
+  margin-bottom: 20px;
+}
+
+.overlay-image {
+  width: 500px; /* Set the width of the image */
+  height: 400px; /* Set the height of the image */
+}
+
+.overlay-buttons {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.tab-buttons2 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tab-buttons2 button {
+margin-bottom: 10px; /* Add space between buttons */
+display: flex;
+justify-content: center;
+align-items: center;
+width: 200px; /* Set the width of the button */
+height: 200px; /* Set the height of the button */
+background-color: transparent; /* Set treyhe background color to transparent */
+border: none; /* Remove border */
+padding: 0; /* Remove padding */
+overflow: hidden; /* Hide any overflow from the image */
+transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s; /* Add smooth transitions */
+
+
 }
 
 .tab-buttons2 button img {
-  width: 100%; /* Make the image width 100% of the button width */
-  height: 100%; /* Allow the image height to adjust proportionally */
+width: 100%; /* Make the image width 100% of the button width */
+height: 100%; /* Allow the image height to adjust proportionally */
+
+
 }
-  
-  .prev-btn,
-  .next-btn {
-    background: rgba(0, 0, 0, 0.5);
-    color: white;
-    cursor: pointer;
-    padding: 10px 20px;
-    border: none;
-    transition: background 0.3s;
-  }
-  
-  .prev-btn {
-    left: 0;
-  }
-  
-  .next-btn {
-    right: 0;
-  }
-  
-  .prev-btn {
-    left: 20px;
-  }
-  
-  .next-btn {
-    right: 20px;
-  }
-  
-  .prev-btn:hover,
-  .next-btn:hover {
-    background: rgba(0, 0, 0, 0.7);
-  }
-  .overlay-buttons {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    position: relative;
-  }
+.tab-buttons2 button:hover {
+  transform: scale(1.1); /* Scale the image slightly on hover */
+ 
+  background-color : transparent;
+}
 
-  .scrollable-main {
-    display: flex;
-    flex: 1;
-    overflow-y: auto; /* Allow vertical scrolling for main content */
-  }
-  
-  .sidebar2 {
-    width: 20%;
-    background-color: #f5f5f5;
-    border-left: 4px solid #ccc;
-    padding: 20px;
-  }
+.prev-btn,
+.next-btn {
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  cursor: pointer;
+  padding: 10px 20px;
+  border: none;
+  transition: background 0.3s;
+}
 
-  .text-input {
-    display: flex;
-    align-items: center; /* Center items horizontally */
-    margin-top: 20px; /* Adjust the top margin */
+.prev-btn {
+  left: 0;
+}
+
+.next-btn {
+  right: 0;
+}
+
+.prev-btn {
+  left: 20px;
+}
+
+.next-btn {
+  right: 20px;
+}
+
+.prev-btn:hover,
+.next-btn:hover {
+  background: rgba(0, 0, 0, 0.7);
+}
+.overlay-buttons {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  position: relative;
+}
+
+.scrollable-main {
+  display: flex;
+  flex: 1;
+  overflow-y: auto; /* Allow vertical scrolling for main content */
+}
+
+.sidebar2 {
+  width: 20%;
+  background-color: #f5f5f5;
+  border-left: 4px solid #ccc;
+  padding: 20px;
+  
+}
+
+/* RadiologistConsultancyView.css */
+
+.chat-box {
+  flex: 1; /* Allow chat box to grow and fill remaining space */
+  overflow-y: auto; /* Enable vertical scrolling if content overflows */
+  padding: 10px; /* Add padding as needed */
+  height: 640px;
+}
+
+.message {
+  padding: 8px;
+  border-radius: 8px;
+  max-width: 70%; /* Adjust as needed */
+}
+
+/* Even messages align to the right */
+.message:nth-child(even) {
+  align-self: flex-end;
+  background-color: #e2f0cb; /* Example background color for even messages */
+}
+
+/* Odd messages align to the left */
+.message:nth-child(odd) {
+  align-self: flex-start;
+  background-color: #bde0fe; /* Example background color for odd messages */
+}
+
+.text-input {
+  display: flex;
+  align-items: center;
+  padding: 10px; /* Add padding to the text input container */
+  background-color: #fff; /* Set background color */
+  width: 970px;
 }
 
 .text-input input {
-    padding: 10px;
-    margin-right: 10px; /* Add space between input and button */
+  flex: 1; /* Allow input to grow and fill available space */
+  padding: 8px; /* Adjust input padding */
+  margin-right: 10px; /* Add space between input and button */
+  border: 1px solid #ccc; /* Add border */
+  border-radius: 5px; /* Add border radius */
+  height: 50px;
+  width: 83px;
 }
-  
+
+.text-input button {
+  padding: 8px 15px; /* Adjust button padding */
+  background-color: #4CAF50; /* Set button background color */
+  color: #fff; /* Set button text color */
+  border: none; /* Remove border */
+  border-radius: 5px; /* Add border radius */
+  cursor: pointer;
+}
+
+.text-input button:hover {
+  background-color: #45a049; /* Darker shade of button color on hover */
+}

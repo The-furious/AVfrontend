@@ -24,7 +24,7 @@
     background-color: #ffffff; /* Content background color */
   }
   
-  .tab-buttons {
+  .tab-button {
     width: 300px;
     margin-top: 30px;
     display: flex;
@@ -32,7 +32,7 @@
     background-color: #00b7ac;
   }
   
-  .tab-buttons button {
+  .tab-button button {
     margin-top: 40px;
     margin: 10px 25px;
     padding: 10px;

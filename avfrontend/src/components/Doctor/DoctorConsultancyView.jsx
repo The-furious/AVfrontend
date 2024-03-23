@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import './DoctorConsultancyView.css';
 import image1 from "../images/image1.jpg";
 import image2 from "../images/image2.jpg";
 import image3 from "../images/image3.jpg";
+import { useNavigate } from 'react-router-dom';
 
 
 export const DoctorConsultancyView = () => {
@@ -11,6 +12,15 @@ export const DoctorConsultancyView = () => {
     const [textInputValue, setTextInputValue] = useState('');
     const [overlayImages, setOverlayImages] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
+    const navigate = useNavigate();
+    const isDoctorLoggedIn = sessionStorage.getItem('isDoctorLoggedIn') === 'true';
+    
+
+    useEffect(() => {
+      if (!isDoctorLoggedIn) {
+          navigate('/');
+      }
+  }, [isDoctorLoggedIn, navigate]);
   
     const handleTabClick = (tab) => {
       setSelectedTab(tab);
@@ -58,9 +68,9 @@ export const DoctorConsultancyView = () => {
               <button onClick={() => handleTabClick('radiologist2')} className={selectedTab === 'radiologist2' ? 'active' : ''}>Radiologist 2</button>
             </div>
           </div>
-          <div className="content">
+          <div className="content1">
           
-   {selectedImage && (
+          {selectedImage && (
     <div className="image-overlay-container">
       <div className="image-overlay">
         <span className="close-btn" onClick={handleCloseImage}>&times;</span>
@@ -74,10 +84,25 @@ export const DoctorConsultancyView = () => {
       </div>
     </div>
   )}
+  {!selectedImage && (
+    <div className="chat-box">
+              {/* Render chat messages here */}
+              <div className="message">Chat message 1</div>
+              <div className="message">Chat message 2</div>
+              <div className="message">Chat message 2</div>
+              <div className="message">Chat message 2</div>
+              <div className="message">Chat message 2</div>
+              <div className="message">Chat message 2</div>
+              <div className="message">Chat message 2</div>
+              <div className="message">Chat message 2</div>
+
+              {/* Add more chat messages as needed */}
+    </div>
+    )}
   
   
   
-            <div className="text-input">
+             <div className="text-input">
               <input
                 type="text"
                 placeholder="Type your message here..."
@@ -93,6 +118,11 @@ export const DoctorConsultancyView = () => {
                 <button onClick={() => handleImageClick([image1, image2, image3], 0)}><img src={image1} alt="Image 1" /></button>
                 <button onClick={() => handleImageClick([image1, image2, image3], 1)}><img src={image2} alt="Image 2" /></button>
                 <button onClick={() => handleImageClick([image1, image2, image3], 2)}><img src={image3} alt="Image 3" /></button>
+                <button onClick={() => handleImageClick([image1, image2, image3], 0)}><img src={image1} alt="Image 1" /></button>
+                <button onClick={() => handleImageClick([image1, image2, image3], 1)}><img src={image2} alt="Image 2" /></button>
+                <button onClick={() => handleImageClick([image1, image2, image3], 2)}><img src={image3} alt="Image 3" /></button>
+                             
+              
               </div>
             </div>
           </div>

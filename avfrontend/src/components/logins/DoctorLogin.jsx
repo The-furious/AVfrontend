@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Login.css';
 import EditCalendarIcon from '@mui/icons-material/EditCalendar';
-function DoctorLogin({ setShowForgotPassword, setDoctorLoggedIn }) {
+function DoctorLogin({ setShowForgotPassword}) {
   const [formData, setFormData] = useState({
-    userId: '',
-    password: ''
+    username: '',
+    password: '',
+    role: 'doctor',
   });
   const [errorMessage, setErrorMessage] = useState('');
+  const [isDoctorLoggedIn, setIsDoctorLoggedIn] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -16,13 +20,30 @@ function DoctorLogin({ setShowForgotPassword, setDoctorLoggedIn }) {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    // For demo purposes, check if the username and password match hardcoded values
-    if (formData.userId === 'demoUser' && formData.password === 'demoPassword') {
+    try {
+      const response = await fetch('http://localhost:8090/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+      console.log(response);
+      if (!response.ok) {
+        throw new Error('Invalid username or password');
+      }
+
+      const data = await response.json();
+      const { token } = data;
+      sessionStorage.setItem('jwtToken', token);
       console.log('Login successful'); // For demo, log successful login
-      setDoctorLoggedIn(true); // Set doctorLoggedIn to true when login is successful
-    } else {
+      setIsDoctorLoggedIn(true); // Set isLoggedIn to true when login is successful
+      sessionStorage.setItem('isDoctorLoggedIn', 'true'); 
+      sessionStorage.setItem('DoctorId', formData.userId); 
+      navigate(`/doctor-dashboard/${formData.username}`);// Set doctorLoggedIn to true when login is successful
+    } catch{
       console.log('Invalid username or password'); // For demo, log invalid login attempt
       setErrorMessage('Invalid username or password'); // Set error message
     }
@@ -37,8 +58,8 @@ function DoctorLogin({ setShowForgotPassword, setDoctorLoggedIn }) {
       <h2>Doctor Login</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="userId">User ID:</label>
-          <input type="text" id="userId" name="userId" value={formData.userId} onChange={handleChange} />
+          <label htmlFor="username">User ID:</label>
+          <input type="text" id="username" name="username" value={formData.userId} onChange={handleChange} />
         </div>
         <div className="form-group">
           <label htmlFor="password">Password:</label>
