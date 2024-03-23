@@ -1,35 +1,55 @@
 import React, { useState } from 'react';
 import './Login.css';
+import { useNavigate } from 'react-router-dom';
 
-function RadiologistLogin({ setShowForgotPassword,setRadiologistLoggedIn }) {
+function RadiologistLogin({ setShowForgotPassword }) {
   const [formData, setFormData] = useState({
-    userId: '',
-    password: ''
+    username: '',
+    password: '',
+    role : 'radiologist'
   });
- 
   const [errorMessage, setErrorMessage] = useState('');
-  
+  const [isRadiologistLoggedIn, setIsRadiologistLoggedIn] = useState(false);
+  const navigate = useNavigate();
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prevState => ({
+    setFormData((prevState) => ({
       ...prevState,
       [name]: value
     }));
   };
+
   const handleForgotPasswordClick = () => {
-    setShowForgotPassword(true); // Set showForgotPassword to true when the "Forgot Password" button is clicked
+    setShowForgotPassword(true);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData); // You can do further processing with the form data here
-     // For demo purposes, check if the username and password match hardcoded values
-     if (formData.userId === 'demoUser' && formData.password === 'demoPassword') {
-      console.log('Login successful'); // For demo, log successful login
-      setRadiologistLoggedIn(true); // Set doctorLoggedIn to true when login is successful
-    } else {
-      console.log('Invalid username or password'); // For demo, log invalid login attempt
-      setErrorMessage('Invalid username or password'); // Set error message
+    try {
+      const response = await fetch('http://localhost:8090/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+      console.log(response);
+      if (!response.ok) {
+        throw new Error('Invalid username or password');
+      }
+
+      const data = await response.json();
+      const { token } = data; // Assuming the token is provided in the response data
+
+      sessionStorage.setItem('jwtToken', token);
+      setIsRadiologistLoggedIn(true);
+      sessionStorage.setItem('isRadiologistLoggedIn', 'true');
+      sessionStorage.setItem('radiologistId', formData.userId);
+      navigate(`/radiologist-dashboard/${formData.userId}`);
+    } catch (error) {
+      console.error(error);
+      setErrorMessage('Invalid username or password');
     }
   };
 
@@ -38,16 +58,34 @@ function RadiologistLogin({ setShowForgotPassword,setRadiologistLoggedIn }) {
       <h2>Radiologist Login</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="userId">User ID:</label>
-          <input type="text" id="userId" name="userId" value={formData.userId} onChange={handleChange} />
+          <label htmlFor="username">User ID:</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
+          />
         </div>
         <div className="form-group">
           <label htmlFor="password">Password:</label>
-          <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} />
+          <input
+            type="password"
+            id="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+          />
         </div>
         <button type="submit">Login</button>
-        <button type="button" className="forgot-password-button" onClick={handleForgotPasswordClick}>Forgot Password</button>
-
+        <button
+          type="button"
+          className="forgot-password-button"
+          onClick={handleForgotPasswordClick}
+        >
+          Forgot Password
+        </button>
+        {errorMessage && <div className="error-message">{errorMessage}</div>}
       </form>
     </div>
   );

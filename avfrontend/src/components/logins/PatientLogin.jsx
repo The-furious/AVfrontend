@@ -4,7 +4,8 @@ import './Login.css';
 function PatientLogin({ setShowForgotPassword, setShowSignUp }) {
   const [formData, setFormData] = useState({
     userId: '',
-    password: ''
+    password: '',
+    role:'patient'
   });
 
   const handleChange = (e) => {

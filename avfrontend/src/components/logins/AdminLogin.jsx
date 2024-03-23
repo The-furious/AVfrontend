@@ -5,7 +5,8 @@ import ForgotPassword from './ForgotPassword/ForgotPassword'; // Import the Forg
 function AdminLogin({ setShowForgotPassword }) {
   const [formData, setFormData] = useState({
     userId: '',
-    password: ''
+    password: '',
+    role:'admin'
   });
 
   const handleChange = (e) => {

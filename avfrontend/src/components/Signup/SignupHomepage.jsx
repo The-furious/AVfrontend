@@ -8,9 +8,9 @@ import LabLogin from '../logins/LabLogin';
 import ForgotPassword from '../logins/ForgotPassword/ForgotPassword';
 import "./SignUpHomePage.css";
 import Navbar from '../Navbar/Navbar';
-import NavbarHome from '../NavbarHome/NavbarHome.jsx'
 
-export const SignupHomepage = ({setDoctorLoggedIn}) => {
+
+export const SignupHomepage = () => {
   const [selectedTab, setSelectedTab] = useState(1);
   const [showSignUp, setShowSignUp] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
@@ -36,7 +36,7 @@ export const SignupHomepage = ({setDoctorLoggedIn}) => {
       case 'admin':
         return <AdminLogin setShowForgotPassword={setShowForgotPassword} />;
       case 'doctor':
-        return <DoctorLogin setShowForgotPassword={setShowForgotPassword} setDoctorLoggedIn={setDoctorLoggedIn} />;
+        return <DoctorLogin setShowForgotPassword={setShowForgotPassword} />;
       case 'patient':
         return <PatientLogin setShowForgotPassword={setShowForgotPassword} setShowSignUp={setShowSignUp} />;
       case 'radiologist':
@@ -80,7 +80,7 @@ export const SignupHomepage = ({setDoctorLoggedIn}) => {
                 <div>
                   {selectedTab === 1 && !showForgotPassword && <AdminLogin setShowForgotPassword={setShowForgotPassword} />}
                   {selectedTab === 1 && showForgotPassword && <ForgotPassword onPasswordReset={() => handlePasswordResetSuccess('admin')} />}
-                  {selectedTab === 2 && !showForgotPassword && <DoctorLogin setShowForgotPassword={setShowForgotPassword} setDoctorLoggedIn={setDoctorLoggedIn}  />}
+                  {selectedTab === 2 && !showForgotPassword && <DoctorLogin setShowForgotPassword={setShowForgotPassword}  />}
                   {selectedTab === 2 && showForgotPassword && <ForgotPassword onPasswordReset={() => handlePasswordResetSuccess('doctor')} />}
                   {selectedTab === 3 && !showForgotPassword && !showSignUp && <PatientLogin setShowForgotPassword={setShowForgotPassword} setShowSignUp={setShowSignUp} />}
                   {selectedTab === 3 && showSignUp && <PatientSignUp setShowSignUp={setShowSignUp} />}

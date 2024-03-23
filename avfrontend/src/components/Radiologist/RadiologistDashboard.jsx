@@ -1,17 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import Navbar from '../Navbar/Navbar';
 import "./RadiologistDashboard.css";
 import EditCalendarIcon from '@mui/icons-material/EditCalendar';
+import { useNavigate } from 'react-router-dom';
 
-const RadiologistDashboard= ({handleValueTileClick}) => {
+const RadiologistDashboard= () => {
     const [selectedTab, setSelectedTab] = useState(1);
     const [content, setContent] = useState(null);
     const [consultancyDetails, setConsultancyDetails] = useState(null);
     const [historyDetails, setHistoryDetails] = useState(null);
-    const [showConsultancyView, setShowConsultancyView] = useState(false); // State to manage visibility of RadiologistConsultancyView
     const [isLoggedIn, setIsLoggedIn] = useState(false); // State to manage user's authentication status
     const [newConsultancyUpdates, setNewConsultancyUpdates] = useState(false);
     const [newHistoryUpdates, setNewHistoryUpdates] = useState(false);
+
+    const isRadiologistLoggedIn = sessionStorage.getItem('isRadiologistLoggedIn') === 'true';
+    const RadiologistId=sessionStorage.getItem('RadiologistId'); 
+    const navigate = useNavigate(); 
 
     const handleConsultancyClick = () => {
         setSelectedTab(1);
@@ -98,9 +102,17 @@ const RadiologistDashboard= ({handleValueTileClick}) => {
       const handleValueClick = (value) => {
         // Handle the click event for the value tile
         console.log(`Clicked value: ${value}`);
-        handleValueTileClick();
+      
+
+        navigate(`/radiologist-consultancy-view/${RadiologistId}`);
         // Add further handling logic as needed
       };
+
+      useEffect(() => {
+        if (!isRadiologistLoggedIn) {
+            navigate('/');
+        }
+    }, [isRadiologistLoggedIn, navigate]);
     
       return (
         <>
@@ -147,7 +159,7 @@ const RadiologistDashboard= ({handleValueTileClick}) => {
             <div className="radiologist-dashboard-content">
              {/* Main content goes here */}
 
-             Main Content
+            
              {selectedTab === 1 && content && (
                   <div>
                     <h2>Consultancy</h2>

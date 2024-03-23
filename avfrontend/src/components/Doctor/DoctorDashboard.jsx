@@ -1,17 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import Navbar from '../Navbar/Navbar';
 import "./DoctorDashboard.css";
 import EditCalendarIcon from '@mui/icons-material/EditCalendar';
+import { useNavigate } from 'react-router-dom';
 
 const DoctorDashboard= ({handleValueTileClick}) => {
     const [selectedTab, setSelectedTab] = useState(1);
     const [content, setContent] = useState(null);
     const [consultancyDetails, setConsultancyDetails] = useState(null);
     const [historyDetails, setHistoryDetails] = useState(null);
-    const [showConsultancyView, setShowConsultancyView] = useState(false); // State to manage visibility of DoctorConsultancyView
-    const [isLoggedIn, setIsLoggedIn] = useState(false); // State to manage user's authentication status
+    
     const [newConsultancyUpdates, setNewConsultancyUpdates] = useState(false);
     const [newHistoryUpdates, setNewHistoryUpdates] = useState(false);
+    const isDoctorLoggedIn = sessionStorage.getItem('isDoctorLoggedIn') === 'true';
+    const DoctorId=sessionStorage.getItem('DoctorId'); 
+    const navigate = useNavigate(); 
 
     const handleConsultancyClick = () => {
         setSelectedTab(1);
@@ -95,12 +98,22 @@ const DoctorDashboard= ({handleValueTileClick}) => {
         setNewHistoryUpdates(false); // Reset notification badge
       };
     
-      const handleValueClick = (value) => {
+      const handleValueClick = (value,patientName) => {
         // Handle the click event for the value tile
         console.log(`Clicked value: ${value}`);
-        handleValueTileClick();
+        
+        navigate(`/doctor-consultancy-view/${DoctorId}`); 
+
         // Add further handling logic as needed
       };
+
+     
+      
+    useEffect(() => {
+        if (!isDoctorLoggedIn) {
+            navigate('/');
+        }
+    }, [isDoctorLoggedIn, navigate]);
     
       return (
         <>

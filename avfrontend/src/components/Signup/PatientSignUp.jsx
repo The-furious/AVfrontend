@@ -1,6 +1,62 @@
 import React, { useState } from 'react';
 import './patientlogin.css';
 
+const IndianStates = [
+  'Andhra Pradesh',
+  'Arunachal Pradesh',
+  'Assam',
+  'Bihar',
+  'Chhattisgarh',
+  'Goa',
+  'Gujarat',
+  'Haryana',
+  'Himachal Pradesh',
+  'Jharkhand',
+  'Karnataka',
+  'Kerala',
+  'Madhya Pradesh',
+  'Maharashtra',
+  'Manipur',
+  'Meghalaya',
+  'Mizoram',
+  'Nagaland',
+  'Odisha',
+  'Punjab',
+  'Rajasthan',
+  'Sikkim',
+  'Tamil Nadu',
+  'Telangana',
+  'Tripura',
+  'Uttar Pradesh',
+  'Uttarakhand',
+  'West Bengal',
+];
+
+const IndianCities = {
+  'Andhra Pradesh': ['Visakhapatnam', 'Vijayawada', 'Guntur', 'Nellore', 'Kurnool', 'Rajahmundry', 'Tirupati', 'Kakinada', 'Kadapa', 'Anantapur', 'Chittoor', 'Kadapa'],
+  'Arunachal Pradesh': ['Itanagar', 'Naharlagun', 'Pasighat', 'Namsai', 'Roing', 'Tezu'],
+  'Assam': ['Guwahati', 'Silchar', 'Dibrugarh', 'Jorhat', 'Nagaon', 'Tinsukia', 'Tezpur', 'Bongaigaon', 'Karimganj', 'Dhubri'],
+  'Bihar': ['Patna', 'Gaya', 'Bhagalpur', 'Muzaffarpur', 'Purnia', 'Darbhanga', 'Bihar Sharif', 'Arrah', 'Begusarai', 'Katihar'],
+  'Chhattisgarh': ['Raipur', 'Bhilai', 'Durg', 'Raigarh', 'Korba', 'Bilaspur', 'Rajnandgaon', 'Jagdalpur', 'Ambikapur', 'Mahasamund'],
+  'Goa': ['Panaji', 'Margao', 'Vasco da Gama', 'Ponda', 'Mapusa', 'Bicholim', 'Curchorem'],
+  'Gujarat': ['Ahmedabad', 'Surat', 'Vadodara', 'Rajkot', 'Bhavnagar', 'Jamnagar', 'Junagadh', 'Gandhinagar', 'Nadiad', 'Mehsana'],
+  'Haryana': ['Faridabad', 'Gurgaon', 'Hisar', 'Panipat', 'Ambala', 'Rohtak', 'Karnal', 'Sonipat', 'Yamunanagar', 'Panchkula'],
+  'Himachal Pradesh': ['Shimla', 'Mandi', 'Solan', 'Dharamshala', 'Una', 'Kullu', 'Bilaspur', 'Hamirpur', 'Nahan', 'Sundarnagar'],
+  'Jharkhand': ['Ranchi', 'Jamshedpur', 'Dhanbad', 'Bokaro Steel City', 'Deoghar', 'Phusro', 'Hazaribagh', 'Giridih', 'Ramgarh', 'Medininagar'],
+  'Karnataka': ['Bangalore', 'Mysore', 'Hubli', 'Mangalore', 'Belgaum', 'Gulbarga', 'Davanagere', 'Bellary', 'Bijapur', 'Shimoga'],
+  'Kerala': ['Thiruvananthapuram', 'Kochi', 'Kozhikode', 'Thrissur', 'Kollam', 'Palakkad', 'Kannur', 'Kottayam', 'Alappuzha', 'Kollam'],
+  'Madhya Pradesh': ['Indore', 'Bhopal', 'Jabalpur', 'Gwalior', 'Ujjain', 'Sagar', 'Dewas', 'Satna', 'Ratlam', 'Rewa'],
+  'Maharashtra': ['Mumbai', 'Pune', 'Nagpur', 'Thane', 'Nashik', 'Aurangabad', 'Solapur', 'Kolhapur', 'Amravati', 'Nanded'],
+  'Manipur': ['Imphal', 'Thoubal', 'Bishnupur', 'Kakching', 'Nambol', 'Lilong', 'Wangoi', 'Sugnu', 'Lamsang', 'Mayang Imphal'],
+  'Meghalaya': ['Shillong', 'Tura', 'Nongstoin', 'Jowai', 'Baghmara', 'Williamnagar', 'Nongpoh', 'Resubelpara', 'Ampati', 'Mairang'],
+  'Mizoram': ['Aizawl', 'Lunglei', 'Saiha', 'Champhai', 'Kolasib', 'Serchhip', 'Lawngtlai', 'Saitual', 'Saitual', 'Khawhai'],
+  'Nagaland': ['Kohima', 'Dimapur', 'Mokokchung', 'Tuensang', 'Wokha', 'Zunheboto', 'Phek', 'Zunheboto', 'Kiphire', 'Longleng'],
+  'Odisha': ['Bhubaneswar', 'Cuttack', 'Rourkela', 'Brahmapur', 'Sambalpur', 'Puri', 'Balasore', 'Bhadrak', 'Baripada', 'Jeypore'],
+  'Punjab': ['Ludhiana', 'Amritsar', 'Jalandhar', 'Patiala', 'Bathinda', 'Mohali', 'Pathankot', 'Moga', 'Firozpur', 'Hoshiarpur'],
+  'Rajasthan': ['Jaipur', 'Jodhpur', 'Kota', 'Bikaner', 'Ajmer', 'Udaipur', 'Bhilwara', 'Alwar', 'Sikar', 'Pali'],
+  'Sikkim': ['Gangtok', 'Namchi', 'Mangan', 'Singtam', 'Gyalshing', 'Rangpo', 'Soreng', 'Jorethang', 'Nepalganj']
+};
+
 function PatientSignUp({ setShowSignUp }) {
   const [formData, setFormData] = useState({
     firstName: '',
@@ -19,6 +75,7 @@ function PatientSignUp({ setShowSignUp }) {
     pincode: '',
     username: '',
   });
+  const cityOptions = IndianCities[formData.state] || [];
 
   const [emailValidated, setEmailValidated] = useState(false);
   const [otpValidated, setOTPValidated] = useState(false);
@@ -26,6 +83,7 @@ function PatientSignUp({ setShowSignUp }) {
   const [pincodeError, setPincodeError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [formErrors, setFormErrors] = useState({});
+  const [otp, setOTP] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -48,8 +106,13 @@ function PatientSignUp({ setShowSignUp }) {
   };
 
   const handleOTPValidation = () => {
-    // Implement your OTP validation logic here
-    setOTPValidated(true); // Assuming OTP validation is successful
+    if (formData.emailOTP === otp) {
+      setOTPValidated(true);
+      console.log('OTP validated successfully');
+    } else {
+      setOTPValidated(false);
+      setFormErrors(prevErrors => ({ ...prevErrors, emailOTP: 'Invalid OTP' }));
+    }
   };
 
   const handleSendOTP = () => {
@@ -57,7 +120,17 @@ function PatientSignUp({ setShowSignUp }) {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (emailRegex.test(formData.email)) {
       setEmailValidated(true);
-      // Implement the logic to send OTP
+      const generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+    console.log('Generated OTP:', generatedOTP); // Log OTP (for development)
+    setOTP(generatedOTP); // Store OTP in state (for validation)
+
+    // Send the OTP to the user's email address using an email service
+    // Replace this with your actual email sending logic
+    console.log('Sending OTP to:', formData.email);
+    // Code to send OTP via email
+
+    // Set email validation status to true for demonstration
+      setEmailValidated(true);
       console.log('Sending OTP to:', formData.email);
     } else {
       setEmailValidated(false);
@@ -152,12 +225,14 @@ function PatientSignUp({ setShowSignUp }) {
           {formErrors.email && <span className="error">{formErrors.email}</span>}
         </label>
         <div className="otp-container">
-          <label>
-            Email OTP:
-            <input type="text" name="emailOTP" value={formData.emailOTP} onChange={handleChange} />
-          </label>
-          <button type="button" className="otp-button" onClick={handleOTPValidation}>Validate OTP</button>
-        </div>
+        <label>
+            Email OTP<span className="required">*</span>:
+           <input type="text" name="emailOTP" value={formData.emailOTP} onChange={handleChange} />
+              {formErrors.emailOTP && <span className="error">{formErrors.emailOTP}</span>}
+        </label>
+           <button type="button" className="otp-button" onClick={handleOTPValidation}>Validate OTP</button>
+           {otpValidated && <span style={{ color: 'green', marginLeft: '5px' }}>&#10004;</span>}
+         </div>
         <label>
           Phone Number<span className="required">*</span>:
           <input type="text" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} />
@@ -173,13 +248,26 @@ function PatientSignUp({ setShowSignUp }) {
         </label>
         <div className="city-state-container">
           <label>
-            City:
-            <input type="text" name="city" value={formData.city} onChange={handleChange} />
+            State:
+            <select name="state" value={formData.state} onChange={handleChange}>
+              <option value="">Select</option>
+              {IndianStates.map((state) => (
+                <option key={state} value={state}>
+                  {state}
+                </option>
+              ))}
+            </select>
           </label>
           <label>
-            State :
-            <input type="text" name="state" value={formData.state} onChange={handleChange} />
-            {/* {formErrors.state && <span className="error">{formErrors.state}</span>} */}
+            City:
+            <select name="city" value={formData.city} onChange={handleChange}>
+              <option value="">Select</option>
+              {cityOptions.map((city) => (
+                <option key={city} value={city}>
+                  {city}
+                </option>
+              ))}
+            </select>
           </label>
         </div>
         <label>

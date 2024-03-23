@@ -4,7 +4,8 @@ import './Login.css';
 function LabLogin({ setShowForgotPassword }) {
   const [formData, setFormData] = useState({
     userId: '',
-    password: ''
+    password: '',
+    role:'lab_technician'
   });
 
   const handleChange = (e) => {
@@ -36,7 +37,7 @@ function LabLogin({ setShowForgotPassword }) {
           <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} />
         </div>
         <button type="submit">Login</button>
-        <button type="button-85 " className="forgot-password-button" onClick={handleForgotPasswordClick}>Forgot Password</button>
+        <button type="button" className="forgot-password-button" onClick={handleForgotPasswordClick}>Forgot Password</button>
 
       </form>
     </div>
