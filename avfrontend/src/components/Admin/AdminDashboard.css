@@ -1,0 +1,40 @@
+/* Admin.css */
+
+.admin-container {
+  display: flex;
+  height: 100vh;
+}
+
+.admin-sidebar {
+  width: 20%;
+  background-color: #404040;;
+  padding: 20px;
+}
+
+.admin-sidebar h2 {
+  margin-bottom: 20px;
+}
+
+.admin-sidebar-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Align items to the center */
+}
+
+.admin-sidebar-button {
+  background-color:#00b7ac;
+  width: 100%; /* Set the width to 100% to fill the container */
+  margin-bottom: 40px; /* Add spacing between buttons */
+}
+
+.admin-main-content {
+  margin-top: 20px;
+  flex: 1;
+  padding: 20px;
+}
+
+.admin-sidebar h2 {
+  font-size: 15px;
+  margin-bottom: 20px;
+  color: white; /* Change text color to white */
+}
