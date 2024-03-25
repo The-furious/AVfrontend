@@ -1,7 +1,7 @@
-
+/* 
 row{
   height: 100dvh;
-}
+} */
 header {
   background-color: #4CAF50;
   color: white;
@@ -24,7 +24,7 @@ header {
 
 .sidebar {
   width: 20%;
-  background-color: #404040;
+  background-color: #f2f2f2 ;
   border-right: 4px solid #ccc;
   padding-right: 10px;
  
