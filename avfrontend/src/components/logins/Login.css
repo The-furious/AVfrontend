@@ -4,10 +4,9 @@
   margin-left: 382px;
   max-width: 400px;
   padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  margin-top: 30px;
+  background-color:  hsl(176, 65%, 86%);
+  border-radius: 10px;
+  margin-top: 100px;
 }
 .form-group input[type="text"],
 .form-group input[type="password"]{
@@ -27,6 +26,7 @@ h2 {
 label {
   display: block;
   margin-bottom: 5px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 input {
@@ -45,6 +45,7 @@ button {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  margin: 0 auto;
 }
 
 
@@ -53,7 +54,6 @@ button:hover {
 }
 
 .signup {
-  
   padding: 10px;
   background-color: #007bff;
   color: white;
@@ -64,14 +64,14 @@ button:hover {
 
 .forgot-password-button {
   width: 100%;
-  padding: 10px;
+  padding: 0 0 0 10px;
   background-color: transparent;
   color: #007bff;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   text-align: center;
-  margin-top: 10px; /* Add margin-top to create space */
+  margin: 0 20rem;
 }
 
 .forgot-password-button:hover {
