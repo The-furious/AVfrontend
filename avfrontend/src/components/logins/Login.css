@@ -9,7 +9,12 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   margin-top: 30px;
 }
-
+.form-group input[type="text"],
+.form-group input[type="password"]{
+  width: 100%; /* 100% of the available space within the form-group */
+  /* OR */
+  width: 90%; /* Fixed width in pixels */
+}
 h2 {
   text-align: center;
   margin-bottom: 20px;
