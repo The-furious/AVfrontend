@@ -91,3 +91,6 @@ button:hover {
   height: 45px;
   background-color: #00b7ac;
 }
+.sidebar-button.active{
+  background-color: #006861;
+}
