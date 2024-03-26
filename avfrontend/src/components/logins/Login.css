@@ -40,14 +40,15 @@ img{
   height: 10rem;
 }
 button {
-  width: 100%;
+  width: 40% !important;
+  height: 3rem;
   padding: 10px;
   background-color: #007bff;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  margin: 0 auto;
+  margin: 0 auto !important; 
 }
 .logo {
   align-items: center;
