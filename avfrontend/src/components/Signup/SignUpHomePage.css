@@ -1,4 +1,3 @@
-
 row{
   height: 100dvh;
 }
@@ -24,7 +23,7 @@ header {
 
 .sidebar {
   width: 20%;
-  background-color: #404040;
+  background-color: #f2f2f2 ;
   border-right: 4px solid #ccc;
   padding-right: 10px;
  
@@ -88,7 +87,10 @@ button:hover {
  width: 100%;
 }
 .sidebar-button{
-  width: 80%;
+  width: 80% !important;
   height: 45px;
   background-color: #00b7ac;
+}
+.sidebar-button.active{
+  background-color: #006861;
 }

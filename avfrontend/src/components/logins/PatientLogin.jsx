@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './Login.css';
-
+import PatientIcon from "../images/patient.jpeg"
 function PatientLogin({ setShowForgotPassword, setShowSignUp }) {
   const [formData, setFormData] = useState({
     userId: '',
@@ -33,6 +33,9 @@ function PatientLogin({ setShowForgotPassword, setShowSignUp }) {
 
   return (
     <div className="login-container">
+      <div className='logo'>
+      <img src={PatientIcon} alt='admin'/>
+      </div>
       <h2> Patient Login</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
@@ -48,7 +51,7 @@ function PatientLogin({ setShowForgotPassword, setShowSignUp }) {
           <button className='signup' onClick={handleSignUpClick}>Sign Up</button>
         </div>
       </form>
-      <button type="button" className="forgot-password-button" onClick={handleForgotPasswordClick}>Forgot Password</button>
+      <button className="forgot-password-button" onClick={handleForgotPasswordClick}>Forgot Password?</button>
     </div>
   );
 }

@@ -10,6 +10,7 @@
   top: 0;
   z-index: 1000;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 0 0 10px 10px;
 }
 
 .navbar__left {
@@ -18,9 +19,11 @@
 }
 
 .navbar__logo {
-  width: 100px; /* Adjust as needed */
-  height: auto; /* Ensures aspect ratio is maintained */
-  margin-right: 10px;
+  width: 100px; /* Adjust width and height as needed */
+  height: 100px; /* Adjust width and height as needed */
+  border-radius: 50%; /* Creates a circle */
+  object-fit: cover;
+  
 }
 
 .navbar__title {
@@ -45,7 +48,7 @@
 }
 
 .navbar__user-icon {
-  font-size: 24px;
+  font-size: 50px;
 }
 
 .navbar__dropdown {

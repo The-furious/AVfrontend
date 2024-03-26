@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Login.css';
 import ForgotPassword from './ForgotPassword/ForgotPassword'; // Import the ForgotPassword component
-
+import AdminIcon from '../images/admin.jpeg'
 function AdminLogin({ setShowForgotPassword }) {
   const [formData, setFormData] = useState({
     userId: '',
@@ -28,6 +28,9 @@ function AdminLogin({ setShowForgotPassword }) {
 
   return (
     <div className="login-container">
+      <div className='logo'>
+      <img src={AdminIcon} alt='admin'/>
+      </div>
       <h2> Admin Login</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
@@ -39,7 +42,7 @@ function AdminLogin({ setShowForgotPassword }) {
           <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} />
         </div>
         <button type="submit">Login</button>
-        <button type="button" className="forgot-password-button" onClick={handleForgotPasswordClick}>Forgot Password</button>
+        <button className="forgot-password-button" onClick={handleForgotPasswordClick}>Forgot Password?</button>
       </form>
     </div>
   );

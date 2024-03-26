@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Login.css';
 import { useNavigate } from 'react-router-dom';
-
+import RadiologistIcon from '../images/radiologist.jpg'
 function RadiologistLogin({ setShowForgotPassword }) {
   const [formData, setFormData] = useState({
     username: '',
@@ -55,6 +55,9 @@ function RadiologistLogin({ setShowForgotPassword }) {
 
   return (
     <div className="login-container">
+      <div className='logo'>
+      <img src={RadiologistIcon} alt='admin'/>
+      </div>
       <h2>Radiologist Login</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
@@ -78,13 +81,7 @@ function RadiologistLogin({ setShowForgotPassword }) {
           />
         </div>
         <button type="submit">Login</button>
-        <button
-          type="button"
-          className="forgot-password-button"
-          onClick={handleForgotPasswordClick}
-        >
-          Forgot Password
-        </button>
+        <button className="forgot-password-button" onClick={handleForgotPasswordClick}>Forgot Password?</button>
         {errorMessage && <div className="error-message">{errorMessage}</div>}
       </form>
     </div>

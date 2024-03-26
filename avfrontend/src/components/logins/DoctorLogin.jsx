@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
+import DoctorIcon from "../images/doctor.jpg"
 import EditCalendarIcon from '@mui/icons-material/EditCalendar';
 function DoctorLogin({ setShowForgotPassword}) {
   const [formData, setFormData] = useState({
@@ -34,7 +35,6 @@ function DoctorLogin({ setShowForgotPassword}) {
       if (!response.ok) {
         throw new Error('Invalid username or password');
       }
-
       const data = await response.json();
       const { token } = data;
       sessionStorage.setItem('jwtToken', token);
@@ -55,6 +55,9 @@ function DoctorLogin({ setShowForgotPassword}) {
 
   return (
     <div className="login-container">
+      <div className='logo'>
+      <img src={DoctorIcon} alt='admin'/>
+      </div>
       <h2>Doctor Login</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
@@ -67,7 +70,7 @@ function DoctorLogin({ setShowForgotPassword}) {
         </div>
         {errorMessage && <div className="error-message">{errorMessage}</div>} {/* Render error message */}
         <button type="submit">Login</button>
-        <button type="button" className="forgot-password-button" onClick={handleForgotPasswordClick}>Forgot Password</button>
+        <button className="forgot-password-button" onClick={handleForgotPasswordClick}>Forgot Password?</button>
       </form>
     </div>
   );

@@ -7,13 +7,14 @@
     list-style: none; 
     width: 20%;
     /* Sidebar background color */
-    background-color: #404040;
+    background-color: #f5f5f5;
     height: calc(100vh - 120px); /* Subtract the height of the navbar */
     position: sticky; /* Make the sidebar fixed */
     top: 120px; /* Position the sidebar below the navbar */
     overflow-y: auto; /* Enable vertical scrolling if content exceeds the height */
   
-   
+    align-items: center;
+    justify-content: center;
     
    
   }
@@ -25,13 +26,20 @@
   }
   
   .tab-button {
-    width: 300px;
-    margin-top: 30px;
+    width: 80%!important;
+    padding: 2px 2px;
+    margin-top: 30px!important;
+    margin-left: 1px!important;
     display: flex;
     flex-direction: column;
     background-color: #00b7ac;
+    align-items: center;
+    justify-content: center;
   }
-  
+  button{
+    padding: 2px 20px;
+    cursor: pointer;
+  }
   .tab-button button {
     margin-top: 40px;
     margin: 10px 25px;
@@ -47,8 +55,8 @@
     background-color: #0056b3;
   }
   
-  .active {
-    background-color: #0056b3;
+  .tab-button.active {
+    background-color: #006861;
   }
   
   
@@ -102,7 +110,7 @@
     display: flex;
     flex-direction: row;
     text-align: left;
-    width: calc(100% - 22px);
+    width: calc(100% - 22px) !important;
   }
   
   .value-tile:hover {
