@@ -5,7 +5,7 @@ import EditCalendarIcon from '@mui/icons-material/EditCalendar';
 import { useNavigate } from 'react-router-dom';
 
 const DoctorDashboard= ({handleValueTileClick}) => {
-    const [selectedTab, setSelectedTab] = useState(1);
+    const [selectedTab, setSelectedTab] = useState(0);
     const [content, setContent] = useState(null);
     const [consultancyDetails, setConsultancyDetails] = useState(null);
     const [historyDetails, setHistoryDetails] = useState(null);
