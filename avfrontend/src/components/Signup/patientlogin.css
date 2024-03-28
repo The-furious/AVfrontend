@@ -25,6 +25,16 @@ form {
   display: flex;
   justify-content: space-between;
 }
+.name-container > input{
+  padding: 8px;
+  width: 100px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  
+
+}
 
 label {
   margin-bottom: 10px;

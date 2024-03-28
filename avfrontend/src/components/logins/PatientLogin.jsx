@@ -1,12 +1,21 @@
 import React, { useState } from 'react';
 import './Login.css';
+<<<<<<< Updated upstream
+=======
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios'; // Import Axios
+import PatientIcon from "../images/patient.jpeg"
+>>>>>>> Stashed changes
 
 function PatientLogin({ setShowForgotPassword, setShowSignUp }) {
   const [formData, setFormData] = useState({
-    userId: '',
+    username: '',
     password: '',
-    role:'patient'
+    userType:'PATIENT'
   });
+  const [isPatientLoggedIn, setIsPatientLoggedIn] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -17,14 +26,29 @@ function PatientLogin({ setShowForgotPassword, setShowSignUp }) {
   };
   
   const handleForgotPasswordClick = () => {
-    setShowForgotPassword(true); // Set showForgotPassword to true when the "Forgot Password" button is clicked
+    setShowForgotPassword(true);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData); // You can do further processing with the form data here
+    try {
+      const response = await axios.post('http://localhost:8090/auth/login', formData); // Use Axios for POST request
+      console.log(response);
+      if (!response.data || !response.data.token) {
+        throw new Error('Invalid username or password');
+      }
 
-    
+      const { token } = response.data;
+
+      sessionStorage.setItem('jwtToken', token);
+      setIsPatientLoggedIn(true);
+      sessionStorage.setItem('isPatientLoggedIn', 'true');
+      sessionStorage.setItem('patientId', formData.username);
+      navigate(`/patient-dashboard/${formData.username}`);
+    } catch (error) {
+      console.error(error);
+      setErrorMessage('Invalid username or password');
+    }
   };
 
   const handleSignUpClick = () => {
@@ -33,11 +57,17 @@ function PatientLogin({ setShowForgotPassword, setShowSignUp }) {
 
   return (
     <div className="login-container">
+<<<<<<< Updated upstream
+=======
+      <div className='logo'>
+        <img src={PatientIcon} alt='admin'/>
+      </div>
+>>>>>>> Stashed changes
       <h2> Patient Login</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="userId">User ID:</label>
-          <input type="text" id="userId" name="userId" value={formData.userId} onChange={handleChange} />
+          <label htmlFor="username">User ID:</label>
+          <input type="text" id="username" name="username" value={formData.username} onChange={handleChange} />
         </div>
         <div className="form-group">
           <label htmlFor="password">Password:</label>
@@ -48,7 +78,12 @@ function PatientLogin({ setShowForgotPassword, setShowSignUp }) {
           <button className='signup' onClick={handleSignUpClick}>Sign Up</button>
         </div>
       </form>
+<<<<<<< Updated upstream
       <button type="button" className="forgot-password-button" onClick={handleForgotPasswordClick}>Forgot Password</button>
+=======
+      <button className="forgot-password-button" onClick={handleForgotPasswordClick}>Forgot Password?</button>
+      {errorMessage && <div className="error-message">{errorMessage}</div>}
+>>>>>>> Stashed changes
     </div>
   );
 }

@@ -27,6 +27,7 @@ header {
   background-color: #404040;
   border-right: 4px solid #ccc;
   padding-right: 10px;
+  top:57px;
  
   position: fixed; /* Make the sidebar fixed */
   height: 100%; /* Set the height of the sidebar to 100% of the viewport */
@@ -81,6 +82,7 @@ button:hover {
   height:auto;
   padding: 0;
   width: 100%;
+  padding-top: 72px;
 }
 .sidebar-row{
   text-align: center;

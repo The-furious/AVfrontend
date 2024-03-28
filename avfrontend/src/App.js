@@ -9,6 +9,11 @@ import DoctorDashboard from './components/Doctor/DoctorDashboard'
 import RadiologistDashboard from './components/Radiologist/RadiologistDashboard';
 import RadiologistConsultancyView from './components/Radiologist/RadiologistConsultancyView';
 import Navbar from './components/Navbar/Navbar';
+<<<<<<< Updated upstream
+=======
+import AdminDashboard from './components/Admin/AdminDashboard';
+import PatientDashboard from './components/Patient/PatientDashboard'
+>>>>>>> Stashed changes
 
 
 function App() {
@@ -19,10 +24,19 @@ function App() {
         <Navbar/>
         <Routes>
           <Route exact path="/" element={<SignupHomepage/>} />
+          <Route path="/admin-dashboard/:adminName" element={<AdminDashboard />} />
           <Route path="/doctor-dashboard/:doctorName" element={<DoctorDashboard />} />
           <Route path="/doctor-consultancy-view/:doctorName" element={<DoctorConsultancyView/>} />
           <Route path="/radiologist-dashboard/:radiologistName" element={<RadiologistDashboard />} />
           <Route path="/radiologist-consultancy-view/:radiologistName" element={<RadiologistConsultancyView/>} />
+<<<<<<< Updated upstream
+=======
+          {/* <Route path="/lab-dashboard/:labName" element={<LabDashboard />} /> */}
+          <Route path="/patient-dashboard/:patientName" element={<PatientDashboard />} />
+
+
+          
+>>>>>>> Stashed changes
           
         </Routes>
          

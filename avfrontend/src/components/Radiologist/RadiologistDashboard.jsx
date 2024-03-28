@@ -1,17 +1,42 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState,useEffect,useRef } from 'react';
 import Navbar from '../Navbar/Navbar';
 import "./RadiologistDashboard.css";
 import EditCalendarIcon from '@mui/icons-material/EditCalendar';
 import { useNavigate } from 'react-router-dom';
+import useMousePosition from '../useMousePosition';
 
 const RadiologistDashboard= () => {
-    const [selectedTab, setSelectedTab] = useState(1);
+    const [selectedTab, setSelectedTab] = useState(0);
     const [content, setContent] = useState(null);
     const [consultancyDetails, setConsultancyDetails] = useState(null);
     const [historyDetails, setHistoryDetails] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false); // State to manage user's authentication status
     const [newConsultancyUpdates, setNewConsultancyUpdates] = useState(false);
     const [newHistoryUpdates, setNewHistoryUpdates] = useState(false);
+    const [hoveredTileDetails, setHoveredTileDetails] = useState(null);
+    const [showPatientDetails, setShowPatientDetails] = useState(false);
+    const timerRef = useRef(null);
+    const mousePosition = useMousePosition();
+
+    const handleHoverTile = (details) => {
+      setHoveredTileDetails(details);
+      timerRef.current = setTimeout(() => setShowPatientDetails(true), 1000); // Set delay for 1 second
+  };
+
+  const handleMouseLeave = () => {
+    clearTimeout(timerRef.current);
+    setShowPatientDetails(false);
+};
+
+
+
+
+  useEffect(() => {
+    return () => {
+        clearTimeout(timerRef.current); // Clear timeout on component unmount
+    };
+}, []);
+
 
     const isRadiologistLoggedIn = sessionStorage.getItem('isRadiologistLoggedIn') === 'true';
     const RadiologistId=sessionStorage.getItem('RadiologistId'); 
@@ -102,6 +127,8 @@ const RadiologistDashboard= () => {
       const handleValueClick = (value) => {
         // Handle the click event for the value tile
         console.log(`Clicked value: ${value}`);
+        clearTimeout(timerRef.current); // Clear timeout on click
+        setShowPatientDetails(false);
       
 
         navigate(`/radiologist-consultancy-view/${RadiologistId}`);
@@ -181,6 +208,8 @@ const RadiologistDashboard= () => {
                             <button
                               className="value-tile"
                               onClick={() => handleValueClick()}
+                              onMouseEnter={() => handleHoverTile(detail)}
+                              onMouseLeave={handleMouseLeave}
                             >
                               {/* Values */}
                               <div>{detail.consultationNumber}</div>
@@ -188,7 +217,14 @@ const RadiologistDashboard= () => {
                               <div>{detail.startDate}</div>
                               <div>{detail.status}</div>
                             </button>
+                            {showPatientDetails && hoveredTileDetails === detail && (
+                                                <div className="patient-details-box"  style={{ left: mousePosition.x, top: mousePosition.y }}>
+                                                    <div>Name: {detail.patientName}</div>
+                                                    {/* Add more patient details here */}
+                                                </div>
+                                            )}
                           </div>
+                          
                         </div>
                       ))}
                   </div>
@@ -214,6 +250,8 @@ const RadiologistDashboard= () => {
                             <button
                               className="value-tile"
                               onClick={() => handleValueClick()}
+                              onMouseEnter={() => handleHoverTile(detail)}
+                              onMouseLeave={handleMouseLeave}
                             >
                               {/* Values */}
                               <div>{detail.consultationNumber}</div>
@@ -221,6 +259,12 @@ const RadiologistDashboard= () => {
                               <div>{detail.startDate}</div>
                               <div>{detail.status}</div>
                             </button>
+                            {showPatientDetails && hoveredTileDetails === detail && (
+                                                <div className="patient-details-box"  style={{ left: mousePosition.x, top: mousePosition.y }}>
+                                                    <div>Name: {detail.patientName}</div>
+                                                    {/* Add more patient details here */}
+                                                </div>
+                                            )}
                           </div>
                         </div>
                       ))}

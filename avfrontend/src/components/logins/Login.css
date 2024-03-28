@@ -4,10 +4,22 @@
   margin-left: 382px;
   max-width: 400px;
   padding: 20px;
+<<<<<<< Updated upstream
   border: 1px solid #ccc;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   margin-top: 30px;
+=======
+  background-color:  hsl(176, 65%, 86%);
+  border-radius: 10px;
+  margin-top: 63px;
+}
+.form-group input[type="text"],
+.form-group input[type="password"]{
+  width: 100%; /* 100% of the available space within the form-group */
+  /* OR */
+  width: 90%; /* Fixed width in pixels */
+>>>>>>> Stashed changes
 }
 
 h2 {

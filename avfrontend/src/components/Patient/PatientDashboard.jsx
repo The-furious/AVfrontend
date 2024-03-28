@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect } from 'react';
 import Navbar from '../Navbar/Navbar';
 import "./PatientDashboard.css";
 import EditCalendarIcon from '@mui/icons-material/EditCalendar';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { useNavigate } from 'react-router-dom';
 
 const PatientDashboard = ({ handleValueTileClick }) => {
     const [selectedTab, setSelectedTab] = useState(1);
@@ -12,6 +13,10 @@ const PatientDashboard = ({ handleValueTileClick }) => {
     const [newConsultancyUpdates, setNewConsultancyUpdates] = useState(false);
     const [newHistoryUpdates, setNewHistoryUpdates] = useState(false);
     const [activeButton, setActiveButton] = useState(null); // State to track active button
+
+    const isPatientLoggedIn = sessionStorage.getItem('isPatientLoggedIn') === 'true';
+    const PatientId=sessionStorage.getItem('PatientId'); 
+    const navigate = useNavigate();
 
     const handleRequestClick = () => {
         setSelectedTab(1);
@@ -71,6 +76,11 @@ const PatientDashboard = ({ handleValueTileClick }) => {
         // Show success message
         setContent('Success');
     };
+    useEffect(() => {
+        if (!isPatientLoggedIn) {
+            navigate('/');
+        }
+    }, [isPatientLoggedIn, navigate]);
 
     const handleChange = (event) => {
         // Handle form input changes
@@ -84,7 +94,7 @@ const PatientDashboard = ({ handleValueTileClick }) => {
 
     return (
         <>
-            <Navbar />
+            
             <div className="container-fluid">
                 <div className="doctor-dashboard-sidebar">
                     <ul className="dashboard-sidebar-list" style={{ listStyle: 'none' }}>
