@@ -9,8 +9,8 @@ import DoctorDashboard from './components/Doctor/DoctorDashboard'
 import RadiologistDashboard from './components/Radiologist/RadiologistDashboard';
 import RadiologistConsultancyView from './components/Radiologist/RadiologistConsultancyView';
 import Navbar from './components/Navbar/Navbar';
+import { LabTechnicianDashboard } from './components/LabTechnician/LabTechnicianDashboard';
 import AdminDashboard from './components/Admin/AdminDashboard';
-
 
 function App() {
   
@@ -24,8 +24,8 @@ function App() {
           <Route path="/doctor-consultancy-view/:doctorName" element={<DoctorConsultancyView/>} />
           <Route path="/radiologist-dashboard/:radiologistName" element={<RadiologistDashboard />} />
           <Route path="/radiologist-consultancy-view/:radiologistName" element={<RadiologistConsultancyView/>} />
+          <Route path="/lab-dashboard/:labName" element={<LabTechnicianDashboard />} />
           <Route path="/admin-dashboard/:adminName" element={<AdminDashboard />} />
-          
         </Routes>
          
       </div>
