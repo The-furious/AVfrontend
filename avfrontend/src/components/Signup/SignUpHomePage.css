@@ -29,7 +29,7 @@ header {
   top:57px;
  
   position: fixed; /* Make the sidebar fixed */
-  height: 100%; /* Set the height of the sidebar to 100% of the viewport */
+  height: 100% !important; /* Set the height of the sidebar to 100% of the viewport */
   overflow-y: auto; /* Enable vertical scrolling for the sidebar */
 }
 
