@@ -12,6 +12,8 @@ import Navbar from '../Navbar/Navbar';
 
 export const SignupHomepage = () => {
   const [selectedTab, setSelectedTab] = useState(1);
+  const [isSignupOpen, setIsSignupOpen] = useState(false);
+  
   const [showSignUp, setShowSignUp] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [passwordResetSuccess, setPasswordResetSuccess] = useState(false);
@@ -21,6 +23,12 @@ export const SignupHomepage = () => {
     setSelectedTab(tabNumber);
     setShowForgotPassword(false); // Reset showForgotPassword when changing tabs
     setPasswordResetSuccess(false); // Reset password reset success state when changing tabs
+
+    if (tabNumber === 3) {
+      setIsSignupOpen(false); // Set isSignupOpen to true when clicking on the Patient button
+    } else {
+      setIsSignupOpen(true); // Reset isSignupOpen for other tabs
+    }
   };
 
   // Function to handle password reset success
@@ -82,8 +90,8 @@ export const SignupHomepage = () => {
                   {selectedTab === 1 && showForgotPassword && <ForgotPassword onPasswordReset={() => handlePasswordResetSuccess('admin')} />}
                   {selectedTab === 2 && !showForgotPassword && <DoctorLogin setShowForgotPassword={setShowForgotPassword}  />}
                   {selectedTab === 2 && showForgotPassword && <ForgotPassword onPasswordReset={() => handlePasswordResetSuccess('doctor')} />}
-                  {selectedTab === 3 && !showForgotPassword && !showSignUp && <PatientLogin setShowForgotPassword={setShowForgotPassword} setShowSignUp={setShowSignUp} />}
-                  {selectedTab === 3 && showSignUp && <PatientSignUp setShowSignUp={setShowSignUp} />}
+                  {(selectedTab === 3 && !showForgotPassword && !isSignupOpen) && <PatientLogin setShowForgotPassword={setShowForgotPassword} setShowSignUp={setShowSignUp} setIsSignupOpen={setIsSignupOpen} />}
+                  {(selectedTab === 3 && isSignupOpen) && <PatientSignUp setShowSignUp={setShowSignUp} setIsSignupOpen={setIsSignupOpen} />}
                   {selectedTab === 3 && showForgotPassword && <ForgotPassword onPasswordReset={() => handlePasswordResetSuccess('patient')} />}
                   {selectedTab === 4 && !showForgotPassword && <RadiologistLogin setShowForgotPassword={setShowForgotPassword} />}
                   {selectedTab === 4 && showForgotPassword && <ForgotPassword onPasswordReset={() => handlePasswordResetSuccess('radiologist')} />}

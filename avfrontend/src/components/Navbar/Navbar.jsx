@@ -13,13 +13,19 @@ const Navbar = ({ personName }) => {
   };
 
   const handleLogoutClick = () => {
-    sessionStorage.setItem('isDoctorLoggedIn', 'false');
-    sessionStorage.setItem('isRadiologistLoggedIn', 'false');
-    sessionStorage.setItem('isLabLoggedIn', 'false');
+    sessionStorage.removeItem('isDoctorLoggedIn', 'false');
+    sessionStorage.removeItem('isRadiologistLoggedIn', 'false');
+    sessionStorage.removeItem('isLabLoggedIn', 'false');
+    sessionStorage.removeItem('isPatientLoggedIn', 'false');
+    sessionStorage.removeItem('isAdminLoggedIn', 'false');
+    
     sessionStorage.removeItem('DoctorId');
     sessionStorage.removeItem('RadiologistId');
+    sessionStorage.removeItem('PatientId');
+    sessionStorage.removeItem('AdminId');
     sessionStorage.removeItem('LabId');
 
+    sessionStorage.removeItem('jwtToken');
     setShowDropdown(false); // Close the dropdown on logout
     navigate('/');
   };
@@ -32,11 +38,18 @@ const Navbar = ({ personName }) => {
   useEffect(() => {
     const isDoctorLoggedIn = sessionStorage.getItem('isDoctorLoggedIn') === 'true';
     const isRadiologistLoggedIn = sessionStorage.getItem('isRadiologistLoggedIn') === 'true';
+    const isPatientLoggedIn = sessionStorage.getItem('isPatientLoggedIn') === 'true';
     const isLabLoggedIn = sessionStorage.getItem('isLabLoggedIn') === 'true';
-    if (!isDoctorLoggedIn && !isRadiologistLoggedIn && !isLabLoggedIn) {
+    const isAdminLoggedIn = sessionStorage.getItem('isRadiologistLoggedIn') === 'true';
+
+    if (!isDoctorLoggedIn && !isRadiologistLoggedIn && !isPatientLoggedIn && !isLabLoggedIn  && !isAdminLoggedIn) {
       setShowDropdown(false);
     }
   }, []);
+
+  const flag = sessionStorage.getItem('isDoctorLoggedIn') === 'true' ||
+  sessionStorage.getItem('isRadiologistLoggedIn') === 'true'||sessionStorage.getItem('isPatientLoggedIn') === 'true' ||
+  sessionStorage.getItem('isLabLoggedIn') === 'true'|| sessionStorage.getItem('isAdminLoggedIn') === 'true';
 
   return (
     <nav className="navbar">
@@ -45,6 +58,7 @@ const Navbar = ({ personName }) => {
         <span className="navbar__title">Arogya Varta</span>
       </div>
 
+      { flag ? (
       {sessionStorage.getItem('isDoctorLoggedIn') === 'true' ||
       sessionStorage.getItem('isRadiologistLoggedIn') === 'true'
       || sessionStorage.getItem('isLabLoggedIn') === 'true'? (

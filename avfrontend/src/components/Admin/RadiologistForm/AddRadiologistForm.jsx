@@ -1,27 +1,164 @@
 import React, { useState } from 'react';
 import './AddRadiologistForm.css'; // Import CSS file
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function AddRadiologistForm() {
   // State variables for form fields and popup visibility
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  // const [profilePhotoUrl, setProfilePhotoUrl] = useState('');
+  const [contactNumber, setContactNumber] = useState('');
+  const [address, setAddress] = useState('');
+  const [specialization, setSpecialization] = useState('');
+  const [licenseNumber, setLicenseNumber] = useState('');
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
-  const [userFirstName, setUserFirstName] = useState('');
-  const [userLastName, setUserLastName] = useState('');
   const [showPopup, setShowPopup] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const isAdminLoggedIn = sessionStorage.getItem('isAdminLoggedIn') === 'true';
+  const AdminId = sessionStorage.getItem('AdminId');
+  const navigate = useNavigate();
 
   // Function to handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you can perform any action with the form data, such as sending it to a server
-    console.log('Form submitted:', { userName, password, userFirstName, userLastName });
-    // Show the popup
-    setShowPopup(true);
+
+    
+    // Prepare the data object to send
+    const formData = {
+     name: name,
+     email: email,
+      // profilePhotoUrl,
+     contactNumber: contactNumber,
+      address:address,
+      specialization,
+     licenseNumber: licenseNumber,
+      username: userName,
+     password: password,
+    };
+
+    try {
+      // Send a POST request to the server with the JWT token
+      const token = sessionStorage.getItem('jwtToken');
+      const response = await axios.post('http://localhost:8090/admin/createRadiologist', formData, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Attach the JWT token to the Authorization header
+        },
+      });
+
+      console.log('Form submitted:', response.data);
+
+      // Show the popup
+      setShowPopup(true);
+
+
+      setUserName('');
+      setPassword(''); 
+      setName('');
+      setEmail('');
+      setContactNumber('');
+      setAddress('');
+      setSpecialization('');
+      setLicenseNumber('');
+    } catch (error) {
+      console.error('Error submitting form:', error.response);
+      // Handle error scenarios (e.g., show an error message to the user)
+      if (error.response && error.response.data && error.response.data.message) {
+        setErrorMessage(error.response.data.message);
+      } else {
+        setErrorMessage('An error occurred while submitting the form. Please try again later.');
+      }
+    }
   };
 
   return (
     <div className="container">
       <h1>Radiologist Registration Form</h1>
       <form onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label htmlFor="name">Name:</label>
+          <input
+            type="text"
+            id="name"
+            className="form-control"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+
+          />
+            
+
+        </div>
+        <div className="form-group">
+          <label htmlFor="email">Email:</label>
+          <input
+            type="email"
+            id="email"
+            className="form-control"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+
+          />
+            
+
+        </div>
+        {/* <div className="form-group">
+          <label htmlFor="profilePhotoUrl">Profile Photo URL:</label>
+          <input
+            type="text"
+            id="profilePhotoUrl"
+            className="form-control"
+            value={profilePhotoUrl}
+            onChange={(e) => setProfilePhotoUrl(e.target.value)}
+          />
+        </div> */}
+        <div className="form-group">
+          <label htmlFor="contactNumber">Contact Number:</label>
+          <input
+            type="text"
+            id="contactNumber"
+            className="form-control"
+            value={contactNumber}
+            onChange={(e) => setContactNumber(e.target.value)}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="address">Address:</label>
+          <input
+            type="text"
+            id="address"
+            className="form-control"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="specialization">Specialization:</label>
+          <input
+            type="text"
+            id="specialization"
+            className="form-control"
+            value={specialization}
+            onChange={(e) => setSpecialization(e.target.value)}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="licenseNumber">License Number:</label>
+          <input
+            type="text"
+            id="licenseNumber"
+            className="form-control"
+            value={licenseNumber}
+            onChange={(e) => setLicenseNumber(e.target.value)}
+            required
+          />
+        </div>
         <div className="form-group">
           <label htmlFor="userName">Username:</label>
           <input
@@ -30,6 +167,7 @@ function AddRadiologistForm() {
             className="form-control"
             value={userName}
             onChange={(e) => setUserName(e.target.value)}
+            required
           />
         </div>
         <div className="form-group">
@@ -40,31 +178,17 @@ function AddRadiologistForm() {
             className="form-control"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="userFirstName">First Name:</label>
-          <input
-            type="text"
-            id="userFirstName"
-            className="form-control"
-            value={userFirstName}
-            onChange={(e) => setUserFirstName(e.target.value)}
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="userLastName">Last Name:</label>
-          <input
-            type="text"
-            id="userLastName"
-            className="form-control"
-            value={userLastName}
-            onChange={(e) => setUserLastName(e.target.value)}
+            required
           />
         </div>
         <button type="submit" className="btn btn-primary">Submit</button>
       </form>
-      
+      {errorMessage && (
+        <div className="error-message">
+          {errorMessage}
+        </div>
+      )}
+
       {/* Popup */}
       {showPopup && (
         <div className="popup">
@@ -77,5 +201,4 @@ function AddRadiologistForm() {
     </div>
   );
 }
-
 export default AddRadiologistForm;

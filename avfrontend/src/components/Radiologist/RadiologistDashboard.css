@@ -124,3 +124,21 @@ button:hover {
     }
   
 }     
+
+.patient-details-box {
+  display: block;
+  position: absolute;
+
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+ 
+  z-index: 1; /* Set a high z-index value to ensure it appears over other elements */
+}
+
+
+
+.value-tile:hover .patient-details-box {
+  display: block;
+}

@@ -11,6 +11,7 @@ import RadiologistConsultancyView from './components/Radiologist/RadiologistCons
 import Navbar from './components/Navbar/Navbar';
 import { LabTechnicianDashboard } from './components/LabTechnician/LabTechnicianDashboard';
 import AdminDashboard from './components/Admin/AdminDashboard';
+import PatientDashboard from './components/Patient/PatientDashboard'
 
 function App() {
   
@@ -20,6 +21,7 @@ function App() {
         <Navbar/>
         <Routes>
           <Route exact path="/" element={<SignupHomepage/>} />
+          <Route path="/admin-dashboard/:adminName" element={<AdminDashboard />} />
           <Route path="/doctor-dashboard/:doctorName" element={<DoctorDashboard />} />
           <Route path="/doctor-consultancy-view/:doctorName" element={<DoctorConsultancyView/>} />
           <Route path="/radiologist-dashboard/:radiologistName" element={<RadiologistDashboard />} />
