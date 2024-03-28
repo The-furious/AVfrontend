@@ -1,8 +1,9 @@
 /* Admin.css */
 
 .admin-container {
+  top: 120px;
   display: flex;
-  height: 100vh;
+  height: calc(100vh - 100px);
 }
 
 .admin-sidebar {
@@ -28,9 +29,10 @@
 }
 
 .admin-main-content {
-  margin-top: 20px;
+
   flex: 1;
   padding: 20px;
+  overflow-y: scroll;
 }
 
 .admin-sidebar h2 {

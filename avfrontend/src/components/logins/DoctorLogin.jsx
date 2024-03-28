@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios'; // Import Axios
 import './Login.css';
 import DoctorIcon from "../images/doctor.jpg"
-import EditCalendarIcon from '@mui/icons-material/EditCalendar';
-function DoctorLogin({ setShowForgotPassword}) {
+
+function DoctorLogin({ setShowForgotPassword }) {
   const [formData, setFormData] = useState({
     username: '',
     password: '',
-    role: 'doctor',
+    userType: 'DOCTOR',
   });
   const [errorMessage, setErrorMessage] = useState('');
-  const [isDoctorLoggedIn, setIsDoctorLoggedIn] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -21,34 +21,28 @@ function DoctorLogin({ setShowForgotPassword}) {
     }));
   };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:8090/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-      });
+      const response = await axios.post('http://localhost:8090/auth/login', formData); // Use Axios for POST request
       console.log(response);
-      if (!response.ok) {
+      if (!response.data || !response.data.token) {
         throw new Error('Invalid username or password');
       }
-      const data = await response.json();
-      const { token } = data;
+
+      const { token } = response.data;
       sessionStorage.setItem('jwtToken', token);
       console.log('Login successful'); // For demo, log successful login
-      setIsDoctorLoggedIn(true); // Set isLoggedIn to true when login is successful
-      sessionStorage.setItem('isDoctorLoggedIn', 'true'); 
-      sessionStorage.setItem('DoctorId', formData.userId); 
-      navigate(`/doctor-dashboard/${formData.username}`);// Set doctorLoggedIn to true when login is successful
-    } catch{
+      sessionStorage.setItem('isDoctorLoggedIn', 'true');
+      sessionStorage.setItem('DoctorId', formData.username);
+      navigate(`/doctor-dashboard/${formData.username}`); // Navigate to doctor dashboard
+    } catch (error) {
+      console.error(error);
       console.log('Invalid username or password'); // For demo, log invalid login attempt
       setErrorMessage('Invalid username or password'); // Set error message
     }
   };
-  
+
   const handleForgotPasswordClick = () => {
     setShowForgotPassword(true); // Set showForgotPassword to true when the "Forgot Password" button is clicked
   };
@@ -56,21 +50,22 @@ function DoctorLogin({ setShowForgotPassword}) {
   return (
     <div className="login-container">
       <div className='logo'>
-      <img src={DoctorIcon} alt='admin'/>
+        <img src={DoctorIcon} alt='admin'/>
       </div>
       <h2>Doctor Login</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="username">User ID:</label>
-          <input type="text" id="username" name="username" value={formData.userId} onChange={handleChange} />
+          <input type="text" id="username" name="username" value={formData.username} onChange={handleChange} />
         </div>
         <div className="form-group">
           <label htmlFor="password">Password:</label>
           <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} />
         </div>
-        {errorMessage && <div className="error-message">{errorMessage}</div>} {/* Render error message */}
         <button type="submit">Login</button>
         <button className="forgot-password-button" onClick={handleForgotPasswordClick}>Forgot Password?</button>
+        {errorMessage && <div className="error-message">{errorMessage}</div>} {/* Render error message */}
+
       </form>
     </div>
   );

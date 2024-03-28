@@ -98,6 +98,22 @@ export const RadiologistConsultancyView = () => {
               <div className="message">Chat message 2</div>
               <div className="message">Chat message 2</div>
               <div className="message">Chat message 2</div>
+              <div className="message">Chat message 1</div>
+              <div className="message">Chat message 2</div>
+              <div className="message">Chat message 2</div>
+              <div className="message">Chat message 2</div>
+              <div className="message">Chat message 2</div>
+              <div className="message">Chat message 2</div>
+              <div className="message">Chat message 2</div>
+              <div className="message">Chat message 2</div>
+              <div className="message">Chat message 1</div>
+              <div className="message">Chat message 2</div>
+              <div className="message">Chat message 2</div>
+              <div className="message">Chat message 2</div>
+              <div className="message">Chat message 2</div>
+              <div className="message">Chat message 2</div>
+              <div className="message">Chat message 2</div>
+              <div className="message">Chat message 2</div>
 
               {/* Add more chat messages as needed */}
     </div>

@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import AddDoctorForm from './DoctorForm/AddDoctorForm';
 import AddRadiologistForm from './RadiologistForm/AddRadiologistForm';
 import './AdminDashboard.css'; // Import CSS file for Admin component styling
+import { useNavigate } from 'react-router-dom';
 
 const AdminDashboard = () => {
   const [showDoctorForm, setShowDoctorForm] = useState(false);
   const [showRadiologistForm, setShowRadiologistForm] = useState(false);
   const [redirectToAdmin, setRedirectToAdmin] = useState(false);
+  const isAdminLoggedIn = sessionStorage.getItem('isAdminLoggedIn') === 'true';
+    const AdminId=sessionStorage.getItem('AdminId'); 
+    const navigate = useNavigate(); 
 
   const handleDoctorButtonClick = () => {
     setShowDoctorForm(true);
@@ -24,17 +28,16 @@ const AdminDashboard = () => {
     setRedirectToAdmin(true);
   };
 
-  // Redirect to /admin if redirectToAdmin is true
-  if (redirectToAdmin) {
-    window.location.href = '/admin';
-    // Alternatively, you can use history.push('/admin') if you have access to history object
-    return null; // Render nothing because we are redirecting
-  }
+  useEffect(() => {
+    if (!isAdminLoggedIn) {
+        navigate('/');
+    }
+}, [isAdminLoggedIn, navigate]);
 
   return (
     <div className="admin-container">
       <div className="admin-sidebar">
-        <h2>Admin Panel</h2>
+        
         <div className="admin-sidebar-buttons">
           <button className="admin-button admin-sidebar-button" onClick={handleDoctorButtonClick}>Add Doctor</button>
           <button className="admin-button admin-sidebar-button" onClick={handleRadiologistButtonClick}>Add Radiologist</button>

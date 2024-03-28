@@ -81,12 +81,32 @@ export const DoctorConsultancyView = () => {
           <button className="prev-btn" onClick={handlePrevImage}>&lt; Previous</button>
           <button className="next-btn" onClick={handleNextImage}>Next &gt;</button>
         </div>
+        <div className="annotations">
+          {/* Add your annotation content here */}
+          <p>This is an annotation for the selected image.</p>
+        </div>
       </div>
     </div>
   )}
   {!selectedImage && (
     <div className="chat-box">
               {/* Render chat messages here */}
+              <div className="message">Chat message 1</div>
+              <div className="message">Chat message 2</div>
+              <div className="message">Chat message 2</div>
+              <div className="message">Chat message 2</div>
+              <div className="message">Chat message 2</div>
+              <div className="message">Chat message 2</div>
+              <div className="message">Chat message 2</div>
+              <div className="message">Chat message 2</div>
+              <div className="message">Chat message 1</div>
+              <div className="message">Chat message 2</div>
+              <div className="message">Chat message 2</div>
+              <div className="message">Chat message 2</div>
+              <div className="message">Chat message 2</div>
+              <div className="message">Chat message 2</div>
+              <div className="message">Chat message 2</div>
+              <div className="message">Chat message 2</div>
               <div className="message">Chat message 1</div>
               <div className="message">Chat message 2</div>
               <div className="message">Chat message 2</div>

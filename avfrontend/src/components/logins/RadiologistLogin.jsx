@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import './Login.css';
 import { useNavigate } from 'react-router-dom';
-import RadiologistIcon from '../images/radiologist.jpg'
+import RadiologistIcon from '../images/radiologist.jpg';
+import axios from 'axios'; // Import Axios
+
 function RadiologistLogin({ setShowForgotPassword }) {
   const [formData, setFormData] = useState({
     username: '',
     password: '',
-    role : 'radiologist'
+    userType: 'RADIOLOGIST'
   });
   const [errorMessage, setErrorMessage] = useState('');
   const [isRadiologistLoggedIn, setIsRadiologistLoggedIn] = useState(false);
@@ -27,26 +29,19 @@ function RadiologistLogin({ setShowForgotPassword }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:8090/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-      });
-      console.log(response);
-      if (!response.ok) {
+      const response = await axios.post('http://localhost:8090/auth/login', formData);
+      
+      if (!response.data || !response.data.token) {
         throw new Error('Invalid username or password');
       }
 
-      const data = await response.json();
-      const { token } = data; // Assuming the token is provided in the response data
+      const { token } = response.data;
 
       sessionStorage.setItem('jwtToken', token);
       setIsRadiologistLoggedIn(true);
       sessionStorage.setItem('isRadiologistLoggedIn', 'true');
-      sessionStorage.setItem('radiologistId', formData.userId);
-      navigate(`/radiologist-dashboard/${formData.userId}`);
+      sessionStorage.setItem('radiologistId', formData.username);
+      navigate(`/radiologist-dashboard/${formData.username}`);
     } catch (error) {
       console.error(error);
       setErrorMessage('Invalid username or password');
@@ -56,7 +51,7 @@ function RadiologistLogin({ setShowForgotPassword }) {
   return (
     <div className="login-container">
       <div className='logo'>
-      <img src={RadiologistIcon} alt='admin'/>
+        <img src={RadiologistIcon} alt='admin' />
       </div>
       <h2>Radiologist Login</h2>
       <form onSubmit={handleSubmit}>
