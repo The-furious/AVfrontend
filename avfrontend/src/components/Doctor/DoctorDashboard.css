@@ -180,7 +180,7 @@
   .search-bar {
     display: flex; /* Use flexbox for search bar */
     align-items: center; /* Center items vertically */
-    padding-left: 617px;
+    padding-left: 910px;
   }
   
   .search-bar input {

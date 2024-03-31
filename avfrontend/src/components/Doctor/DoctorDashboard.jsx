@@ -186,21 +186,26 @@ const [filteredHistoryDetails, setFilteredHistoryDetails] = useState(null); // A
     
     const handleSearch = () => {
       // Perform search based on searchInput for consultancy details
-      const filteredConsultancy = consultancyDetails.filter(
+      if (selectedTab === 1) {
+        const filteredConsultancy = consultancyDetails.filter(
           (detail) =>
-              detail.consultationNumber.includes(searchInput) ||
-              detail.patientName.toLowerCase().includes(searchInput.toLowerCase())
-      );
-      setFilteredConsultancyDetails(filteredConsultancy);
-
+            detail.consultationNumber.includes(searchInput) ||
+            detail.patientName.toLowerCase().includes(searchInput.toLowerCase())
+        );
+        setFilteredConsultancyDetails(filteredConsultancy);
+      }
+    
       // Perform search based on searchInput for history details
-      const filteredHistory = historyDetails.filter(
+      if (selectedTab === 2) {
+        const filteredHistory = historyDetails.filter(
           (detail) =>
-              detail.consultationNumber.includes(searchInput) ||
-              detail.patientName.toLowerCase().includes(searchInput.toLowerCase())
-      );
-      setFilteredHistoryDetails(filteredHistory);
-  };
+            detail.consultationNumber.includes(searchInput) ||
+            detail.patientName.toLowerCase().includes(searchInput.toLowerCase())
+        );
+        setFilteredHistoryDetails(filteredHistory);
+      }
+    };
+    
 
   useEffect(() => {
     // Set filteredConsultancyDetails to all consultancy details when the component first renders
@@ -326,7 +331,7 @@ useEffect(() => {
                 {selectedTab === 2 && content && (
                   <div>
                      <div className="consultancy-header">
-                     <h2>Consultancy</h2>
+                     <h2>History</h2>
                      <div className="search-bar">
                        <input
                          type="text"
