@@ -20,6 +20,12 @@ const DoctorDashboard= ({handleValueTileClick}) => {
 
     const [hoveredTileDetails, setHoveredTileDetails] = useState(null);
     const [showPatientDetails, setShowPatientDetails] = useState(false);
+
+    const [searchInput, setSearchInput] = useState('');
+const [filteredConsultancyDetails, setFilteredConsultancyDetails] = useState(null);
+const [filteredHistoryDetails, setFilteredHistoryDetails] = useState(null); // Add state for filtered history details
+
+
    
     const timerRef = useRef(null);
     const mousePosition = useMousePosition();
@@ -78,6 +84,9 @@ const DoctorDashboard= ({handleValueTileClick}) => {
             status: "Cancelled",
           },
         ]);
+        setFilteredConsultancyDetails(consultancyDetails);
+        
+       
         setHistoryDetails(null); // Clear history details when switching tabs
         setNewConsultancyUpdates(false); // Reset notification badge
       };
@@ -113,6 +122,8 @@ const DoctorDashboard= ({handleValueTileClick}) => {
             status: "Completed",
           },
         ]);
+        setFilteredHistoryDetails(historyDetails); // Initialize filtered history details
+
         setConsultancyDetails(null); // Clear consultancy details when switching tabs
         setNewHistoryUpdates(false); // Reset notification badge
       };
@@ -133,6 +144,47 @@ const DoctorDashboard= ({handleValueTileClick}) => {
             clearTimeout(timerRef.current); // Clear timeout on component unmount
         };
     }, []);
+    const handleSearchInputChange = (e) => {
+      const inputValue = e.target.value;
+      setSearchInput(inputValue);
+    
+      // Update filtered consultancy details based on search input
+      if (inputValue.trim() !== '') {
+        const filteredDetails = consultancyDetails.filter(
+          (detail) =>
+            detail.consultationNumber.includes(inputValue) ||
+            detail.patientName.toLowerCase().includes(inputValue.toLowerCase())
+        );
+        setFilteredConsultancyDetails(filteredDetails);
+      } else {
+        // If search input is empty, render all consultancy details
+        setFilteredConsultancyDetails(consultancyDetails);
+      }
+    };
+    
+    const handleSearch = () => {
+      // Perform search based on searchInput for consultancy details
+      const filteredConsultancy = consultancyDetails.filter(
+          (detail) =>
+              detail.consultationNumber.includes(searchInput) ||
+              detail.patientName.toLowerCase().includes(searchInput.toLowerCase())
+      );
+      setFilteredConsultancyDetails(filteredConsultancy);
+
+      // Perform search based on searchInput for history details
+      const filteredHistory = historyDetails.filter(
+          (detail) =>
+              detail.consultationNumber.includes(searchInput) ||
+              detail.patientName.toLowerCase().includes(searchInput.toLowerCase())
+      );
+      setFilteredHistoryDetails(filteredHistory);
+  };
+
+  useEffect(() => {
+    // Set filteredConsultancyDetails to all consultancy details when the component first renders
+    setFilteredConsultancyDetails(consultancyDetails);
+}, [consultancyDetails]);
+    
 
      
       
@@ -188,50 +240,78 @@ const DoctorDashboard= ({handleValueTileClick}) => {
              {/* Main content goes here */}
 
             
-             {selectedTab === 1 && content && (
-                  <div>
-                    <h2>Consultancy</h2>
-                    {consultancyDetails &&
-                      consultancyDetails.map((detail, index) => (
-                        <div className="tile" key={index}>
-                          <div className="consultancy-details">
-                            <div className="attribute-tile">
-                              {/* Attribute names */}
-                              <div className="attribute-name">
-                                Consultation Number:
-                              </div>
-                              <div className="attribute-name">
-                                Patient Name:
-                              </div>
-                              <div className="attribute-name">Start Date:</div>
-                              <div className="attribute-name">Status:</div>
-                            </div>
-                            <button
-                              className="value-tile"
-                              onClick={() => handleValueClick()}
-                              onMouseEnter={() => handleHoverTile(detail)}
-                              onMouseLeave={handleMouseLeave}
-                            >
-                              {/* Values */}
-                              <div>{detail.consultationNumber}</div>
-                              <div>{detail.patientName}</div>
-                              <div>{detail.startDate}</div>
-                              <div>{detail.status}</div>
-                            </button>
-                            {showPatientDetails && hoveredTileDetails === detail && (
-                                                <div className="patient-details-box"  style={{ left: mousePosition.x, top: mousePosition.y }}>
+                    {selectedTab === 1 && content && (
+                      <div>
+                     
+                     <div className="consultancy-header">
+                     <h2>Consultancy</h2>
+                     <div className="search-bar">
+                       <input
+                         type="text"
+                         placeholder="Search"
+                         value={searchInput}
+                         onChange={handleSearchInputChange}
+                       />
+                       <button className="search-button" onClick={() => handleSearch()}>
+                         Search
+                       </button>
+                     </div>
+                   </div>
+                            
+                            {filteredConsultancyDetails &&
+                                filteredConsultancyDetails.map((detail, index) => (
+                                    <div className="tile" key={index}>
+                                        <div className="consultancy-details">
+                                            <div className="attribute-tile">
+                                                {/* Attribute names */}
+                                                <div className="attribute-name">
+                                                    Consultation Number:
+                                                </div>
+                                                <div className="attribute-name">
+                                                    Patient Name:
+                                                </div>
+                                                <div className="attribute-name">Start Date:</div>
+                                                <div className="attribute-name">Status:</div>
+                                            </div>
+                                            <button
+                                                className="value-tile"
+                                                onClick={() => handleValueClick(detail.consultationNumber, detail.patientName)}
+                                                onMouseEnter={() => handleHoverTile(detail)}
+                                                onMouseLeave={handleMouseLeave}
+                                            >
+                                                {/* Values */}
+                                                <div>{detail.consultationNumber}</div>
+                                                <div>{detail.patientName}</div>
+                                                <div>{detail.startDate}</div>
+                                                <div>{detail.status}</div>
+                                            </button>
+                                            {showPatientDetails && hoveredTileDetails === detail && (
+                                                <div className="patient-details-box" style={{ left: mousePosition.x, top: mousePosition.y }}>
                                                     <div>Name: {detail.patientName}</div>
                                                     {/* Add more patient details here */}
                                                 </div>
                                             )}
-                          </div>
+                                        </div>
+                                    </div>
+                                ))}
                         </div>
-                      ))}
-                  </div>
-                )}
+                    )}
                 {selectedTab === 2 && content && (
                   <div>
-                    <h2>History</h2>
+                     <div className="consultancy-header">
+                     <h2>Consultancy</h2>
+                     <div className="search-bar">
+                       <input
+                         type="text"
+                         placeholder="Search"
+                         value={searchInput}
+                         onChange={handleSearchInputChange}
+                       />
+                       <button className="search-button" onClick={() => handleSearch()}>
+                         Search
+                       </button>
+                     </div>
+                   </div>
                     {historyDetails &&
                       historyDetails.map((detail, index) => (
                         <div className="tile" key={index}>

@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState,useEffect ,useRef } from 'react';
 import './DoctorConsultancyView.css';
 import image1 from "../images/image1.jpg";
 import image2 from "../images/image2.jpg";
@@ -12,8 +12,32 @@ export const DoctorConsultancyView = () => {
     const [textInputValue, setTextInputValue] = useState('');
     const [overlayImages, setOverlayImages] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
+   
+    const [zoomLevel, setZoomLevel] = useState(1);
+    const [overlayPosition, setOverlayPosition] = useState({ x: 0, y: 0 });
+    const [isDragging, setIsDragging] = useState(false);
+    const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
     const navigate = useNavigate();
     const isDoctorLoggedIn = sessionStorage.getItem('isDoctorLoggedIn') === 'true';
+    const chatBoxRef = useRef(null);
+
+    const [chatMessages, setChatMessages] = useState([
+        { id: 1, text: "Hello!", sender: "patient" },
+        { id: 2, text: "Hi, Doctor!", sender: "doctor" },
+        { id: 3, text: "How can I help you today?", sender: "doctor" },
+        { id: 4, text: "I have some medical reports to discuss.", sender: "patient" },
+        { id: 5, text: "Sure, please send them over.", sender: "doctor" },
+    ]);
+
+    useEffect(() => {
+        const screenWidth = window.innerWidth;
+        const screenHeight = window.innerHeight;
+        const overlayWidth = 400; // Adjust as needed
+        const overlayHeight = 300; // Adjust as needed
+        const initialX = (screenWidth - overlayWidth) / 2;
+        const initialY = 200; // 200px from top
+        setOverlayPosition({ x: initialX, y: initialY });
+    }, []);
     
 
     useEffect(() => {
@@ -38,14 +62,7 @@ export const DoctorConsultancyView = () => {
       setSelectedImage(null);
     };
   
-    const handleSendMessage = () => {
-      if (textInputValue.trim() !== "") {
-        // Handle sending message here
-        console.log("Message sent:", textInputValue);
-        // Clear text input after sending message
-        setTextInputValue('');
-      }
-    };
+  
   
     const handlePrevImage = () => {
       setCurrentIndex((prevIndex) => (prevIndex === 0 ? overlayImages.length - 1 : prevIndex - 1));
@@ -55,6 +72,56 @@ export const DoctorConsultancyView = () => {
     const handleNextImage = () => {
       setCurrentIndex((prevIndex) => (prevIndex === overlayImages.length - 1 ? 0 : prevIndex + 1));
       setSelectedImage(overlayImages[currentIndex]);
+    };
+
+    const handleMouseDown = (e) => {
+        setIsDragging(true);
+        setDragStart({ x: e.clientX - overlayPosition.x, y: e.clientY - overlayPosition.y });
+    };
+
+    const handleMouseMove = (e) => {
+        if (isDragging) {
+            const newX = e.clientX - dragStart.x;
+            const newY = e.clientY - dragStart.y;
+            setOverlayPosition({ x: newX, y: newY });
+        }
+    };
+
+    const handleMouseUp = () => {
+        setIsDragging(false);
+    };
+
+    const overlayContainerStyle = {
+        transform: `scale(${zoomLevel})`,
+        left: `${overlayPosition.x}px`,
+        top: `${overlayPosition.y}px`,
+        cursor: isDragging ? 'grabbing' : 'grab',
+    };
+
+    useEffect(() => {
+        // Scroll the chat box to the bottom after every render
+        if (chatBoxRef.current) {
+            chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
+        }
+    });
+
+    const handleSendMessage = () => {
+        if (textInputValue.trim() !== "") {
+            const newMessage = {
+                id: chatMessages.length + 1,
+                text: textInputValue.trim(),
+                sender: 'doctor', // Assuming the sender is the doctor
+            };
+            setChatMessages([...chatMessages, newMessage]);
+            setTextInputValue('');
+
+            if (chatBoxRef.current) {
+                chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
+            }
+
+
+            
+        }
     };
   
     return (
@@ -71,16 +138,18 @@ export const DoctorConsultancyView = () => {
           <div className="content1">
           
           {selectedImage && (
-    <div className="image-overlay-container">
+    <div className="image-overlay-container" style={overlayContainerStyle} onMouseDown={handleMouseDown} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
       <div className="image-overlay">
         <span className="close-btn" onClick={handleCloseImage}>&times;</span>
         <div className="overlay-content">
           <img src={selectedImage} alt="Selected" className="overlay-image" />
         </div>
         <div className="overlay-buttons">
-          <button className="prev-btn" onClick={handlePrevImage}>&lt; Previous</button>
-          <button className="next-btn" onClick={handleNextImage}>Next &gt;</button>
-        </div>
+                                    <button className="zoom-in-btn" onClick={() => setZoomLevel((prevZoomLevel) => prevZoomLevel + 0.1)}>Zoom In</button>
+                                    <button className="zoom-out-btn" onClick={() => setZoomLevel((prevZoomLevel) => prevZoomLevel - 0.1)}>Zoom Out</button>
+                                    <button className="prev-btn" onClick={handlePrevImage}>&lt; Previous</button>
+                                    <button className="next-btn" onClick={handleNextImage}>Next &gt;</button>
+                                </div>
         <div className="annotations">
           {/* Add your annotation content here */}
           <p>This is an annotation for the selected image.</p>
@@ -89,41 +158,19 @@ export const DoctorConsultancyView = () => {
     </div>
   )}
   {!selectedImage && (
-    <div className="chat-box">
-              {/* Render chat messages here */}
-              <div className="message">Chat message 1</div>
-              <div className="message">Chat message 2</div>
-              <div className="message">Chat message 2</div>
-              <div className="message">Chat message 2</div>
-              <div className="message">Chat message 2</div>
-              <div className="message">Chat message 2</div>
-              <div className="message">Chat message 2</div>
-              <div className="message">Chat message 2</div>
-              <div className="message">Chat message 1</div>
-              <div className="message">Chat message 2</div>
-              <div className="message">Chat message 2</div>
-              <div className="message">Chat message 2</div>
-              <div className="message">Chat message 2</div>
-              <div className="message">Chat message 2</div>
-              <div className="message">Chat message 2</div>
-              <div className="message">Chat message 2</div>
-              <div className="message">Chat message 1</div>
-              <div className="message">Chat message 2</div>
-              <div className="message">Chat message 2</div>
-              <div className="message">Chat message 2</div>
-              <div className="message">Chat message 2</div>
-              <div className="message">Chat message 2</div>
-              <div className="message">Chat message 2</div>
-              <div className="message">Chat message 2</div>
-
-              {/* Add more chat messages as needed */}
-    </div>
+    <div className="chat-box"  ref={chatBoxRef}>
+    {chatMessages.map((message) => (
+        <div key={message.id} className={`message ${message.sender === 'doctor' ? 'right' : 'left'}`}>
+            {message.text}
+        </div>
+    ))}
+</div>
     )}
   
   
   
              <div className="text-input">
-              <input
+              <textarea
                 type="text"
                 placeholder="Type your message here..."
                 value={textInputValue}

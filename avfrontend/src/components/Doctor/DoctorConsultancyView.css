@@ -283,7 +283,7 @@ height: 100%; /* Allow the image height to adjust proportionally */
 .text-input {
   display: flex;
   align-items: center; /* Center items horizontally */
-  margin-top: 20px; /* Adjust the top margin */
+  margin-top: 5px; /* Adjust the top margin */
 }
 
 .text-input input {
@@ -305,15 +305,24 @@ height: 100%; /* Allow the image height to adjust proportionally */
 }
 
 /* Even messages align to the right */
-.message:nth-child(even) {
+/* .message:nth-child(even) {
   align-self: flex-end;
   background-color: #e2f0cb; /* Example background color for even messages */
-}
+/* } */ 
 
-/* Odd messages align to the left */
+/* Odd messages align to the left
 .message:nth-child(odd) {
   align-self: flex-start;
   background-color: #bde0fe; /* Example background color for odd messages */
+/* } */
+.message.right {
+  background-color: #e2f0cb;
+  align-self: flex-end; /* Aligns messages on the right to the left */
+} 
+
+.message.left {
+  background-color: #bde0fe;
+  align-self: flex-start;
 }
 
 .text-input {

@@ -247,17 +247,10 @@ height: 100%; /* Allow the image height to adjust proportionally */
   max-width: 70%; /* Adjust as needed */
 }
 
-/* Even messages align to the right */
-.message:nth-child(even) {
-  align-self: flex-end;
-  background-color: #e2f0cb; /* Example background color for even messages */
-}
 
-/* Odd messages align to the left */
-.message:nth-child(odd) {
-  align-self: flex-start;
-  background-color: #bde0fe; /* Example background color for odd messages */
-}
+
+
+
 
 .text-input {
   display: flex;
@@ -288,4 +281,15 @@ height: 100%; /* Allow the image height to adjust proportionally */
 
 .text-input button:hover {
   background-color: #45a049; /* Darker shade of button color on hover */
+}
+.text-input textarea {
+  width: 100%;
+  min-height: 50px; /* Set the initial minimum height */
+  padding: 10px;
+  resize: vertical; /* Allow vertical resizing */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 10px;
 }

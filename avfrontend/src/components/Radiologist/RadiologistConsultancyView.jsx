@@ -16,6 +16,7 @@ export const RadiologistConsultancyView = () => {
     const navigate = useNavigate();
     const isRadiologistLoggedIn = sessionStorage.getItem('isRadiologistLoggedIn') === 'true';
     
+    
 
     useEffect(() => {
       if (!isRadiologistLoggedIn) {
@@ -119,9 +120,8 @@ export const RadiologistConsultancyView = () => {
     </div>
     )}
 
-       <div className="text-input">
-              <input
-                type="text"
+<div className="text-input">
+              <textarea
                 placeholder="Type your message here..."
                 value={textInputValue}
                 onChange={(e) => setTextInputValue(e.target.value)}
