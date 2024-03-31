@@ -122,6 +122,7 @@ const [filteredHistoryDetails, setFilteredHistoryDetails] = useState(null); // A
             status: "Completed",
           },
         ]);
+        
         setFilteredHistoryDetails(historyDetails); // Initialize filtered history details
 
         setConsultancyDetails(null); // Clear consultancy details when switching tabs
@@ -144,7 +145,9 @@ const [filteredHistoryDetails, setFilteredHistoryDetails] = useState(null); // A
             clearTimeout(timerRef.current); // Clear timeout on component unmount
         };
     }, []);
-    const handleSearchInputChange = (e) => {
+
+
+    const handleSearchInputChangeConsultancy = (e) => {
       const inputValue = e.target.value;
       setSearchInput(inputValue);
     
@@ -156,9 +159,28 @@ const [filteredHistoryDetails, setFilteredHistoryDetails] = useState(null); // A
             detail.patientName.toLowerCase().includes(inputValue.toLowerCase())
         );
         setFilteredConsultancyDetails(filteredDetails);
+        
       } else {
         // If search input is empty, render all consultancy details
         setFilteredConsultancyDetails(consultancyDetails);
+      }
+    };
+    const handleSearchInputChangeHistory = (e) => {
+      const inputValue = e.target.value;
+      setSearchInput(inputValue);
+    
+      // Update filtered consultancy details based on search input
+      if (inputValue.trim() !== '') {
+        const filteredDetails = historyDetails.filter(
+          (detail) =>
+            detail.consultationNumber.includes(inputValue) ||
+            detail.patientName.toLowerCase().includes(inputValue.toLowerCase())
+        );
+        setFilteredHistoryDetails(filteredDetails);
+        
+      } else {
+        // If search input is empty, render all consultancy details
+        setFilteredHistoryDetails(historyDetails);
       }
     };
     
@@ -184,6 +206,11 @@ const [filteredHistoryDetails, setFilteredHistoryDetails] = useState(null); // A
     // Set filteredConsultancyDetails to all consultancy details when the component first renders
     setFilteredConsultancyDetails(consultancyDetails);
 }, [consultancyDetails]);
+
+useEffect(() => {
+  // Set filteredConsultancyDetails to all consultancy details when the component first renders
+  setFilteredHistoryDetails(historyDetails);
+}, [historyDetails]);
     
 
      
@@ -250,7 +277,7 @@ const [filteredHistoryDetails, setFilteredHistoryDetails] = useState(null); // A
                          type="text"
                          placeholder="Search"
                          value={searchInput}
-                         onChange={handleSearchInputChange}
+                         onChange={handleSearchInputChangeConsultancy}
                        />
                        <button className="search-button" onClick={() => handleSearch()}>
                          Search
@@ -305,15 +332,15 @@ const [filteredHistoryDetails, setFilteredHistoryDetails] = useState(null); // A
                          type="text"
                          placeholder="Search"
                          value={searchInput}
-                         onChange={handleSearchInputChange}
+                         onChange={handleSearchInputChangeHistory}
                        />
                        <button className="search-button" onClick={() => handleSearch()}>
                          Search
                        </button>
                      </div>
                    </div>
-                    {historyDetails &&
-                      historyDetails.map((detail, index) => (
+                    {filteredHistoryDetails &&
+                      filteredHistoryDetails.map((detail, index) => (
                         <div className="tile" key={index}>
                           <div className="consultancy-details">
                             <div className="attribute-tile">

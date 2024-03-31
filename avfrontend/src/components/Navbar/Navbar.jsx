@@ -13,19 +13,7 @@ const Navbar = ({ personName }) => {
   };
 
   const handleLogoutClick = () => {
-    sessionStorage.removeItem('isDoctorLoggedIn', 'false');
-    sessionStorage.removeItem('isRadiologistLoggedIn', 'false');
-    sessionStorage.removeItem('isLabLoggedIn', 'false');
-    sessionStorage.removeItem('isPatientLoggedIn', 'false');
-    sessionStorage.removeItem('isAdminLoggedIn', 'false');
-    
-    sessionStorage.removeItem('DoctorId');
-    sessionStorage.removeItem('RadiologistId');
-    sessionStorage.removeItem('PatientId');
-    sessionStorage.removeItem('AdminId');
-    sessionStorage.removeItem('LabId');
-
-    sessionStorage.removeItem('jwtToken');
+    sessionStorage.clear(); // Clear all sessionStorage items
     setShowDropdown(false); // Close the dropdown on logout
     navigate('/');
   };
@@ -40,16 +28,19 @@ const Navbar = ({ personName }) => {
     const isRadiologistLoggedIn = sessionStorage.getItem('isRadiologistLoggedIn') === 'true';
     const isPatientLoggedIn = sessionStorage.getItem('isPatientLoggedIn') === 'true';
     const isLabLoggedIn = sessionStorage.getItem('isLabLoggedIn') === 'true';
-    const isAdminLoggedIn = sessionStorage.getItem('isRadiologistLoggedIn') === 'true';
+    const isAdminLoggedIn = sessionStorage.getItem('isAdminLoggedIn') === 'true';
 
-    if (!isDoctorLoggedIn && !isRadiologistLoggedIn && !isPatientLoggedIn && !isLabLoggedIn  && !isAdminLoggedIn) {
+    if (!isDoctorLoggedIn && !isRadiologistLoggedIn && !isPatientLoggedIn && !isLabLoggedIn && !isAdminLoggedIn) {
       setShowDropdown(false);
     }
   }, []);
 
-  const flag = sessionStorage.getItem('isDoctorLoggedIn') === 'true' ||
-  sessionStorage.getItem('isRadiologistLoggedIn') === 'true'||sessionStorage.getItem('isPatientLoggedIn') === 'true' ||
-  sessionStorage.getItem('isLabLoggedIn') === 'true'|| sessionStorage.getItem('isAdminLoggedIn') === 'true';
+  const flag =
+    sessionStorage.getItem('isDoctorLoggedIn') === 'true' ||
+    sessionStorage.getItem('isRadiologistLoggedIn') === 'true' ||
+    sessionStorage.getItem('isPatientLoggedIn') === 'true' ||
+    sessionStorage.getItem('isLabLoggedIn') === 'true' ||
+    sessionStorage.getItem('isAdminLoggedIn') === 'true';
 
   return (
     <nav className="navbar">
@@ -58,25 +49,25 @@ const Navbar = ({ personName }) => {
         <span className="navbar__title">Arogya Varta</span>
       </div>
 
-      { flag ? (
-      {sessionStorage.getItem('isDoctorLoggedIn') === 'true' ||
-      sessionStorage.getItem('isRadiologistLoggedIn') === 'true'
-      || sessionStorage.getItem('isLabLoggedIn') === 'true'? (
-        <div className="navbar__right">
-          <div className="navbar__user" onClick={toggleDropdown}>
-            <span className="navbar__username">{personName}</span>
-            <FaUser className="navbar__user-icon" />
-          </div>
-          {showDropdown && (
-            <div className="navbar__dropdown">
-              <ul>
-                <li onClick={handleProfileClick}>Your Profile</li>
-                <li onClick={handleLogoutClick}>Logout</li>
-              </ul>
+      {flag &&
+        (sessionStorage.getItem('isDoctorLoggedIn') === 'true' ||
+          sessionStorage.getItem('isRadiologistLoggedIn') === 'true' ||
+          sessionStorage.getItem('isLabLoggedIn') === 'true') && (
+          <div className="navbar__right">
+            <div className="navbar__user" onClick={toggleDropdown}>
+              <span className="navbar__username">{personName}</span>
+              <FaUser className="navbar__user-icon" />
             </div>
-          )}
-        </div>
-      ) : null}
+            {showDropdown && (
+              <div className="navbar__dropdown">
+                <ul>
+                  <li onClick={handleProfileClick}>Your Profile</li>
+                  <li onClick={handleLogoutClick}>Logout</li>
+                </ul>
+              </div>
+            )}
+          </div>
+        )}
     </nav>
   );
 };
