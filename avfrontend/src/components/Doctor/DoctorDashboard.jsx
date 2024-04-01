@@ -287,7 +287,7 @@ useEffect(() => {
                      <h2>Consultancy</h2>
                      <div className="search-bar">
                        <input
-                         type="text"
+                         type="text" className="searching"
                          placeholder="Search"
                          value={searchInput}
                          onChange={handleSearchInputChangeConsultancy}

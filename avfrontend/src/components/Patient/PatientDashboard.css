@@ -1,0 +1,180 @@
+.container-fluid {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.doctor-dashboard-sidebar {
+  list-style: none;
+  width: 20%;
+  /* Sidebar background color */
+  background-color: #f2f2f2;
+  height: calc(100vh - 120px); /* Subtract the height of the navbar */
+  position: sticky; /* Make the sidebar fixed */
+  top: 120px; /* Position the sidebar below the navbar */
+  overflow-y: auto; /* Enable vertical scrolling if content exceeds the height */
+ 
+}
+
+.doctor-dashboard-content {
+  max-width:80%;
+  width: 80%;
+  background-color: #ffffff; /* Content background color */
+}
+
+.tab-buttons {
+  width: 220px;
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  background-color: #00b7ac;
+}
+
+
+
+
+.tab-buttons>button {
+  margin-top: 40px;
+  margin: 10px 25px;
+  padding: 10px;
+  width: 300px;
+  cursor: pointer;
+  background-color: #00b7ac;
+  color: white;
+  border: none;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.active {
+  background-color:#0056b3;
+}
+
+
+.tile {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.consultancy-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.attribute-tile {
+  display: flex;
+  
+  border-bottom: 1px solid #ccc; /* Add border to separate attribute and value tiles */
+  overflow-x: auto; /* Enable horizontal scrolling if attributes exceed the width */
+}
+
+.value-tile {
+  display: flex;
+ 
+}
+
+.attribute-name {
+  flex: 0 0 25%; /* Each attribute takes up 25% of the width */
+  font-weight: bold;
+  padding: 5px;
+  white-space: nowrap; /* Prevent attribute names from wrapping */
+  overflow: hidden; /* Hide any overflow */
+  text-overflow: ellipsis; /* Show ellipsis for overflowed text */
+}
+
+.value-tile > div {
+  flex: 0 0 25%; /* Each value takes up 25% of the width */
+  padding: 5px;
+  color: black;
+}
+
+.value-tile {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 5px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  text-align: left;
+  width: calc(100% - 22px);
+}
+
+.value-tile:hover {
+  background-color: #f0f0f0;
+}
+.active {
+  background-color: #0056b3;
+}
+
+
+@media screen and (min-width: 768px) {
+  /* Apply styles only for screens larger than 768px width */
+  .doctor-dashboard-content {
+    width: 80%;
+    max-width: none; /* Reset max-width */
+  margin-left: 0;
+  }
+  .tab-button {
+      margin-top: 30px;
+      width:80%; /* Override width to 100% for screens narrower than 992px */
+    }
+  
+
+    .form-container {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background-color: #f9f9f9;
+    }
+    
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    
+    button[type="submit"] {
+      background-color: #00b7ac;
+      color: white;
+      padding: 10px 20px;
+      border: none; /* */
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    
+    button[type="submit"]:hover {
+      background-color: #0056b3;
+    }
+    
+    .success-message {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-top: 20px;
+      font-size: 24px;
+      color: green;
+    }  
+      
+}     

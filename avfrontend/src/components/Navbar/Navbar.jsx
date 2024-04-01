@@ -66,9 +66,7 @@ const Navbar = ({ personName }) => {
       </div>
 
       {flag &&
-        (sessionStorage.getItem('isDoctorLoggedIn') === 'true' ||
-          sessionStorage.getItem('isRadiologistLoggedIn') === 'true' ||
-          sessionStorage.getItem('isLabLoggedIn') === 'true') && (
+         (
           <div className="navbar__right">
             <div className="navbar__user" onClick={toggleDropdown} ref={dropdownRef}>
               <span className="navbar__username">{personName}</span>
