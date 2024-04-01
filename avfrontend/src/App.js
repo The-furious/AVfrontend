@@ -9,7 +9,7 @@ import DoctorDashboard from './components/Doctor/DoctorDashboard'
 import RadiologistDashboard from './components/Radiologist/RadiologistDashboard';
 import RadiologistConsultancyView from './components/Radiologist/RadiologistConsultancyView';
 import Navbar from './components/Navbar/Navbar';
-import { LabTechnicianDashboard } from './components/LabTechnician/LabTechnicianDashboard';
+import LabTechnicianDashboard  from './components/LabTechnician/LabTechnicianDashboard';
 import AdminDashboard from './components/Admin/AdminDashboard';
 import PatientDashboard from './components/Patient/PatientDashboard'
 

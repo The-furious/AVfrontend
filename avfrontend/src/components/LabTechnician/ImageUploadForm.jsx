@@ -47,6 +47,8 @@ function ImageUploadForm() {
   };
 
   return (
+    <div className="image-uploder">
+    <h2>Upload Image</h2>
     <form className="image-upload-form" onSubmit={handleSubmit}>
       <div>
         <label htmlFor="consultationId">Consultation Id:</label>
@@ -89,6 +91,7 @@ function ImageUploadForm() {
       </div>
       <button type="submit">Upload Images</button>
     </form>
+    </div>
   );
 }
 
