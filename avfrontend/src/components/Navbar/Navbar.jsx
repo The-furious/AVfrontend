@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useRef } from 'react';
 import { FaUser } from 'react-icons/fa';
 import './navbar.css';
 import ArogyaVartaIcon from '../images/ArogyaVartaIcon.jpeg';
@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 const Navbar = ({ personName }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const navigate = useNavigate();
+  const dropdownRef = useRef(null);
 
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
@@ -23,6 +24,8 @@ const Navbar = ({ personName }) => {
     // Add your logic for handling the "Your Profile" action
   };
 
+ 
+
   useEffect(() => {
     const isDoctorLoggedIn = sessionStorage.getItem('isDoctorLoggedIn') === 'true';
     const isRadiologistLoggedIn = sessionStorage.getItem('isRadiologistLoggedIn') === 'true';
@@ -34,6 +37,19 @@ const Navbar = ({ personName }) => {
       setShowDropdown(false);
     }
   }, []);
+ 
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [dropdownRef]);
 
   const flag =
     sessionStorage.getItem('isDoctorLoggedIn') === 'true' ||
@@ -54,12 +70,12 @@ const Navbar = ({ personName }) => {
           sessionStorage.getItem('isRadiologistLoggedIn') === 'true' ||
           sessionStorage.getItem('isLabLoggedIn') === 'true') && (
           <div className="navbar__right">
-            <div className="navbar__user" onClick={toggleDropdown}>
+            <div className="navbar__user" onClick={toggleDropdown} ref={dropdownRef}>
               <span className="navbar__username">{personName}</span>
               <FaUser className="navbar__user-icon" />
             </div>
             {showDropdown && (
-              <div className="navbar__dropdown">
+              <div className="navbar__dropdown" ref={dropdownRef}>
                 <ul>
                   <li onClick={handleProfileClick}>Your Profile</li>
                   <li onClick={handleLogoutClick}>Logout</li>

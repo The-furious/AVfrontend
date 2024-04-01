@@ -39,7 +39,7 @@ const RadiologistDashboard= () => {
 
 
     const isRadiologistLoggedIn = sessionStorage.getItem('isRadiologistLoggedIn') === 'true';
-    const RadiologistId=sessionStorage.getItem('RadiologistId'); 
+    const RadiologistId=sessionStorage.getItem('radiologistId'); 
     const navigate = useNavigate(); 
 
     const handleConsultancyClick = () => {

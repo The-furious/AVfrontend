@@ -7,7 +7,7 @@ import useMousePosition from '../useMousePosition';
 
 
 const DoctorDashboard= ({handleValueTileClick}) => {
-    const [selectedTab, setSelectedTab] = useState(0);
+    const [selectedTab, setSelectedTab] = useState(1);
     const [content, setContent] = useState(null);
     const [consultancyDetails, setConsultancyDetails] = useState(null);
     const [historyDetails, setHistoryDetails] = useState(null);
@@ -216,6 +216,14 @@ useEffect(() => {
   // Set filteredConsultancyDetails to all consultancy details when the component first renders
   setFilteredHistoryDetails(historyDetails);
 }, [historyDetails]);
+
+useEffect(() => {
+  if (selectedTab === 1) {
+      handleConsultancyClick(); // Render consultancy content when tab 1 is selected
+  } else if (selectedTab === 2) {
+      handleHistoryClick(); // Render history content when tab 2 is selected
+  }
+}, [selectedTab]);
     
 
      
@@ -361,7 +369,7 @@ useEffect(() => {
                             </div>
                             <button
                               className="value-tile"
-                              onClick={() => handleValueClick()}
+                              
                               onMouseEnter={() => handleHoverTile(detail)}
                               onMouseLeave={handleMouseLeave}
                             >
