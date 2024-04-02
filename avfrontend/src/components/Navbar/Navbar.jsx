@@ -57,11 +57,7 @@ const Navbar = ({ personName }) => {
         <img src={ArogyaVartaIcon} alt="Logo" className="navbar__logo" />
         <span className="navbar__title">Arogya Varta</span>
       </div>
-
       { flag ? (
-      {sessionStorage.getItem('isDoctorLoggedIn') === 'true' ||
-      sessionStorage.getItem('isRadiologistLoggedIn') === 'true'
-      || sessionStorage.getItem('isLabLoggedIn') === 'true'? (
         <div className="navbar__right">
           <div className="navbar__user" onClick={toggleDropdown}>
             <span className="navbar__username">{personName}</span>
@@ -78,7 +74,7 @@ const Navbar = ({ personName }) => {
         </div>
       ) : null}
     </nav>
-  );
-};
+    );
+}
 
 export default Navbar;
