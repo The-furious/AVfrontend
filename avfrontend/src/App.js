@@ -26,6 +26,7 @@ function App() {
           <Route path="/doctor-consultancy-view/:doctorName" element={<DoctorConsultancyView/>} />
           <Route path="/radiologist-dashboard/:radiologistName" element={<RadiologistDashboard />} />
           <Route path="/radiologist-consultancy-view/:radiologistName" element={<RadiologistConsultancyView/>} />
+          <Route path="/patient-dashboard/:patientName" element={<PatientDashboard />} />
           <Route path="/lab-dashboard/:labName" element={<LabTechnicianDashboard />} />
           <Route path="/admin-dashboard/:adminName" element={<AdminDashboard />} />
           <Route path="/patient-dashboard/:patientName" element={<PatientDashboard />} />

@@ -1,4 +1,4 @@
-import React, { useState , useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '../Navbar/Navbar';
 import "./PatientDashboard.css";
 import EditCalendarIcon from '@mui/icons-material/EditCalendar';
@@ -15,7 +15,7 @@ const PatientDashboard = ({ handleValueTileClick }) => {
     const [activeButton, setActiveButton] = useState(null); // State to track active button
 
     const isPatientLoggedIn = sessionStorage.getItem('isPatientLoggedIn') === 'true';
-    const PatientId=sessionStorage.getItem('PatientId'); 
+    const PatientId = sessionStorage.getItem('PatientId');
     const navigate = useNavigate();
 
     const handleRequestClick = () => {
@@ -94,9 +94,9 @@ const PatientDashboard = ({ handleValueTileClick }) => {
 
     return (
         <>
-            
+
             <div className="container-fluid">
-                <div className="doctor-dashboard-sidebar">
+                <div className="patient-dashboard-sidebar">
                     <ul className="dashboard-sidebar-list" style={{ listStyle: 'none' }}>
                         <li>
                             <button
@@ -139,7 +139,7 @@ const PatientDashboard = ({ handleValueTileClick }) => {
                         </li>
                     </ul>
                 </div>
-                <div className="doctor-dashboard-content">
+                <div className="patient-dashboard-content">
                     {/* Main content goes here */}
                     {content === 'Success' ? (
                         <div className="success-message">
@@ -231,30 +231,30 @@ const PatientDashboard = ({ handleValueTileClick }) => {
                                                                 </div>
                                                                 <div className="attribute-name">Radiologist ID:
                                                                 </div>
-<div className="attribute-name">Status:</div>
-</div>
-<button
-className="value-tile"
-onClick={() => handleValueClick()}
->
-<div>{detail.consultationNumber}</div>
-<div>{detail.doctorId}</div>
-<div>{detail.radiologistId}</div>
-<div>{detail.status}</div>
-</button>
-</div>
-</div>
-))}
-</div>
-)}
-</>
-)}
-</>
-)}
-</div>
-</div>
-</>
-);
+                                                                <div className="attribute-name">Status:</div>
+                                                            </div>
+                                                            <button
+                                                                className="value-tile"
+                                                                onClick={() => handleValueClick()}
+                                                            >
+                                                                <div>{detail.consultationNumber}</div>
+                                                                <div>{detail.doctorId}</div>
+                                                                <div>{detail.radiologistId}</div>
+                                                                <div>{detail.status}</div>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                        </div>
+                                    )}
+                                </>
+                            )}
+                        </>
+                    )}
+                </div>
+            </div>
+        </>
+    );
 }
 
 export default PatientDashboard;
