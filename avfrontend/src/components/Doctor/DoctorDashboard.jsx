@@ -4,6 +4,7 @@ import "./DoctorDashboard.css";
 import EditCalendarIcon from '@mui/icons-material/EditCalendar';
 import { useNavigate } from 'react-router-dom';
 import useMousePosition from '../useMousePosition';
+import PatientDetails from '../Patient/PatientDetails';
 
 
 const DoctorDashboard= ({handleValueTileClick}) => {
@@ -48,14 +49,14 @@ const [filteredHistoryDetails, setFilteredHistoryDetails] = useState(null); // A
         setConsultancyDetails([
           {
             consultationNumber: "1234",
-            patientName: "John Doe",
+            patientName: "patient",
             startDate: "2024-02-14",
             status: "Work in Progress",
             newUpdate: true // Indicate new update
           },
           {
             consultationNumber: "5678",
-            patientName: "Jane Smith",
+            Name: "Jane Smith",
             startDate: "2024-02-15",
             status: "Scheduled",
           },
@@ -105,7 +106,7 @@ const [filteredHistoryDetails, setFilteredHistoryDetails] = useState(null); // A
           },
           {
             consultationNumber: "5678",
-            patientName: "Jane Smith",
+            patientName: "patient",
             startDate: "2024-02-15",
             status: "Completed",
           },
@@ -327,8 +328,8 @@ useEffect(() => {
                                             </button>
                                             {showPatientDetails && hoveredTileDetails === detail && (
                                                 <div className="patient-details-box" style={{ left: mousePosition.x, top: mousePosition.y }}>
-                                                    <div>Name: {detail.patientName}</div>
-                                                    {/* Add more patient details here */}
+                                                   <PatientDetails patient={detail.patientName} />
+                                                    
                                                 </div>
                                             )}
                                         </div>
