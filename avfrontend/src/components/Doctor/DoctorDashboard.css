@@ -18,6 +18,10 @@
     
    
   }
+  .consultancy-header h2 {
+    margin-right: 20px;
+    padding-left: 33px;
+}
   
   .doctor-dashboard-content {
     max-width:80%;
@@ -133,4 +137,61 @@
         width:80%; /* Override width to 100% for screens narrower than 992px */
       }
     
-  }     
+  } 
+  
+  .search-bar {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-top: 20px;
+  }
+  
+  /* Styling for the search input */
+  input[type="text"] {
+    flex: 1;
+    padding: 8px;
+    margin-right: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+  }
+  
+  /* Styling for the search button */
+  .search-button {
+    padding: 8px 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .search-button:hover {
+    background-color: #45a049;
+  }
+
+
+
+  .consultancy-header {
+    display: flex; /* Use flexbox */
+    align-items: center; /* Center items vertically */
+  }
+  
+  .consultancy-header h2 {
+    margin-right: 20px; /* Adjust margin between elements */
+  }
+  
+  .search-bar {
+    display: flex; /* Use flexbox for search bar */
+    align-items: center; /* Center items vertically */
+    padding-left: 910px;
+  }
+  
+  .search-bar input {
+    margin-right: 10px; /* Adjust margin between input and button */
+  }
+  
+  .search-button {
+    padding: 8px 12px; /* Adjust button padding */
+  }
+  

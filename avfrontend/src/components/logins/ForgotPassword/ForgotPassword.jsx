@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import './forgotPassword.css';
 
 function ForgotPassword({ onPasswordReset }) {
@@ -8,39 +9,72 @@ function ForgotPassword({ onPasswordReset }) {
   const [repeatPassword, setRepeatPassword] = useState('');
   const [otpValidated, setOtpValidated] = useState(false);
   const [passwordMatchError, setPasswordMatchError] = useState('');
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpError, setOtpError] = useState('');
+  const [resetPasswordError, setResetPasswordError] = useState('');
+  const [passwordResetSuccess, setPasswordResetSuccess] = useState(false);
 
-  const handleSendOtp = () => {
-    // Implement logic to send OTP to the email
-    // For now, let's just log the email and generate a random OTP
-    console.log('Sending OTP to:', email);
-    const generatedOtp = Math.floor(1000 + Math.random() * 9000); // Generate random 4-digit OTP
-    console.log('Generated OTP:', generatedOtp);
-    // You can send the OTP to the email here
+  const clearErrors = () => {
+    setTimeout(() => {
+      setOtpError('');
+      setResetPasswordError('');
+      setPasswordMatchError('');
+    }, 2000); // 5000 milliseconds = 5 seconds
   };
 
-  const handleValidateOtp = () => {
-    // Implement OTP validation logic
-    // For now, let's just check if the entered OTP matches the expected OTP
-    const expectedOtp = 1234; // Assume the expected OTP is 1234
-    if (parseInt(otp) === expectedOtp) {
-      setOtpValidated(true);
-    } else {
-      setOtpValidated(false);
-      // Handle incorrect OTP
+  const handleSendOtp = async () => {
+    try {
+      const response = await axios.post('http://localhost:8090/auth/createOTP', {
+        username: email, // Use the email as the username
+        otp: 0 // Initial OTP value, can be changed based on backend logic
+      });
+      console.log('OTP sent:', response.data);
+      setOtpSent(true);
+    } catch (error) {
+      console.error('Error sending OTP:', error);
+      setOtpError('Error sending OTP. Please try again.');
+      clearErrors();
     }
   };
 
-  const handleResetPassword = () => {
+  const handleValidateOtp = async () => {
+    try {
+      const response = await axios.post('http://localhost:8090/auth/verifyOTP', {
+        username: email, // Use the email as the username
+        otp: otp
+      });
+      console.log('OTP validated:', response.data);
+      setOtpValidated(true);
+    } catch (error) {
+      console.error('Error validating OTP:', error);
+      setOtpError('Invalid OTP. Please try again.');
+      clearErrors();
+    }
+  };
+
+  const handleResetPassword = async () => {
     if (newPassword !== repeatPassword) {
       setPasswordMatchError('Passwords do not match');
       return;
     }
-    // Implement logic to reset the password
-    // For now, let's just log the new password
-    console.log('New password:', newPassword);
-    // You can update the password in your backend here
-    // Once the password is successfully reset, you can call onPasswordReset() to close the forgot password form
-    onPasswordReset();
+
+    try {
+      const response = await axios.post('http://localhost:8090/auth/changePassword', {
+        username: email, // Use the email as the username
+        password: newPassword
+      });
+      console.log('Password changed:', response.data);
+      setPasswordResetSuccess(true); // Set the success message visibility
+      onPasswordReset();
+    } catch (error) {
+      console.error('Error changing password:', error);
+      setResetPasswordError('Error changing password. Please try again.');
+      clearErrors();
+    }
+  };
+
+  const handleCloseSuccessMessage = () => {
+    setPasswordResetSuccess(false); // Close the success message popup
   };
 
   return (
@@ -48,12 +82,17 @@ function ForgotPassword({ onPasswordReset }) {
       {!otpValidated ? (
         <div>
           <h2>Forgot Password</h2>
-          <label>Email:</label>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <label>User_Name :</label>
+          <input type="input" value={email} onChange={(e) => setEmail(e.target.value)} />
           <button onClick={handleSendOtp}>Send OTP</button>
-          <label>Enter OTP:</label>
-          <input type="text" value={otp} onChange={(e) => setOtp(e.target.value)} />
-          <button onClick={handleValidateOtp}>Validate OTP</button>
+          {otpSent && (
+            <>
+              <label>Enter OTP:</label>
+              <input type="text" value={otp} onChange={(e) => setOtp(e.target.value)} />
+              <button onClick={handleValidateOtp}>Validate OTP</button>
+            </>
+          )}
+          {otpError && <span className="error">{otpError}</span>}
         </div>
       ) : (
         <div>
@@ -64,6 +103,17 @@ function ForgotPassword({ onPasswordReset }) {
           <input type="password" value={repeatPassword} onChange={(e) => setRepeatPassword(e.target.value)} />
           {passwordMatchError && <span className="error">{passwordMatchError}</span>}
           <button onClick={handleResetPassword}>Reset Password</button>
+          {resetPasswordError && <span className="error">{resetPasswordError}</span>}
+        </div>
+      )}
+
+      {/* Success message popup */}
+      {passwordResetSuccess && (
+        <div className="popup">
+          <div className="popup-content">
+            <span className="close-btn" onClick={handleCloseSuccessMessage}>&times;</span>
+            <p>Password reset successful!</p>
+          </div>
         </div>
       )}
     </div>
