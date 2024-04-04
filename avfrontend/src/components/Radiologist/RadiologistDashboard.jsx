@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import useMousePosition from '../useMousePosition';
 
 const RadiologistDashboard= () => {
-    const [selectedTab, setSelectedTab] = useState(0);
+    const [selectedTab, setSelectedTab] = useState(1);
     const [content, setContent] = useState(null);
     const [consultancyDetails, setConsultancyDetails] = useState(null);
     const [historyDetails, setHistoryDetails] = useState(null);
@@ -17,6 +17,10 @@ const RadiologistDashboard= () => {
     const [showPatientDetails, setShowPatientDetails] = useState(false);
     const timerRef = useRef(null);
     const mousePosition = useMousePosition();
+
+    const [searchInput, setSearchInput] = useState('');
+    const [filteredConsultancyDetails, setFilteredConsultancyDetails] = useState(null);
+    const [filteredHistoryDetails, setFilteredHistoryDetails] = useState(null);
 
     const handleHoverTile = (details) => {
       setHoveredTileDetails(details);
@@ -39,7 +43,7 @@ const RadiologistDashboard= () => {
 
 
     const isRadiologistLoggedIn = sessionStorage.getItem('isRadiologistLoggedIn') === 'true';
-    const RadiologistId=sessionStorage.getItem('RadiologistId'); 
+    const RadiologistId=sessionStorage.getItem('radiologistId'); 
     const navigate = useNavigate(); 
 
     const handleConsultancyClick = () => {
@@ -85,6 +89,7 @@ const RadiologistDashboard= () => {
             status: "Cancelled",
           },
         ]);
+        setFilteredConsultancyDetails(consultancyDetails);
         setHistoryDetails(null); // Clear history details when switching tabs
         setNewConsultancyUpdates(false); // Reset notification badge
       };
@@ -120,6 +125,7 @@ const RadiologistDashboard= () => {
             status: "Completed",
           },
         ]);
+        setFilteredHistoryDetails(historyDetails);
         setConsultancyDetails(null); // Clear consultancy details when switching tabs
         setNewHistoryUpdates(false); // Reset notification badge
       };
@@ -134,12 +140,90 @@ const RadiologistDashboard= () => {
         navigate(`/radiologist-consultancy-view/${RadiologistId}`);
         // Add further handling logic as needed
       };
+      const handleSearchInputChangeConsultancy = (e) => {
+        const inputValue = e.target.value;
+        setSearchInput(inputValue);
+      
+        // Update filtered consultancy details based on search input
+        if (inputValue.trim() !== '') {
+          const filteredDetails = consultancyDetails.filter(
+            (detail) =>
+              detail.consultationNumber.includes(inputValue) ||
+              detail.patientName.toLowerCase().includes(inputValue.toLowerCase())
+          );
+          setFilteredConsultancyDetails(filteredDetails);
+          
+        } else {
+          // If search input is empty, render all consultancy details
+          setFilteredConsultancyDetails(consultancyDetails);
+        }
+      };
+
+      const handleSearchInputChangeHistory = (e) => {
+        const inputValue = e.target.value;
+        setSearchInput(inputValue);
+      
+        // Update filtered consultancy details based on search input
+        if (inputValue.trim() !== '') {
+          const filteredDetails = historyDetails.filter(
+            (detail) =>
+              detail.consultationNumber.includes(inputValue) ||
+              detail.patientName.toLowerCase().includes(inputValue.toLowerCase())
+          );
+          setFilteredHistoryDetails(filteredDetails);
+          
+        } else {
+          // If search input is empty, render all consultancy details
+          setFilteredHistoryDetails(historyDetails);
+        }
+      };
+
+      const handleSearch = () => {
+        // Perform search based on searchInput for consultancy details
+        if (selectedTab === 1) {
+          const filteredConsultancy = consultancyDetails.filter(
+            (detail) =>
+              detail.consultationNumber.includes(searchInput) ||
+              detail.patientName.toLowerCase().includes(searchInput.toLowerCase())
+          );
+          setFilteredConsultancyDetails(filteredConsultancy);
+        }
+      
+        // Perform search based on searchInput for history details
+        if (selectedTab === 2) {
+          const filteredHistory = historyDetails.filter(
+            (detail) =>
+              detail.consultationNumber.includes(searchInput) ||
+              detail.patientName.toLowerCase().includes(searchInput.toLowerCase())
+          );
+          setFilteredHistoryDetails(filteredHistory);
+        }
+      };
+
 
       useEffect(() => {
         if (!isRadiologistLoggedIn) {
             navigate('/');
         }
     }, [isRadiologistLoggedIn, navigate]);
+
+    useEffect(() => {
+      // Set filteredConsultancyDetails to all consultancy details when the component first renders
+      setFilteredConsultancyDetails(consultancyDetails);
+  }, [consultancyDetails]);
+  
+  useEffect(() => {
+    // Set filteredConsultancyDetails to all consultancy details when the component first renders
+    setFilteredHistoryDetails(historyDetails);
+  }, [historyDetails]);
+  
+  useEffect(() => {
+    if (selectedTab === 1) {
+        handleConsultancyClick(); // Render consultancy content when tab 1 is selected
+    } else if (selectedTab === 2) {
+        handleHistoryClick(); // Render history content when tab 2 is selected
+    }
+  }, [selectedTab]);
     
       return (
         <>
@@ -189,9 +273,22 @@ const RadiologistDashboard= () => {
             
              {selectedTab === 1 && content && (
                   <div>
-                    <h2>Consultancy</h2>
-                    {consultancyDetails &&
-                      consultancyDetails.map((detail, index) => (
+                     <div className="consultancy-header">
+                     <h2>Consultancy</h2>
+                     <div className="search-bar">
+                       <input
+                         type="text"
+                         placeholder="Search"
+                         value={searchInput}
+                         onChange={handleSearchInputChangeConsultancy}
+                       />
+                       <button className="search-button" onClick={() => handleSearch()}>
+                         Search
+                       </button>
+                     </div>
+                   </div>
+                    {filteredConsultancyDetails &&
+                      filteredConsultancyDetails.map((detail, index) => (
                         <div className="tile" key={index}>
                           <div className="consultancy-details">
                             <div className="attribute-tile">
@@ -231,9 +328,22 @@ const RadiologistDashboard= () => {
                 )}
                 {selectedTab === 2 && content && (
                   <div>
-                    <h2>History</h2>
-                    {historyDetails &&
-                      historyDetails.map((detail, index) => (
+                     <div className="consultancy-header">
+                     <h2>History</h2>
+                     <div className="search-bar">
+                       <input
+                         type="text"
+                         placeholder="Search"
+                         value={searchInput}
+                         onChange={handleSearchInputChangeHistory}
+                       />
+                       <button className="search-button" onClick={() => handleSearch()}>
+                         Search
+                       </button>
+                     </div>
+                   </div>
+                    {filteredHistoryDetails &&
+                      filteredHistoryDetails.map((detail, index) => (
                         <div className="tile" key={index}>
                           <div className="consultancy-details">
                             <div className="attribute-tile">

@@ -24,20 +24,21 @@ main {
   overflow-y: auto; /* Add vertical scrolling for content overflow */
 }
 
-.sidebar1 {
+.sidebar1r {
   list-style: none; 
   width: 20%;
   /* Sidebar background color */
-  background-color: #404040;
+  background-color:  #f5f5f5;
  
   
   position: sticky; /* Make the sidebar fixed */
   /* Position the sidebar below the navbar */
   overflow-y: auto; /* Enable vertical scrolling if content exceeds the height */
   display: flex;
-  height: 100%;
+  height: calc(100vh - 120px);
+  border-right: 5px solid #ddd;
 }
-.sidebar1 button {
+.sidebar1r button {
   margin-bottom: 10px; /* Add space between buttons */
 }
 
@@ -45,6 +46,7 @@ main {
   display:flex;
  align-items: end;
   position: relative; /* Ensure relative positioning for absolutely positioned elements */
+  height: calc(100vh - 120px)
 }
 
 
@@ -53,9 +55,9 @@ main {
   width: 20%;
   background-color: #f5f5f5;
   border-left: 4px solid #ccc;
-  padding: 20px;
+  
   overflow-y: auto; /* Allow vertical scrolling for sidebar2 */
-  height: 716px;;
+  height: calc(100vh - 120px)
 }
 
 .image-container {
@@ -78,7 +80,7 @@ main {
 }
 
 
-.tab-buttons {
+.tab-buttonsr {
   width: 300px;
   margin-top: 30px;
   display: flex;
@@ -89,19 +91,23 @@ main {
 
 }
 
-.tab-buttons button {
-  margin-top: 40px;
-  margin: 10px 25px;
-  padding: 10px;
-  width: 250px;
-  cursor: pointer;
+.tab-buttonsr button {
+  width: 80%!important;
+  padding: 2px 2px;
+  margin-top: 30px!important;
+  margin-left: 30px!important;
+  display: flex;
+  flex-direction: column;
   background-color: #00b7ac;
-  color: white;
-  border: none;
+  align-items: center;
+  justify-content: center;
 }
 
-.tab-buttons button:hover {
+.tab-buttonsr button:hover {
   background-color: #0d8aea; /* Darker shade of blue on hover */
+}
+.tab-buttonsr button.active {
+  background-color: #006861;
 }
 
 .image-overlay-container {
@@ -147,10 +153,18 @@ main {
   cursor: pointer;
 }
 
+textarea {
+  resize: none;
+  padding: 10px;
+  
+  width: 1000px;
+}
+
 .tab-buttons2 {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-top: 20px;
 }
 
 .tab-buttons2 button {
@@ -224,50 +238,60 @@ height: 100%; /* Allow the image height to adjust proportionally */
   overflow-y: auto; /* Allow vertical scrolling for main content */
 }
 
-.sidebar2 {
-  width: 20%;
-  background-color: #f5f5f5;
-  border-left: 4px solid #ccc;
-  padding: 20px;
-  
-}
+
 
 /* RadiologistConsultancyView.css */
 
 .chat-box {
-  flex: 1; /* Allow chat box to grow and fill remaining space */
-  overflow-y: auto; /* Enable vertical scrolling if content overflows */
-  padding: 10px; /* Add padding as needed */
-  height: 640px;
+  position: absolute; /* Position chat box absolutely within content */
+  top: 93px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  overflow-y: auto; /* Enable vertical scrolling when content overflows */
+  max-height: calc(100% - 202px); /* Limit chat box height to fill available space within content and leave room for padding */
+  display: flex;
+  flex-direction: column;
 }
 
 .message {
   padding: 8px;
   border-radius: 8px;
   max-width: 70%; /* Adjust as needed */
-}
+  word-wrap: break-word; /* Allow long words to break and wrap */
+  overflow-wrap: break-word; /* Ensure words break at appropriate points */
 
-/* Even messages align to the right */
-.message:nth-child(even) {
-  align-self: flex-end;
-  background-color: #e2f0cb; /* Example background color for even messages */
 }
+.message.right {
+  background-color: #e2f0cb;
+  align-self: flex-end; /* Aligns messages on the right to the left */
+} 
 
-/* Odd messages align to the left */
-.message:nth-child(odd) {
+.message.left {
+  background-color: #bde0fe;
   align-self: flex-start;
-  background-color: #bde0fe; /* Example background color for odd messages */
 }
 
-.text-input {
+
+
+
+
+
+.text-inputr {
   display: flex;
   align-items: center;
   padding: 10px; /* Add padding to the text input container */
   background-color: #fff; /* Set background color */
   width: 970px;
+  position: sticky;
+  bottom: 0; /* Stick the text input to the bottom of the container */
+  margin-top: auto; /* Align the text input at the bottom */
+  margin-bottom: 20px;
+  flex-shrink: 0;
 }
 
-.text-input input {
+.text-inputr input {
   flex: 1; /* Allow input to grow and fill available space */
   padding: 8px; /* Adjust input padding */
   margin-right: 10px; /* Add space between input and button */
@@ -277,7 +301,7 @@ height: 100%; /* Allow the image height to adjust proportionally */
   width: 83px;
 }
 
-.text-input button {
+.text-inputr button {
   padding: 8px 15px; /* Adjust button padding */
   background-color: #4CAF50; /* Set button background color */
   color: #fff; /* Set button text color */
@@ -286,6 +310,6 @@ height: 100%; /* Allow the image height to adjust proportionally */
   cursor: pointer;
 }
 
-.text-input button:hover {
+.text-inputr button:hover {
   background-color: #45a049; /* Darker shade of button color on hover */
 }

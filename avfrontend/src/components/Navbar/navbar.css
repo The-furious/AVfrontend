@@ -110,3 +110,18 @@
   background-color: #f0f0f0;
 }
 
+.navbar__logo {
+  transition: transform 0.3s ease; /* Adding transition for smooth effect */
+}
+
+.navbar__logo:hover {
+  transform: scale(1.2); /* Increase the size on hover */
+}
+
+.navbar__user-icon{
+  transition: transform 0.3s ease; /* Adding transition for smooth effect */
+}
+
+.navbar__user-icon:hover {
+  transform: scale(1.2); /* Increase the size on hover */
+}
