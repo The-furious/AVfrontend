@@ -125,3 +125,21 @@
 .navbar__user-icon:hover {
   transform: scale(1.2); /* Increase the size on hover */
 }
+
+@media screen and (min-width: 768px){
+  .iconphone{
+    display: none;
+  }
+
+  .insidenavbar{
+    display: none;
+  }
+  
+}
+
+@media screen and (max-width: 768px){
+  .outsidenavbar{
+    display: none;
+  }
+}
+

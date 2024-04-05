@@ -13,6 +13,9 @@ const PatientDashboard = ({ handleValueTileClick }) => {
     const [newConsultancyUpdates, setNewConsultancyUpdates] = useState(false);
     const [newHistoryUpdates, setNewHistoryUpdates] = useState(false);
     const [activeButton, setActiveButton] = useState(null); // State to track active button
+    const [startConfirmation, setStartConfirmation] = useState(false);
+    const [doctorId, setDoctorId] = useState('');
+    const [radiologistId, setRadiologistId] = useState('');
 
     const isPatientLoggedIn = sessionStorage.getItem('isPatientLoggedIn') === 'true';
     const PatientId = sessionStorage.getItem('PatientId');
@@ -76,6 +79,7 @@ const PatientDashboard = ({ handleValueTileClick }) => {
         // Show success message
         setContent('Success');
     };
+
     useEffect(() => {
         if (!isPatientLoggedIn) {
             navigate('/');
@@ -84,7 +88,12 @@ const PatientDashboard = ({ handleValueTileClick }) => {
 
     const handleChange = (event) => {
         // Handle form input changes
-        // Update form data state
+        const { name, value } = event.target;
+        if (name === 'doctorId') {
+            setDoctorId(value);
+        } else if (name === 'radiologistId') {
+            setRadiologistId(value);
+        }
     };
 
     const handleValueClick = (value) => {
@@ -94,10 +103,20 @@ const PatientDashboard = ({ handleValueTileClick }) => {
 
     return (
         <>
-
             <div className="container-fluid">
                 <div className="patient-dashboard-sidebar">
                     <ul className="dashboard-sidebar-list" style={{ listStyle: 'none' }}>
+                        <li>
+                            <button
+                                onClick={handleStartConsultationClick}
+                                className={`tab-buttons ${content === 'form' && activeButton === 3 ? "active" : ""}`}
+                            >
+                                <span>
+                                    <EditCalendarIcon />
+                                </span>
+                                Start New Consultant
+                            </button>
+                        </li>
                         <li>
                             <button
                                 onClick={handleRequestClick}
@@ -126,60 +145,62 @@ const PatientDashboard = ({ handleValueTileClick }) => {
                                 )}
                             </button>
                         </li>
-                        <li>
-                            <button
-                                onClick={handleStartConsultationClick}
-                                className={`tab-buttons ${content === 'form' && activeButton === 3 ? "active" : ""}`}
-                            >
-                                <span>
-                                    <EditCalendarIcon />
-                                </span>
-                                Start New Consultation
-                            </button>
-                        </li>
                     </ul>
                 </div>
                 <div className="patient-dashboard-content">
                     {/* Main content goes here */}
                     {content === 'Success' ? (
-                        <div className="success-message">
-                            <CheckCircleIcon style={{ color: 'green', fontSize: 48 }} />
-                            <p>Success!</p>
+                        <div className="success-message-container">
+                            <div className="success-message">
+                                <CheckCircleIcon style={{ color: 'green', fontSize: 48 }} />
+                                <p>Success!</p>
+                            </div>
                         </div>
                     ) : (
                         <>
                             {content === 'form' ? (
                                 <div className="form-container">
-                                    <h1>Fill in the details</h1>
                                     <form onSubmit={handleSubmit}>
-                                        <div className="form-group">
+                                        <h2>Fill in the Details</h2>
+                                        <div className="form-group" >
                                             <label htmlFor="doctorId">Doctor ID:</label>
                                             <input
                                                 type="text"
                                                 id="doctorId"
                                                 name="doctorId"
+                                                value={doctorId}
                                                 onChange={handleChange}
+                                                required // Adding required attribute for mandatory field
                                             />
                                         </div>
                                         <div className="form-group">
-                                            <label htmlFor="radiologistId">Radiologist ID:</label>
+                                            <label htmlFor="radiologistId">Radiologist ID (Optional):</label>
                                             <input
                                                 type="text"
                                                 id="radiologistId"
                                                 name="radiologistId"
+                                                value={radiologistId}
                                                 onChange={handleChange}
+                                                // You can omit 'required' attribute for optional fields
                                             />
                                         </div>
                                         <div className="form-group">
-                                            <label htmlFor="labId">Lab ID:</label>
-                                            <input
-                                                type="text"
-                                                id="labId"
-                                                name="labId"
-                                                onChange={handleChange}
-                                            />
+                                           <div className="form-group">
+    <label style={{ display: 'flex', alignItems: 'center' }}>
+        <input
+            type="checkbox"
+            id="startConfirmation"
+            checked={startConfirmation}
+            onChange={() => setStartConfirmation(!startConfirmation)}
+        />
+        <span style={{ marginLeft: '-50px' }}>
+            Are you sure you want to start a consultation
+        </span>
+    </label>
+</div>
+
                                         </div>
-                                        <button type="submit">Start</button>
+                                        <button type="submit">Submit</button>
                                     </form>
                                 </div>
                             ) : (
@@ -211,7 +232,7 @@ const PatientDashboard = ({ handleValueTileClick }) => {
                                                                 <div>{detail.status}</div>
                                                             </button>
                                                         </div>
-                                                    </div> /* */
+                                                    </div>
                                                 ))}
                                         </div>
                                     )}

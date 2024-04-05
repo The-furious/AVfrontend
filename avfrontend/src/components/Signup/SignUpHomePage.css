@@ -102,3 +102,19 @@ button:hover {
 .sidebar-button.active{
   background-color: #006861;
 }
+
+
+
+
+
+
+/* Media query for smaller screens */
+@media screen and (max-width: 1200px) {
+  .sidebar{
+    display: none;
+  }
+  .content {
+    display: none;
+  }
+  
+}
