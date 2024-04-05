@@ -1,11 +1,15 @@
-import React, { useState, useEffect,useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FaUser } from 'react-icons/fa';
+import { IoMenu } from 'react-icons/io5';
 import './navbar.css';
 import ArogyaVartaIcon from '../images/ArogyaVartaIcon.jpeg';
 import { useNavigate } from 'react-router-dom';
+import AdminLogin from '../logins/AdminLogin';
+import PatientLogin from '../logins/PatientLogin';
 
 const Navbar = ({ personName }) => {
   const [showDropdown, setShowDropdown] = useState(false);
+  const [selectedOption, setSelectedOption] = useState(null);
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
 
@@ -19,12 +23,10 @@ const Navbar = ({ personName }) => {
     navigate('/');
   };
 
-  const handleProfileClick = () => {
-    setShowDropdown(false); // Close the dropdown when "Your Profile" is clicked
-    // Add your logic for handling the "Your Profile" action
+  const handleProfileClick = (option) => {
+    setSelectedOption(option);
+    setShowDropdown(false); // Close the dropdown when an option is clicked
   };
-
- 
 
   useEffect(() => {
     const isDoctorLoggedIn = sessionStorage.getItem('isDoctorLoggedIn') === 'true';
@@ -37,7 +39,7 @@ const Navbar = ({ personName }) => {
       setShowDropdown(false);
     }
   }, []);
- 
+
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -51,11 +53,16 @@ const Navbar = ({ personName }) => {
     };
   }, [dropdownRef]);
 
+
+
+  const fflag=sessionStorage.getItem('isPatientLoggedIn') === 'true';
+  
+
   const flag =
     sessionStorage.getItem('isDoctorLoggedIn') === 'true' ||
     sessionStorage.getItem('isRadiologistLoggedIn') === 'true' ||
-    sessionStorage.getItem('isPatientLoggedIn') === 'true' ||
     sessionStorage.getItem('isLabLoggedIn') === 'true' ||
+    sessionStorage.getItem('isPatientLoggedIn') === 'true'||
     sessionStorage.getItem('isAdminLoggedIn') === 'true';
 
   return (
@@ -65,25 +72,74 @@ const Navbar = ({ personName }) => {
         <span className="navbar__title">Arogya Varta</span>
       </div>
 
-      {flag &&
-         (
-          <div className="navbar__right">
-            <div className="navbar__user" onClick={toggleDropdown} ref={dropdownRef}>
-              <span className="navbar__username">{personName}</span>
-              <FaUser className="navbar__user-icon" />
-            </div>
-            {showDropdown && (
-              <div className="navbar__dropdown" ref={dropdownRef}>
-                <ul>
-                  <li onClick={handleProfileClick}>Your Profile</li>
-                  <li onClick={handleLogoutClick}>Logout</li>
-                </ul>
-              </div>
-            )}
+
+
+      
+
+
+{fflag &&(
+        <div className="navbar__right insidenavbar">
+         <div className="navbar__user" onClick={toggleDropdown} ref={dropdownRef}>
+            <span className="navbar__username">{personName}</span>
+            <IoMenu className="navbar__user-icon" />
           </div>
-        )}
+          {showDropdown && (
+            <div className="navbar__dropdown" ref={dropdownRef}>
+              <ul>
+                <li onClick={() => handleProfileClick('Start New Consutation')}>Start New Consultaion</li>
+                <li onClick={() => handleProfileClick('Request')}>Request</li>
+                <li onClick={() => handleProfileClick('History')}>History</li>
+                <li onClick={() => handleProfileClick('Your Profile')}>Your Profile</li>
+                <li onClick={handleLogoutClick}>Logout</li>
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
+
+
+
+      {flag && (
+        <div className="navbar__right outsidenavbar">
+          <div className="navbar__user" onClick={toggleDropdown} ref={dropdownRef}>
+            <span className="navbar__username">{personName}</span>
+            <FaUser className="navbar__user-icon" />
+          </div>
+          {showDropdown && (
+            <div className="navbar__dropdown" ref={dropdownRef}>
+              <ul>
+                <li onClick={() => handleProfileClick('Your Profile')}>Your Profile</li>
+                <li onClick={handleLogoutClick}>Logout</li>
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
+
+      {!flag && !fflag && (
+        <div className="navbar__right iconphone">
+          <div className="navbar__user" onClick={toggleDropdown} ref={dropdownRef}>
+            <span className="navbar__username">{personName}</span>
+            <IoMenu className="navbar__user-icon" />
+          </div>
+          {showDropdown && (
+            <div className="navbar__dropdown" ref={dropdownRef}>
+              <ul>
+                <li onClick={() => handleProfileClick('Admin')}>Admin</li>
+                <li onClick={() => handleProfileClick('Patient')}>Patient</li>
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Render login forms based on the selected option */}
+      {/* {selectedOption === 'Admin' && <AdminLogin />}
+      {selectedOption === 'Patient' && <PatientLogin />} */}
     </nav>
   );
+
+  
 };
 
 export default Navbar;
