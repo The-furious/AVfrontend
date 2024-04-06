@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios'; // Import Axios library
+import axios from 'axios';
 import './ImageUpload.css';
 
 function ImageUploadForm() {
@@ -12,24 +12,19 @@ function ImageUploadForm() {
 
   const handleImageChange = (event) => {
     const newImages = Array.from(event.target.files);
-    const acceptedImages = newImages.filter((image) => {
-      const extension = image.name.split('.').pop().toLowerCase();
-      return extension === 'dcm' || extension === 'dicom' || image.type.includes('image/dicom');
-    });
-
-    setSelectedImages(acceptedImages);
-    setValidationError(
-      newImages.length !== acceptedImages.length ? 'Invalid file format. Only DICOM (.dcm or .dicom) files allowed.' : null
-    );
+    setSelectedImages(newImages);
+    setValidationError(null); // Clear any previous validation errors
   };
+
+  // const handleImageChange = (event) => {
+  //   const newImages = Array.from(event.target.files);
+  //   const acceptedImages = newImages.filter((image) => {
+  //     const extension = image.name.split('.').pop().toLowerCase();
+  //     return extension === 'dcm' || extension === 'dicom' || image.type.includes('image/dicom');
+  //   });
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    // Check for validation error before submission
-    if (validationError) {
-      return;
-    }
 
     const formData = new FormData();
     formData.append('consultationId', consultationId);
@@ -41,21 +36,15 @@ function ImageUploadForm() {
     }
 
     try {
-      // Send formData to backend API using Axios
       const response = await axios.post('http://localhost:8090/lab/upload', formData);
       console.log('Server response:', response.data);
-
-      // Show success message
       setShowSuccessMessage(true);
-
-      // Reset the form after successful submission (optional)
       setConsultationId('');
       setTestType('');
       setRemarks('');
       setSelectedImages([]);
     } catch (error) {
       console.error('Error while uploading images:', error);
-      // Handle error (e.g., display an error message to the user)
     }
   };
 
@@ -67,7 +56,6 @@ function ImageUploadForm() {
     <div className="image-uploader">
       <h2>Upload Image</h2>
       <form className="image-upload-form" onSubmit={handleSubmit}>
-        {/* Form inputs */}
         <div>
           <label htmlFor="consultationId">Consultation Id:</label>
           <input
@@ -97,7 +85,7 @@ function ImageUploadForm() {
           />
         </div>
         <div>
-          <label htmlFor="images">Select Images (DICOM only):</label>
+          <label htmlFor="images">Select Images:</label>
           <input
             type="file"
             id="images"
@@ -110,7 +98,6 @@ function ImageUploadForm() {
         <button type="submit">Upload Images</button>
       </form>
 
-      {/* Success message */}
       {showSuccessMessage && (
         <div className="success-message">
           <p>Images uploaded successfully!</p>

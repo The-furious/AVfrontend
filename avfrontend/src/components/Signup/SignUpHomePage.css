@@ -108,7 +108,7 @@ button:hover {
 
 
 
-/* Media query for smaller screens */
+/* Media query for smaller screens
 @media screen and (max-width: 1200px) {
   .sidebar{
     display: none;
@@ -117,4 +117,4 @@ button:hover {
     display: none;
   }
   
-}
+} */

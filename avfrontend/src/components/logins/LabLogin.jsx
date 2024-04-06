@@ -35,6 +35,7 @@ function LabLogin({ setShowForgotPassword }) {
       sessionStorage.setItem('jwtToken', token);
       console.log('Login successful'); // For demo, log successful login
       sessionStorage.setItem('isLabLoggedIn', 'true');
+      sessionStorage.setItem('userId',response.data.userId)
       sessionStorage.setItem('LabId', formData.username);
       navigate(`/lab-dashboard/${formData.username}`); // Navigate to lab dashboard
     } catch (error) {

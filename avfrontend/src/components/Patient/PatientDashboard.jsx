@@ -4,6 +4,7 @@ import "./PatientDashboard.css";
 import EditCalendarIcon from '@mui/icons-material/EditCalendar';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios'; // Import Axios
 
 const PatientDashboard = ({ handleValueTileClick }) => {
     const [selectedTab, setSelectedTab] = useState(1);
@@ -19,52 +20,90 @@ const PatientDashboard = ({ handleValueTileClick }) => {
 
     const isPatientLoggedIn = sessionStorage.getItem('isPatientLoggedIn') === 'true';
     const PatientId = sessionStorage.getItem('PatientId');
+    let userId = sessionStorage.getItem('userId');
+
+    userId = parseInt(userId);
+
     const navigate = useNavigate();
 
-    const handleRequestClick = () => {
+    const handleRequestClick = async () => {
         setSelectedTab(1);
         setContent('Request content goes here...');
-        setConsultancyDetails([
-            {
-                consultationNumber: "1234",
-                doctorId: "DOC123",
-                radiologistId: "RAD123",
-                status: "Work in Progress",
-                newUpdate: true
+      
+        try {
+          // Fetch data using Axios
+          const token = sessionStorage.getItem('jwtToken');
+          const response = await axios.get(`http://localhost:8090/consultation/get/present/${userId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`, // Attach the JWT token to the Authorization header
             },
-            {
-                consultationNumber: "5678",
-                doctorId: "DOC456",
-                radiologistId: "RAD456",
-                status: "Scheduled",
-            },
-        ]);
-        setHistoryDetails(null);
-        setNewConsultancyUpdates(false);
-        setActiveButton(1); // Set active button
-    };
+          });
+          
+          // Extract relevant data from the response and update state
+          const consultancyDetails = response.data.map((consultancy) => ({
+            consultationId: consultancy.consultationId,
+            doctorName: consultancy.doctor.name,
+            startDate: consultancy.startDate,
+            status: "Work in Progress",
+          }));
+          
+          setConsultancyDetails(consultancyDetails);
+          setHistoryDetails(null);
+          setNewConsultancyUpdates(false);
+          setActiveButton(1); // Set active button
+        } catch (error) {
+          console.error('Error fetching consultancy details:', error);
+          // Handle error (e.g., display an error message to the user)
+          if (error.response && error.response.status === 403) {
+            // JWT token expired, clear session storage and navigate to home page
+            sessionStorage.clear();
+           
+            // Show error alert popup
+            alert('Session expired. Please log in again.'); // You can customize this message or use a more styled popup
+            navigate('/');
+          }
+        }
+      };
 
-    const handleHistoryClick = () => {
-        setSelectedTab(2);
-        setContent('History content goes here...');
-        setHistoryDetails([
-            {
-                consultationNumber: "1234",
-                doctorId: "DOC123",
-                radiologistId: "RAD123",
-                status: "Completed",
-                newUpdate: true
+    const handleHistoryClick = async () => {
+
+        setSelectedTab(2); 
+        setContent('Request content goes here...');
+      
+        try {
+          // Fetch data using Axios
+          const token = sessionStorage.getItem('jwtToken');
+          const response = await axios.get(`http://localhost:8090/consultation/get/history/${userId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`, // Attach the JWT token to the Authorization header
             },
-            {
-                consultationNumber: "5678",
-                doctorId: "DOC456",
-                radiologistId: "RAD456",
-                status: "Completed",
-            },
-        ]);
+          });
+          
+          // Extract relevant data from the response and update state
+          const consultancyDetails = response.data.map((consultancy) => ({
+            consultationId: consultancy.consultationId,
+            doctorName: consultancy.doctor.name,
+            startDate: consultancy.startDate,
+            status: "Completed",
+          }));
+      
         setConsultancyDetails(null);
-        setNewHistoryUpdates(false);
-        setActiveButton(2); // Set active button
+        setNewConsultancyUpdates(false);
+        setHistoryDetails(consultancyDetails);
+        setActiveButton(2); 
+        }catch (error) {
+            console.error('Error fetching consultancy details:', error);
+            // Handle error (e.g., display an error message to the user)
+            if (error.response && error.response.status === 403) {
+                // JWT token expired, clear session storage and navigate to home page
+                sessionStorage.clear();
+               
+                // Show error alert popup
+                alert('Session expired. Please log in again.'); // You can customize this message or use a more styled popup
+                navigate('/');
+              }
+          }
+
     };
 
     const handleStartConsultationClick = () => {
@@ -73,12 +112,41 @@ const PatientDashboard = ({ handleValueTileClick }) => {
         setActiveButton(3); // Set active button
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        // Simulate form submission
-        // Show success message
-        setContent('Success');
-    };
+        
+        // Create the request body
+        const requestBody = {
+          patientId: parseInt(userId),
+          doctorId: parseInt(doctorId),
+        };
+      
+        try {
+          // Send POST request using Axios
+          const token = sessionStorage.getItem('jwtToken');
+          const response = await axios.post('http://localhost:8090/consultation/create', requestBody, {
+            headers: {
+              Authorization: `Bearer ${token}`, // Attach the JWT token to the Authorization header
+            },
+          });
+          console.log('Consultancy created:', response.data);
+          
+          // Show success message or handle further logic
+          setContent('Success');
+        } catch (error) {
+          console.error('Error creating consultancy:', error);
+          // Handle error (e.g., display an error message to the user)
+          if (error.response && error.response.status === 403) {
+            // JWT token expired, clear session storage and navigate to home page
+            sessionStorage.clear();
+           
+            // Show error alert popup
+            alert('Session expired. Please log in again.'); // You can customize this message or use a more styled popup
+            navigate('/');
+          }
+        }
+      };
+      
 
     useEffect(() => {
         if (!isPatientLoggedIn) {
@@ -219,16 +287,16 @@ const PatientDashboard = ({ handleValueTileClick }) => {
                                                                 <div className="attribute-name">
                                                                     Doctor ID:
                                                                 </div>
-                                                                <div className="attribute-name">Radiologist ID:</div>
+                                                                <div className="attribute-name">Start Date:</div>
                                                                 <div className="attribute-name">Status:</div>
                                                             </div>
                                                             <button
                                                                 className="value-tile"
                                                                 onClick={() => handleValueClick()}
                                                             >
-                                                                <div>{detail.consultationNumber}</div>
-                                                                <div>{detail.doctorId}</div>
-                                                                <div>{detail.radiologistId}</div>
+                                                                <div>{detail.consultationId}</div>
+                                                                <div>{detail.doctorName}</div>
+                                                                <div>{detail.startDate}</div>
                                                                 <div>{detail.status}</div>
                                                             </button>
                                                         </div>
@@ -250,17 +318,17 @@ const PatientDashboard = ({ handleValueTileClick }) => {
                                                                 <div className="attribute-name">
                                                                     Doctor ID:
                                                                 </div>
-                                                                <div className="attribute-name">Radiologist ID:
+                                                                <div className="attribute-name">Start Date:
                                                                 </div>
                                                                 <div className="attribute-name">Status:</div>
                                                             </div>
                                                             <button
                                                                 className="value-tile"
-                                                                onClick={() => handleValueClick()}
+                                                                onClick={() => handleHistoryClick()}
                                                             >
-                                                                <div>{detail.consultationNumber}</div>
-                                                                <div>{detail.doctorId}</div>
-                                                                <div>{detail.radiologistId}</div>
+                                                                 <div>{detail.consultationId}</div>
+                                                                <div>{detail.doctorName}</div>
+                                                                <div>{detail.startDate}</div>
                                                                 <div>{detail.status}</div>
                                                             </button>
                                                         </div>
