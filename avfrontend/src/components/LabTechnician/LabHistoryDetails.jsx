@@ -3,11 +3,17 @@ import axios from 'axios';
 
 const LabHistoryDetails = ({ labId }) => {
   const [historyDetails, setHistoryDetails] = useState([]);
+  const userId=sessionStorage.getItem('userId')
 
   useEffect(() => {
     const fetchHistoryDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:8090/lab/history/${labId}`);
+        const token = sessionStorage.getItem('jwtToken');
+        const response = await axios.get(`http://localhost:8090/lab/history/${userId}`,{
+          headers: {
+            Authorization: `Bearer ${token}`, // Attach the JWT token to the Authorization header
+          },
+        });
         setHistoryDetails(response.data);
       } catch (error) {
         console.error('Error fetching history details:', error);

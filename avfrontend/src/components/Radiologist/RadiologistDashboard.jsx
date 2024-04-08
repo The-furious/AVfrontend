@@ -3,7 +3,8 @@ import Navbar from '../Navbar/Navbar';
 import "./RadiologistDashboard.css";
 import EditCalendarIcon from '@mui/icons-material/EditCalendar';
 import { useNavigate } from 'react-router-dom';
-import useMousePosition from '../useMousePosition';
+import useMousePosition from "../Utility/useMousePosition"
+
 import axios from 'axios'; // Import Axios
 
 const RadiologistDashboard= () => {

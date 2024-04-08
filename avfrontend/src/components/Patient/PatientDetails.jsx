@@ -1,40 +1,37 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import './PatientDetails.css'
-import PatientImage from'../images/patient.jpeg'
-
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import "./PatientDetails.css";
+import PatientImage from "../images/patient.jpeg";
 
 const PatientDetails = ({ id }) => {
   const [patientData, setPatientData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-
   const styles = {
     patientDetailsBox: {
-      display: 'flex',
-      margin: '10px',
-      padding: '10px',
-      border: '1px solid #ccc',
-      borderRadius: '5px',
+      display: "flex",
+      margin: "10px",
+      padding: "10px",
+      border: "1px solid #ccc",
+      borderRadius: "5px",
     },
     profileImage: {
-      width: '100px',
-      height: '100px',
-      borderRadius: '50%',
-      marginRight: '20px',
+      width: "100px",
+      height: "100px",
+      borderRadius: "50%",
+      marginRight: "20px",
     },
     detailsContainer: {
       flex: 1,
     },
     name: {
-      marginBottom: '5px',
+      marginBottom: "5px",
     },
     info: {
-      margin: '5px 0',
+      margin: "5px 0",
     },
   };
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -59,7 +56,11 @@ const PatientDetails = ({ id }) => {
   return (
     <div style={styles.patientDetailsBox}>
       <div>
-        <img src={patientData.profilePhotoUrl} alt="Profile" style={styles.profileImage} />
+        <img
+          src={patientData.profilePhotoUrl}
+          alt="Profile"
+          style={styles.profileImage}
+        />
       </div>
       <div style={styles.detailsContainer}>
         <h3 style={styles.name}>{patientData.name}</h3>

@@ -40,6 +40,7 @@ function AdminLogin({ setShowForgotPassword }) {
       sessionStorage.setItem('userId',response.data.userId)
 
       sessionStorage.setItem('jwtToken', token);
+      
       sessionStorage.setItem('isAdminLoggedIn', 'true');
       sessionStorage.setItem('adminId', formData.username);
       setAdminLoggedIn(true);

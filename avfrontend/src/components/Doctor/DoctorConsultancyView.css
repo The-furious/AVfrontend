@@ -35,6 +35,7 @@ main {
   /* Position the sidebar below the navbar */
   overflow-y: auto; /* Enable vertical scrolling if content exceeds the height */
   display: flex;
+  flex-direction: column;
   height: calc(100vh - 120px);
   border-right: 5px solid #ddd;
  
@@ -53,12 +54,13 @@ main {
 }
 
 .tab-buttonsd {
-  width: 300px;
+  max-width: 300px;
   margin-top: 30px;
   display: flex;
   flex-direction: column;
   gap:2;
   align-items: center;
+  margin-left: 10px;
   
   
 
@@ -195,18 +197,18 @@ textarea {
 }
 
 .tab-buttons2 button {
-margin-bottom: 10px; /* Add space between buttons */
+margin-bottom: 10px !important; /* Add space between buttons */
 display: flex;
 justify-content: center;
 align-items: center;
-width: 200px; /* Set the width of the button */
-height: 200px; /* Set the height of the button */
+width: 200px !important; /* Set the width of the button */
+height: 200px !important; /* Set the height of the button */
 background-color: transparent; /* Set treyhe background color to transparent */
 border: none; /* Remove border */
 padding: 0; /* Remove padding */
 overflow: hidden; /* Hide any overflow from the image */
-transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s; /* Add smooth transitions */
-
+transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s !important; /* Add smooth transitions */
+box-shadow: #f3ac14!important;
 
 }
 
@@ -219,7 +221,7 @@ height: 100%; /* Allow the image height to adjust proportionally */
 .tab-buttons2 button:hover {
   transform: scale(1.1); /* Scale the image slightly on hover */
  
-  background-color : transparent;
+  background-color : transparent!important;
 }
 
 
@@ -233,13 +235,7 @@ height: 100%; /* Allow the image height to adjust proportionally */
   transition: background 0.3s;
 }
 
-.prev-btn {
-  left: 0;
-}
 
-.next-btn {
-  right: 0;
-}
 
 .prev-btn {
   left: 20px;
@@ -255,9 +251,9 @@ height: 100%; /* Allow the image height to adjust proportionally */
 }
 .overlay-buttons {
   display: flex;
-  justify-content: space-between;
-  width: 100%;
-  position: relative;
+  justify-content: space-between !important;
+  width: 100% !important;
+ 
 }
 
 .scrollable-main {
@@ -325,12 +321,15 @@ height: 100%; /* Allow the image height to adjust proportionally */
 }
 
 .text-inputd button {
-  padding: 8px 15px; /* Adjust button padding */
+  padding: 8px 8px !important; /* Adjust button padding */
   background-color: #4CAF50; /* Set button background color */
   color: #fff; /* Set button text color */
   border: none; /* Remove border */
-  border-radius: 5px; /* Add border radius */
+  border-radius: 5px!important; /* Add border radius */
   cursor: pointer;
+  height: 100% !important;
+  width: 150px!important;
+  margin-left: 4px!important;
 }
 
 .text-inputd button:hover {
@@ -400,6 +399,109 @@ height: 100%; /* Allow the image height to adjust proportionally */
   display: flex;
   flex-direction: column;
 }
+
+
+.plus-button-inner {
+    /* Adjust the distance from the bottom as needed */
+  /* Adjust the distance from the right as needed */
+  
+  display: flex;
+ margin-left:100px !important;
+  width: 40px !important;
+  height: 40px;
+  background-color: #007bff; /* Button background color */
+  color: #fff; /* Button text color */
+  border: none;
+  /* border-radius: 50%; */
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  
+  margin: 0px 0px 0px 0px !important;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s ease; /* Smooth transition for background color */
+}
+.right-button{
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+
+
+
+
+
+
+
+.dropdown-menu {
+  max-width: 200px !important;
+  width: 100%;
+  max-height: 200px;
+  
+ 
+
+  
+  z-index: 1;
+}
+
+.dropdown-menu select {
+  width: 241px;
+  height: 48px;
+  border: none;
+  outline: none;
+  padding: 5px;
+  box-sizing: border-box;
+  font-size: 14px;
+  background-color: #00b7ac;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  text-align: center;
+  
+}
+
+/* Style the options */
+.dropdown-menu select option {
+  padding: 5px;
+  font-size: 14px;
+  background-color: #fff;
+  color: #8c6464;
+ 
+}
+
+/* Style when option is hovered */
+/* .dropdown-menu select option:hover {
+  background-color: #b81e1e !important;
+} */
+
+/* Style the dropdown button */
+
+
+/* Style when dropdown button is hovered */
+.dropdown-button:hover {
+  background-color: #ff2626;
+}
+.dropdown{
+  max-width: 300px;
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap:2;
+  align-items: flex-start;
+  margin-left: 40px;
+  
+  
+
+}
+
+/* Tooltip container */
+
+
+
+
+
 
 
 

@@ -4,7 +4,7 @@ import axios from 'axios'; // Import Axios
 import "./DoctorDashboard.css";
 import EditCalendarIcon from '@mui/icons-material/EditCalendar';
 import { useNavigate } from 'react-router-dom';
-import useMousePosition from '../useMousePosition';
+import useMousePosition from '../Utility/useMousePosition';
 import PatientDetails from '../Patient/PatientDetails';
 
 
@@ -114,16 +114,18 @@ const [filteredHistoryDetails, setFilteredHistoryDetails] = useState(null); // A
     
     
     
-      const handleValueClick = (value,patientName) => {
-        // Handle the click event for the value tile
-        console.log(`Clicked value: ${value}`);
-        clearTimeout(timerRef.current); // Clear timeout on click
-        setShowPatientDetails(false);
-        
-        navigate(`/doctor-consultancy-view/${DoctorId}`); 
-
-        // Add further handling logic as needed
-      };
+    const handleValueClick = (consultationId, patientName) => {
+      // Handle the click event for the value tile
+      console.log(`Clicked value: ${consultationId}`);
+      clearTimeout(timerRef.current); // Clear timeout on click
+      setShowPatientDetails(false);
+    
+      // Set the selected consultationId in sessionStorage
+      sessionStorage.setItem('selectedConsultationId', consultationId);
+    
+      // Navigate to the doctor-consultancy-view page
+      navigate(`/doctor-consultancy-view/${DoctorId}`);
+    };
 
       useEffect(() => {
         return () => {

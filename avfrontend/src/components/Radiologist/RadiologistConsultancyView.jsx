@@ -5,6 +5,8 @@ import image2 from "../images/image2.jpg";
 import image3 from "../images/image3.jpg";
 import { useNavigate } from 'react-router-dom';
 import doctor from "../images/doctor.jpg";
+import useMousePosition from "../Utility/useMousePosition"
+
 
 const UserProfile = ({ name, photoUrl }) => (
   <div className="user-profile">
