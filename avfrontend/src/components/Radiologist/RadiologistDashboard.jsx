@@ -124,6 +124,8 @@ const RadiologistDashboard= () => {
       const handleValueClick = (value) => {
         // Handle the click event for the value tile
         console.log(`Clicked value: ${value}`);
+        sessionStorage.setItem('selectedConsultationId', value);
+
         clearTimeout(timerRef.current); // Clear timeout on click
         setShowPatientDetails(false);
       
@@ -287,7 +289,7 @@ const RadiologistDashboard= () => {
                             </div>
                             <button
                               className="value-tile"
-                              onClick={() => handleValueClick()}
+                              onClick={() => handleValueClick(detail.consultationId)}
                               onMouseEnter={() => handleHoverTile(detail)}
                               onMouseLeave={handleMouseLeave}
                             >

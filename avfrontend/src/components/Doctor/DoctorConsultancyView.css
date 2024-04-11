@@ -496,7 +496,22 @@ height: 100%; /* Allow the image height to adjust proportionally */
 
 }
 
-/* Tooltip container */
+.tab-buttonsd button.disabled {
+  background-color: #dc3545; /* Red color for disabled button */
+  color: #fff; /* White text color */
+  cursor: not-allowed; /* Show disabled cursor */
+}
+.tab-buttonsd button.disabled:hover {
+  background-color: #dc3545; /* Red color on hover for disabled button */
+}
+
+.profile-container2 {
+  display: flex;
+  
+  justify-content: flex-end;
+}
+
+
 
 
 
