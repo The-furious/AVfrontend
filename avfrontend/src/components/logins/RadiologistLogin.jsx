@@ -41,6 +41,7 @@ function RadiologistLogin({ setShowForgotPassword }) {
       setIsRadiologistLoggedIn(true);
       sessionStorage.setItem('isRadiologistLoggedIn', 'true');
       sessionStorage.setItem('radiologistId', formData.username);
+      sessionStorage.setItem('userId',response.data.userId)
       navigate(`/radiologist-dashboard/${formData.username}`);
     } catch (error) {
       console.error(error);

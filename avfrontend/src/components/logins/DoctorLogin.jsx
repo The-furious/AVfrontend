@@ -35,6 +35,7 @@ function DoctorLogin({ setShowForgotPassword }) {
       console.log('Login successful'); // For demo, log successful login
       sessionStorage.setItem('isDoctorLoggedIn', 'true');
       sessionStorage.setItem('DoctorId', formData.username);
+      sessionStorage.setItem('userId',response.data.userId)
       navigate(`/doctor-dashboard/${formData.username}`); // Navigate to doctor dashboard
     } catch (error) {
       console.error(error);

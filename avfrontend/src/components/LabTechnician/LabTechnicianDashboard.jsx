@@ -11,6 +11,7 @@ const LabTechnicianDashboard = () => {
   const [searchInput, setSearchInput] = useState('');
   const navigate = useNavigate();
   const timerRef = useRef(null);
+  const userId=sessionStorage.getItem('userId')
 
   // Simulated History Details
   const simulatedHistoryDetails = [

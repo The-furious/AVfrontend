@@ -48,7 +48,7 @@ button {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  margin: 0 auto !important; 
+  margin: 0 auto !important ; 
 }
 .logo {
   align-items: center;

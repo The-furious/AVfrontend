@@ -1,61 +1,60 @@
-import React, { useState } from 'react';
-import axios from 'axios'; // Import Axios library
-import './ImageUpload.css';
+import React, { useState } from "react";
+import axios from "axios";
+import "./ImageUpload.css";
+import { useNavigate } from "react-router-dom";
 
 function ImageUploadForm() {
-  const [consultationId, setConsultationId] = useState('');
-  const [testType, setTestType] = useState('');
-  const [remarks, setRemarks] = useState('');
+  const [consultationId, setConsultationId] = useState("");
+  const [testType, setTestType] = useState("");
+  const [remarks, setRemarks] = useState("");
   const [selectedImages, setSelectedImages] = useState([]);
   const [validationError, setValidationError] = useState(null);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const userId = sessionStorage.getItem("userId");
+  const navigate = useNavigate();
 
   const handleImageChange = (event) => {
     const newImages = Array.from(event.target.files);
-    const acceptedImages = newImages.filter((image) => {
-      const extension = image.name.split('.').pop().toLowerCase();
-      return extension === 'dcm' || extension === 'dicom' || image.type.includes('image/dicom');
-    });
-
-    setSelectedImages(acceptedImages);
-    setValidationError(
-      newImages.length !== acceptedImages.length ? 'Invalid file format. Only DICOM (.dcm or .dicom) files allowed.' : null
-    );
+    setSelectedImages(newImages);
+    setValidationError(null); // Clear any previous validation errors
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    // Check for validation error before submission
-    if (validationError) {
-      return;
-    }
-
+  
     const formData = new FormData();
-    formData.append('consultationId', consultationId);
-    formData.append('testType', testType);
-    formData.append('remarks', remarks);
-
+    formData.append("consultationId", consultationId);
+    formData.append("labId", userId);
+    formData.append("testName", testType);
+    formData.append("remarks", remarks);
+  
     for (let i = 0; i < selectedImages.length; i++) {
-      formData.append('images', selectedImages[i]);
+      formData.append("files", selectedImages[i]);
     }
-
+  
     try {
-      // Send formData to backend API using Axios
-      const response = await axios.post('http://localhost:8090/lab/upload', formData);
-      console.log('Server response:', response.data);
-
-      // Show success message
+      const token = sessionStorage.getItem("jwtToken");
+      const response = await axios.post(
+        "http://localhost:8090/lab/upload",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Server response:", response.data);
       setShowSuccessMessage(true);
-
-      // Reset the form after successful submission (optional)
-      setConsultationId('');
-      setTestType('');
-      setRemarks('');
+      setConsultationId("");
+      setTestType("");
+      setRemarks("");
       setSelectedImages([]);
     } catch (error) {
-      console.error('Error while uploading images:', error);
-      // Handle error (e.g., display an error message to the user)
+      console.error("Error while uploading images:", error);
+      if (error.response) {
+        console.log("Error response:", error.response.data);
+        console.log("Status code:", error.response.status);
+      }
     }
   };
 
@@ -67,7 +66,6 @@ function ImageUploadForm() {
     <div className="image-uploader">
       <h2>Upload Image</h2>
       <form className="image-upload-form" onSubmit={handleSubmit}>
-        {/* Form inputs */}
         <div>
           <label htmlFor="consultationId">Consultation Id:</label>
           <input
@@ -97,7 +95,7 @@ function ImageUploadForm() {
           />
         </div>
         <div>
-          <label htmlFor="images">Select Images (DICOM only):</label>
+          <label htmlFor="images">Select Images:</label>
           <input
             type="file"
             id="images"
@@ -105,12 +103,13 @@ function ImageUploadForm() {
             onChange={handleImageChange}
             required
           />
-          {validationError && <p className="error-message">{validationError}</p>}
+          {validationError && (
+            <p className="error-message">{validationError}</p>
+          )}
         </div>
         <button type="submit">Upload Images</button>
       </form>
 
-      {/* Success message */}
       {showSuccessMessage && (
         <div className="success-message">
           <p>Images uploaded successfully!</p>

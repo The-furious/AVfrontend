@@ -62,15 +62,29 @@ function AddRadiologistForm() {
       setAddress('');
       setSpecialization('');
       setLicenseNumber('');
-    } catch (error) {
+    }catch (error) {
       console.error('Error submitting form:', error.response);
       // Handle error scenarios (e.g., show an error message to the user)
-      if (error.response && error.response.data && error.response.data.message) {
-        setErrorMessage(error.response.data.message);
-      } else {
-        setErrorMessage('An error occurred while submitting the form. Please try again later.');
+      if (error.response && error.response.status === 403) {
+        // JWT token expired, clear session storage and navigate to home page
+        sessionStorage.clear();
+       
+        // Show error alert popup
+        alert('Session expired. Please log in again.'); // You can customize this message or use a more styled popup
+        navigate('/');
       }
+    else if (
+      error.response &&
+      error.response.data &&
+      error.response.data.message
+    ) {
+      setErrorMessage(error.response.data.message);
+    } else {
+      setErrorMessage(
+        'An error occurred while submitting the form. Please try again later.'
+      );
     }
+  }
   };
 
   return (

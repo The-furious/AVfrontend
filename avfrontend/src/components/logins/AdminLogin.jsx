@@ -37,8 +37,10 @@ function AdminLogin({ setShowForgotPassword }) {
       }
 
       const { token } = response.data;
+      sessionStorage.setItem('userId',response.data.userId)
 
       sessionStorage.setItem('jwtToken', token);
+      
       sessionStorage.setItem('isAdminLoggedIn', 'true');
       sessionStorage.setItem('adminId', formData.username);
       setAdminLoggedIn(true);

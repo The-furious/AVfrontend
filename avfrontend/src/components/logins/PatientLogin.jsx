@@ -36,6 +36,7 @@ function PatientLogin({ setShowForgotPassword, setShowSignUp,setIsSignupOpen }) 
       }
 
       const { token } = response.data;
+      sessionStorage.setItem('userId',response.data.userId)
 
       sessionStorage.setItem('jwtToken', token);
       setIsPatientLoggedIn(true);
