@@ -170,28 +170,72 @@
     background-color: #45a049;
   }
 
+  .left, .right {
+    position: fixed;
+    top: 40%;
+    transform: translateY(-50%);
+    z-index: 1000;
+  }
+  
+  .left {
+    left: 0;
+  }
+  
+  .right {
+    right: 0;
+  }
+  
+  .prev-btn, .next-btn {
+    background-color: #ccc;
+    border: none;
+    color: white;
+    border-radius: 50%; /* Make the button round */
+    width: 50px;
+    height: 50px;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0; /* Remove padding to ensure the button is perfectly round */
+  }
+  
+
+.close-icon {
+  color: #333; /* Replace with your desired dark color */
+}
+
+.overlay-content {
+  position: relative;
+  overflow: hidden; /* Prevent content from overflowing its box */
+}
 
 
-  .consultancy-header {
-    display: flex; /* Use flexbox */
-    align-items: center; /* Center items vertically */
-  }
-  
-  .consultancy-header h2 {
-    margin-right: 20px; /* Adjust margin between elements */
-  }
-  
-  .search-bar {
-    display: flex; /* Use flexbox for search bar */
-    align-items: center; /* Center items vertically */
-    padding-left: 910px;
-  }
-  
-  .search-bar input {
-    margin-right: 10px; /* Adjust margin between input and button */
-  }
-  
-  .search-button {
-    padding: 8px 12px; /* Adjust button padding */
-  }
-  
+
+.annotations {
+  max-width: 500px; /* Adjust the maximum width as needed */
+  overflow: auto; /* Add this line to enable scrolling if the content exceeds the container size */
+}
+
+
+
+
+.close-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 19px; /* Adjust size as needed */
+  height: 19px; /* Adjust size as needed */
+  border-radius: 50%; /* Make it round */
+  background-color: rgba(0, 0, 0, 0.1); /* Background color */
+  cursor: pointer;
+}
+
+.close-icon {
+  /* Add any additional styling for the cross icon if needed */
+}
+
+

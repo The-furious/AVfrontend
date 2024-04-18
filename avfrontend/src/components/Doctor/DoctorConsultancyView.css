@@ -9,6 +9,10 @@ body {
 }
 
 
+.zoom-icon:hover {
+  color: #851010; /* Change color on hover */
+  cursor: pointer; /* Change cursor on hover */
+}
 
 
 
@@ -130,6 +134,7 @@ textarea {
 
 
 .image-overlay-container {
+  width: 42%;
   position: fixed;
   top: 50%;
   left: 50%;
@@ -260,6 +265,12 @@ height: 100%; /* Allow the image height to adjust proportionally */
   position: relative;
 }
 
+
+
+
+
+
+
 .scrollable-main {
   display: flex;
   flex: 1;
@@ -343,7 +354,6 @@ height: 100%; /* Allow the image height to adjust proportionally */
 
 
 
-
 .chat-box {
   position: absolute; /* Position chat box absolutely within content */
   top: 93px;
@@ -400,6 +410,29 @@ height: 100%; /* Allow the image height to adjust proportionally */
   display: flex;
   flex-direction: column;
 }
+
+.zoom-icon-box {
+  display: inline-flex; /* Use flexbox to align items */
+  justify-content: center; /* Center items horizontally */
+  align-items: center; /* Center items vertically */
+  width: 40px; /* Adjust this width according to your preference */
+  height: 40px; /* Adjust this height according to your preference */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-right: 10px; /* Adjust this margin according to your preference */
+}
+
+.plus-icon, .minus-icon {
+  background-color: #007bff; /* Change this to your desired color */
+}
+
+.zoom-icon {
+  font-size: 16px; /* Adjust the font size of the icons */
+  color: white; /* Change this to your desired icon color */
+  cursor: pointer;
+}
+
+
 
 
 

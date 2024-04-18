@@ -73,6 +73,18 @@ main {
 }
 
 
+.image-overlay-container {
+  position: absolute;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  z-index: 1000;
+  cursor: grab;
+}
+
+
+
+
+
 
 .message-history {
   flex: 1;
@@ -112,7 +124,7 @@ main {
 
 .image-overlay-container {
   position: fixed;
-  top: 50%;
+  top: 60%;
   left: 50%;
   transform: translate(-50%, -50%);
 
@@ -313,3 +325,28 @@ height: 100%; /* Allow the image height to adjust proportionally */
 .text-inputr button:hover {
   background-color: #45a049; /* Darker shade of button color on hover */
 }
+
+
+
+.annotations {
+  width: fit-content; /* Adjust width to fit content */
+  padding: 1px; /* Optional: Add padding */
+}
+
+.annotation-input-container {
+  display: flex;
+  align-items: center; /* Vertically align items */
+}
+
+textarea {
+  flex: 98; /* Take up 98% of remaining space */
+  margin-right: 2px; /* Adjust as needed */
+}
+
+.send-annotation-button {
+  flex: 2; /* Take up 2% of remaining space */
+  padding: 1px; /* Adjust padding to make the button smaller */
+  font-size: 10px; /* Adjust font size if needed */
+  border-radius: 2px; /* Adjust border radius */
+}
+

@@ -5,8 +5,9 @@ import image2 from "../images/image2.jpg";
 import image3 from "../images/image3.jpg";
 import patient from "../images/patient.jpeg";
 import radiologist from "../images/radiologist.jpg";
-
 import { useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronLeft, faChevronRight, faTimes, faSearchPlus, faSearchMinus } from '@fortawesome/free-solid-svg-icons';
 
 const UserProfile = ({ name, photoUrl }) => (
   <div className="user-profile">
@@ -25,11 +26,10 @@ export const DoctorConsultancyView = () => {
   const [overlayPosition, setOverlayPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [annotationContent, setAnnotationContent] = useState("This is an annotation for the selected image.");
   const navigate = useNavigate();
   const isDoctorLoggedIn = sessionStorage.getItem('isDoctorLoggedIn') === 'true';
   const chatBoxRef = useRef(null);
- 
-    
 
   const [chatMessages, setChatMessages] = useState({
     patient: [
@@ -72,6 +72,8 @@ export const DoctorConsultancyView = () => {
     setOverlayImages(images);
     setCurrentIndex(index);
     setSelectedImage(images[index]);
+    // Update annotation content
+    setAnnotationContent(`This is an annotation for ${images[index]}.`); // Modify this as needed
   };
 
   const handleCloseImage = () => {
@@ -106,10 +108,13 @@ export const DoctorConsultancyView = () => {
   };
 
   const overlayContainerStyle = {
-    transform: `scale(${zoomLevel})`,
     left: `${overlayPosition.x}px`,
     top: `${overlayPosition.y}px`,
     cursor: isDragging ? 'grabbing' : 'grab',
+  };
+
+  const imageStyle = {
+    transform: `scale(${zoomLevel})`,
   };
 
   useEffect(() => {
@@ -139,7 +144,6 @@ export const DoctorConsultancyView = () => {
     }
   };
 
-
   return (
     <div className="doctor-consulancy-view">
       <div className="scrollable-main">
@@ -152,22 +156,12 @@ export const DoctorConsultancyView = () => {
             </div>
           </div>
           <div className="content1">
-          
-          <div className="user-profile-section">
-          {selectedTab && (
+            <div className="user-profile-section">
+              {selectedTab && (
                 <UserProfile name={selectedTab} photoUrl="" />
-               
               )}
-              </div>
-            
-            
-            
-            
-            
-            
+            </div>
             <div className="chat">
-              
-
               {!selectedImage && selectedTab && (
                 <div className="chat-box" ref={chatBoxRef}>
                   {chatMessages[selectedTab].map((message) => (
@@ -177,41 +171,54 @@ export const DoctorConsultancyView = () => {
                   ))}
                 </div>
               )}
-
-              </div>
-
-              <div className="text-inputd">
-                <textarea
-                  type="text"
-                  placeholder="Type your message here..."
-                  value={textInputValue}
-                  onChange={(e) => setTextInputValue(e.target.value)}
-                />
-                <button onClick={handleSendMessage}>Send</button>
-              </div>
-           
-
+            </div>
+            <div className="text-inputd">
+              <textarea
+                type="text"
+                placeholder="Type your message here..."
+                value={textInputValue}
+                onChange={(e) => setTextInputValue(e.target.value)}
+              />
+              <button onClick={handleSendMessage}>Send</button>
+            </div>
             {selectedImage && (
               <div className="image-overlay-container" style={overlayContainerStyle} onMouseDown={handleMouseDown} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
+                <span className="close-btn" onClick={handleCloseImage}>
+                  <FontAwesomeIcon icon={faTimes} className="close-icon" />
+                </span>
                 <div className="image-overlay">
-                  <span className="close-btn" onClick={handleCloseImage}>&times;</span>
                   <div className="overlay-content">
-                    <img src={selectedImage} alt="Selected" className="overlay-image" />
+                    <img src={selectedImage} alt="Selected" className="overlay-image" style={imageStyle} />
                   </div>
-                  <div className="overlay-buttons">
-                    <button className="zoom-in-btn" onClick={() => setZoomLevel((prevZoomLevel) => prevZoomLevel + 0.1)}>Zoom In</button>
-                    <button className="zoom-out-btn" onClick={() => setZoomLevel((prevZoomLevel) => prevZoomLevel - 0.1)}>Zoom Out</button>
-                    <button className="prev-btn" onClick={handlePrevImage}>&lt; Previous</button>
-                    <button className="next-btn" onClick={handleNextImage}>Next &gt;</button>
-                  </div>
+                  <div>
+  <div className="zoom-icon-box plus-icon">
+    <FontAwesomeIcon icon={faSearchPlus} className="zoom-icon" onClick={() => setZoomLevel((prevZoomLevel) => prevZoomLevel + 0.1)} />
+  </div>
+  <div className="zoom-icon-box minus-icon">
+    <FontAwesomeIcon icon={faSearchMinus} className="zoom-icon" onClick={() => setZoomLevel((prevZoomLevel) => prevZoomLevel - 0.1)} />
+  </div>
+</div>
+
+
+
+
+<div className="icon-container left">
+  <button className="prev-btn" onClick={handlePrevImage}>
+    <FontAwesomeIcon icon={faChevronLeft} size="sm" />
+  </button>
+</div>
+<div className="icon-container right">
+  <button className="next-btn" onClick={handleNextImage}>
+    <FontAwesomeIcon icon={faChevronRight} size="sm" />
+  </button>
+</div>
+
                   <div className="annotations">
-                    {/* Add your annotation content here */}
-                    <p>This is an annotation for the selected image.</p>
+                    <p>{annotationContent}</p>
                   </div>
                 </div>
               </div>
             )}
-
           </div>
           <div className="sidebar2d">
             <div className="image-container">
