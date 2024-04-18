@@ -21,7 +21,7 @@ const UserProfile = ({ name, userType, photoUrl }) => {
   } else if (userType === "RADIOLOGIST") {
     profileImage = radiologist;
   } else {
-    // Default image or handle other user types
+    
     profileImage = ""; // Set a default image or leave it empty
   }
 
@@ -434,43 +434,18 @@ export const DoctorConsultancyView = () => {
               {!selectedImage && selectedTab && (
                 <div className="chat-box" ref={chatBoxRef}>
                   {chatMessages.map((message) => (
-  <div
-    key={message.chatId}
-    className={`message ${
-      message.senderId.toString() === senderId
-        ? "right"
-        : "left"
-    }`}
-  > 
-    
-    <div className="message-content">
-      {message.content}
-    </div>
-    {message.senderId.toString() !== senderId && (
-      <div className="profile-container">
-        <img
-          src={ message.sender ||left}// Assuming RecipientPhoto is the URL from the backend
-          alt="Recipient Profile"
-          className="profile-photo"
-        />
-      </div>
-    )}
-    {message.senderId.toString() === senderId && (
-      <div className="profile-container2">
-        <img
-          src= {doctor}
-          alt="Sender Profile"
-          className="profile-photo"
-        />
-      </div>
-    )}
-  </div>
-))}
-
+                    <div
+                      key={message.chatId}
+                      className={`message ${
+                        message.senderId.toString() === senderId ? "right" : "left"
+                      }`}
+                    >
+                      {message.content}
+                    </div>
+                  ))}
                 </div>
               )}
             </div>
-
             <div className="text-inputd">
               <textarea
                 type="text"
