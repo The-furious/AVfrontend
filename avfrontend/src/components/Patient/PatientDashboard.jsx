@@ -89,7 +89,7 @@ const PatientDashboard = ({ handleValueTileClick }) => {
       const consultancyDetails = response.data.map((consultancy) => ({
         consultationId: consultancy.consultationId,
         doctorName: consultancy.doctor.name,
-        startDate: consultancy.startDate,
+        startDate: consultancy.startDate.slice(0, 10),
         status: "Completed",
       }));
 

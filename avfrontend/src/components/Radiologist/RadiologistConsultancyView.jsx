@@ -1,5 +1,5 @@
 /* eslint-disable no-template-curly-in-string */
-import React, { useState, useEffect, useRef } from "react";
+import React, { useContext,useState, useEffect, useRef } from "react";
 import "./RadiologistConsultancyView.css";
 import image1 from "../images/image1.jpg";
 import image2 from "../images/image2.jpg";
@@ -11,16 +11,18 @@ import axios from "axios";
 // import io from "socket.io-client";
 import SockJS from "sockjs-client";
 import StompJs from "stompjs";
+import { UserDetailContext } from "../UserDetailContext";
+import useOnlineStatus  from "../Utility/CloseWindowUtility"
+import UserProfile from "../Utility/UserProfile";
 
-const UserProfile = ({ name, photoUrl }) => (
-  <div className="user-profile">
-    <img src={doctor} alt="Profile" className="profile-photo" />
-    <div className="profile-name">{name}</div>
-  </div>
-);
+
+
+
+
+
 
 export const RadiologistConsultancyView = () => {
-  var [selectedTab, setSelectedTab] = useState("doctor1");
+  var [selectedTab, setSelectedTab] = useState();
   const [selectedImage, setSelectedImage] = useState(null);
   const [sidebarImages, setSidebarImages] = useState([]);
   const [textInputValue, setTextInputValue] = useState("");
@@ -38,15 +40,19 @@ export const RadiologistConsultancyView = () => {
   const userId = sessionStorage.getItem("userId");
   const senderId = userId;
   const [RecipientName, setRecipientName] = useState();
-  const [RecipientId, setRecipientId] = useState();
+  let [RecipientId, setRecipientId] = useState();
   const [chatMessages, setChatMessages] = useState([]);
   const [overlayPosition, setOverlayPosition] = useState({ x: 0, y: 0 });
+  const { token, isLoggedIn, setToken, setUserId, setIsLoggedIn,connectedUser, setConnectedUser  } =
+  useContext(UserDetailContext);
 
   const navigate = useNavigate();
   const isRadiologistLoggedIn =
     sessionStorage.getItem("isRadiologistLoggedIn") === "true";
   const chatBoxRef = useRef(null);
 
+
+ 
   useEffect(() => {
     const screenWidth = window.innerWidth;
     const screenHeight = window.innerHeight;
@@ -64,11 +70,17 @@ export const RadiologistConsultancyView = () => {
   }, [isRadiologistLoggedIn, navigate]);
 
   const handleTabClick = (tabname, tabid) => {
-    setSelectedTab(tabid);
+    const updatedTabButtons = tabButtons.map((button) =>
+    button.userId === tabid ? { ...button, unreadMessages: 0 } : button
+  );
+  console.log(tabid);
+  setTabButtons(updatedTabButtons);
+    
     setRecipientName(tabname);
     setRecipientId(tabid);
+    console.log(RecipientId)
 
-    console.log(selectedTab);
+  
     // Reset selected image when switching tabs
     setSelectedImage(null);
   };
@@ -166,6 +178,7 @@ export const RadiologistConsultancyView = () => {
           name: data.name,
           userId: data.userId,
           givenConsent: data.givenConsent,
+          unreadMessages:data.unreadMessages,
         }));
         // Filter the tabButtons array based on givenConsent value
         // const filteredTabButtons = tabButtons.filter(
@@ -201,21 +214,71 @@ export const RadiologistConsultancyView = () => {
     });
   }, [socketUrl]);
 
-  useEffect(() => {
-    if (stompClient) {
-      const subscription = stompClient.subscribe(
-        `/user/${userId}/queue/messages`,
-        (message) => {
-          const newMessage = JSON.parse(message.body);
-          setChatMessages((prevMessages) => [...prevMessages, newMessage]);
+  // Inside the `useEffect` that sets up WebSocket connection
+useEffect(() => {
+  if (stompClient) {
+    const subscription = stompClient.subscribe(
+      `/user/${userId}/queue/messages`,
+      (message) => {
+        const newMessage = JSON.parse(message.body);
+        // Check if the message is not from the currently selected tab
+        if (newMessage.senderId !== selectedTab) {
+          // Find the tab button corresponding to the senderId
+          const updatedTabButtons = tabButtons.map((button) =>
+            button.userId === newMessage.senderId
+              ? { ...button, unreadMessages: button.unreadMessages + 1 }
+              : button
+          );
+          setTabButtons(updatedTabButtons);
         }
-      );
 
-      return () => {
-        subscription.unsubscribe();
-      };
-    }
-  }, [stompClient, userId]);
+        setChatMessages((prevMessages) => [...prevMessages, newMessage]);
+      }
+    );
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }
+}, [stompClient, userId, selectedTab, tabButtons]);
+
+const handleSetConnectedUser = (userId) => {
+  setConnectedUser((prevConnectedUser) => [...prevConnectedUser, userId]);
+  console.log(setConnectedUser);
+};
+
+const handleRemoveConnectedUser = (userIdToRemove) => {
+  setConnectedUser((prevConnectedUser) =>{
+    prevConnectedUser.filter((userId) => userId !== userIdToRemove );
+    console.log("remove",prevConnectedUser);
+  }
+  );
+};
+
+let temp= false;
+useEffect(() => {
+  if (stompClient && temp === false) {
+    const subscription = stompClient.subscribe(
+      `/topic/activeUser`,
+      (message) => {
+        var user = JSON.parse(message.body);
+        console.log("Received message:", message.body);
+        if(user.status==='ONLINE'){
+        handleSetConnectedUser(user.userId);
+        }
+        else{
+          handleRemoveConnectedUser(user.userId);          }
+      }
+    );
+    temp = true;
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }
+}, [connectedUser, stompClient, temp]);
+
+
 
 
   useEffect(() => {
@@ -255,34 +318,46 @@ export const RadiologistConsultancyView = () => {
       setTextInputValue("");
     }
   };
+  const handleEnterKeyPress = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault(); // Prevent new line on Enter
+      handleSendMessage(); // Call handleSendMessage when Enter is pressed
+    }
+  };
+
+  useOnlineStatus(stompClient, userId);
 
   return (
     <div className="radiologist-consulancy-view">
       <div className="scrollable-main">
         <main>
           <div className="sidebar1r">
-            <div className="tab-buttonsr">
-              {tabButtons.map((button) => (
-                <button
-                  key={button.userId}
-                  onClick={() => {
-                    if (button.givenConsent) {
-                      handleTabClick(button.name, button.userId);
-                    }
-                  }}
-                  className={`${
-                    selectedTab === button.userId ? "active" : ""
-                  } ${!button.givenConsent ? "disabled" : ""}`}
-                  disabled={!button.givenConsent}
-                >
-                  {button.name}
-                </button>
-              ))}
-            </div>
+          <div className="tab-buttonsr">
+  {tabButtons.map((button) => (
+    <button
+      key={button.userId}
+      onClick={() => {
+        if (button.givenConsent) {
+          handleTabClick(button.name, button.userId);
+        }
+      }}
+      className={`${
+        selectedTab === button.userId ? "active" : ""
+      } ${!button.givenConsent ? "disabled" : ""}`}
+      disabled={!button.givenConsent}
+    >
+      {button.name}
+      {button.unreadMessages > 0 && (
+        <span className="red-notification">{button.unreadMessages}</span>
+      )}
+    </button>
+  ))}
+</div>
+
           </div>
           <div className="content1">
             <div className="user-profile-section">
-              {selectedTab && <UserProfile name={RecipientName} photoUrl="" />}{" "}
+              {selectedTab && <UserProfile userType="DOCTOR" RecipientId={RecipientId} name={RecipientName} photoUrl="" />}{" "}
             </div>
             <div className="chat">
               {!selectedImage && selectedTab && (
@@ -306,6 +381,7 @@ export const RadiologistConsultancyView = () => {
                 placeholder="Type your message here..."
                 value={textInputValue}
                 onChange={(e) => setTextInputValue(e.target.value)}
+                onKeyDown={handleEnterKeyPress}
               />
               <button onClick={handleSendMessage}>Send</button>
             </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, {useContext, useState, useEffect, useRef } from 'react';
 import { FaUser } from 'react-icons/fa';
 import { IoMenu } from 'react-icons/io5';
 import './navbar.css';
@@ -6,20 +6,37 @@ import ArogyaVartaIcon from '../images/ArogyaVartaIcon.jpeg';
 import { useNavigate } from 'react-router-dom';
 import AdminLogin from '../logins/AdminLogin';
 import PatientLogin from '../logins/PatientLogin';
+import { UserDetailContext } from '../UserDetailContext';
+import SockJS from "sockjs-client";
+import StompJs from "stompjs";
+
 
 const Navbar = ({ personName }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
+  const { token, isLoggedIn, setToken, setUserId, setIsLoggedIn,connectedUser, setConnectedUser,stompClient, setStompClient  } =
+    useContext(UserDetailContext);
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
+  const [socketUrl, setSocketUrl] = useState("http://localhost:8090/ws"); // Change this to your WebSocket server URL
 
+  const userId=sessionStorage.getItem('userId');
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
   };
 
   const handleLogoutClick = () => {
-    sessionStorage.clear(); // Clear all sessionStorage items
+    if (stompClient) {
+      const user = { userId: userId, status: 'OFFLINE' };
+      stompClient.send("/app/topic/disconnectUser", {}, JSON.stringify(user));
+      stompClient.disconnect();
+      console.log("Offline WebSocket disconnected");
+    }
+   sessionStorage.clear();
+
+
     setShowDropdown(false); // Close the dropdown on logout
+    setIsLoggedIn(false);
     navigate('/');
   };
 

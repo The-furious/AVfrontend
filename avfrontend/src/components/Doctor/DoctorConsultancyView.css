@@ -72,7 +72,7 @@ main {
   margin-top: 30px!important;
   margin-left: 30px!important;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   background-color: #00b7ac;
   align-items: center;
   justify-content: center;
@@ -508,6 +508,43 @@ height: 100%; /* Allow the image height to adjust proportionally */
 .profile-container2 {
   display: flex;
   
+  justify-content: flex-end;
+}
+
+/* .red-notification {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  padding: 5px 10px;
+  border-radius: 50%;
+  background: red;
+  color: white;
+} */
+
+.tab-buttonsd button {
+  position: relative; /* Set the position of the button to relative */
+}
+
+.tab-buttonsd .red-notification {
+  position: absolute; /* Set the position of the red notification to absolute */
+  top: -10px;
+  right: -10px;
+  padding: 5px 10px;
+  border-radius: 50%;
+  background: red;
+  color: white;
+}
+
+.online-status {
+  margin-left: 5px; /* Adjust spacing between name and status */
+  color: green; /* Color for online status */
+  font-size: 18px;
+  font-style: italic;
+  justify-self: flex-end;
+ 
+}
+.status{
+  display:flex;
   justify-content: flex-end;
 }
 

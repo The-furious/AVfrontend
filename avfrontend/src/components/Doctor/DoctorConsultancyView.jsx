@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useContext,useState, useEffect, useRef } from "react";
 import "./DoctorConsultancyView.css";
 import image1 from "../images/image1.jpg";
 import image2 from "../images/image2.jpg";
@@ -10,28 +10,15 @@ import axios from "axios";
 import useMousePosition from "../Utility/useMousePosition";
 import SockJS from "sockjs-client";
 import StompJs from "stompjs";
+import { UserDetailContext } from "../UserDetailContext";
+import useOnlineStatus  from "../Utility/CloseWindowUtility"
+import UserProfile from '../Utility/UserProfile';
+
+
+
 
 import { useNavigate } from "react-router-dom";
 
-const UserProfile = ({ name, userType, photoUrl }) => {
-  let profileImage;
-
-  if (userType === "PATIENT") {
-    profileImage = patient;
-  } else if (userType === "RADIOLOGIST") {
-    profileImage = radiologist;
-  } else {
-    
-    profileImage = ""; // Set a default image or leave it empty
-  }
-
-  return (
-    <div className="user-profile">
-      <img src={profileImage} alt="Profile" className="profile-photo" />
-      <div className="profile-name">{name}</div>
-    </div>
-  );
-};
 
 export const DoctorConsultancyView = () => {
   const [selectedTab, setSelectedTab] = useState();
@@ -53,6 +40,13 @@ export const DoctorConsultancyView = () => {
   const [defaultSelectedTab, setDefaultSelectedTab] = useState();
   const [socketUrl, setSocketUrl] = useState("http://localhost:8090/ws"); // Change this to your WebSocket server URL
   const [stompClient, setStompClient] = useState(null);
+  
+  const [addRadiologist, setAddRadiologist] = useState({});
+
+  const { token, isLoggedIn, setToken, setUserId, setIsLoggedIn,connectedUser, setConnectedUser  } =
+  useContext(UserDetailContext);
+  let [prevConnectedUser,setPrevConnectedUser]=useState([]);
+
 
   const chatBoxRef = useRef(null);
 
@@ -78,6 +72,24 @@ export const DoctorConsultancyView = () => {
   }, []);
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://localhost:8090/activeUsers");
+        const newUserArray = response.data; // Assuming response.data is an array of userIds
+
+        setPrevConnectedUser((prevConnectedUser) => [...prevConnectedUser, ...newUserArray]);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+
+  useOnlineStatus(stompClient, userId);
+
+  useEffect(() => {
     if (!isDoctorLoggedIn) {
       navigate("/");
     }
@@ -98,10 +110,14 @@ export const DoctorConsultancyView = () => {
 
 
   const handleTabClick = (tabname, tabid, tabUserType) => {
-    setSelectedTab(tabid);
+    const updatedTabButtons = tabButtons.map((button) =>
+    button.userId === tabid ? { ...button, unreadMessages: 0 } : button
+  );
+  setTabButtons(updatedTabButtons);
     setRecipientName(tabname);
     setRecipientUserType(tabUserType);
     setRecipientId(tabid);
+    setSelectedTab(tabid);
 
     console.log(selectedTab);
     // Reset selected image when switching tabs
@@ -197,16 +213,70 @@ export const DoctorConsultancyView = () => {
         `/user/${userId}/queue/messages`,
         (message) => {
           const newMessage = JSON.parse(message.body);
+          // Check if the message is not from the currently selected tab
+          if (newMessage.senderId !== selectedTab) {
+            // Find the tab button corresponding to the senderId
+            const updatedTabButtons = tabButtons.map((button) =>
+              button.userId === newMessage.senderId
+                ? { ...button, unreadMessages: button.unreadMessages + 1 }
+                : button
+            );
+            setTabButtons(updatedTabButtons);
+          }
+          else{
+           
+  
           setChatMessages((prevMessages) => [...prevMessages, newMessage]);
+          }
+          
         }
       );
+  
+      return () => {
+        subscription.unsubscribe();
+      };
+    }
+  }, [stompClient, userId, selectedTab, tabButtons]);
+  const handleSetConnectedUser = (userId) => {
+    setConnectedUser((prevConnectedUser) => [...prevConnectedUser, userId]);
+    console.log(setConnectedUser);
+  };
+
+  const handleRemoveConnectedUser = (userIdToRemove) => {
+    setConnectedUser((prevConnectedUser) =>
+      prevConnectedUser.filter((userId) => userId !== userIdToRemove)
+    );
+  };
+  
+let temp=false;
+  useEffect(() => {
+    if (stompClient && temp === false) {
+      const subscription = stompClient.subscribe(
+        `/topic/activeUser`,
+        (message) => {
+          var user = JSON.parse(message.body);
+          console.log("Received message:", message.body);
+          if(user.status==='ONLINE'){
+          handleSetConnectedUser(user.userId);
+          }
+          else{
+            handleRemoveConnectedUser(user.userId);          }
+        }
+      );
+      temp = true;
 
       return () => {
         subscription.unsubscribe();
       };
     }
-  }, [stompClient, userId]);
+  }, [connectedUser, stompClient, temp]); 
+  useEffect(() => {
+    // Update connectedUser after prevConnectedUser has been updated
+    setConnectedUser(prevConnectedUser);
+  }, [prevConnectedUser, setConnectedUser]); 
 
+  
+  
   useEffect(() => {
     const fetchMessages = async () => {
       try {
@@ -311,6 +381,7 @@ export const DoctorConsultancyView = () => {
           userId: data.userId,
           givenConsent: data.givenConsent,
           userType: data.userType,
+          unreadMessages:data.unreadMessages,
         }));
         // Filter the tabButtons array based on givenConsent value
         // const filteredTabButtons = tabButtons.filter(
@@ -332,7 +403,7 @@ export const DoctorConsultancyView = () => {
     if (selectedConsultationId) {
       fetchConsultationData();
     }
-  }, [selectedConsultationId]);
+  }, [selectedConsultationId,addRadiologist,userId]);
 
   useEffect(() => {
     setSelectedTab(defaultSelectedTab);
@@ -354,13 +425,20 @@ export const DoctorConsultancyView = () => {
 
       // Handle the response as needed
       console.log("Radiologist assigned:", response.data);
-      window.location.reload();
+      setAddRadiologist(response);
+      setShowDropdown(false);
       
 
       // Optionally, you can update some state or show a success message
     } catch (error) {
       console.error("Error assigning radiologist:", error);
       // Handle error, maybe show a message to the user
+    }
+  };
+  const handleEnterKeyPress = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault(); // Prevent new line on Enter
+      handleSendMessage(); // Call handleSendMessage when Enter is pressed
     }
   };
 
@@ -396,6 +474,10 @@ export const DoctorConsultancyView = () => {
                   disabled={!button.givenConsent}
                 >
                   {button.name}
+                  
+              {button.unreadMessages > 0 && (
+                <span className="red-notification">{button.unreadMessages}</span>
+               )}
                 </button>
               ))}
             </div>
@@ -425,7 +507,9 @@ export const DoctorConsultancyView = () => {
                 <UserProfile
                   name={RecipientName}
                   userType={RecipientUserType}
+                  RecipientId={RecipientId}
                   photoUrl=""
+                  
                 />
               )}
             </div>
@@ -452,6 +536,7 @@ export const DoctorConsultancyView = () => {
                 placeholder="Type your message here..."
                 value={textInputValue}
                 onChange={(e) => setTextInputValue(e.target.value)}
+                onKeyDown={handleEnterKeyPress}
               />
               <button onClick={handleSendMessage}>Send</button>
             </div>

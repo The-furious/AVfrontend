@@ -97,7 +97,7 @@ main {
   margin-top: 30px!important;
   margin-left: 30px!important;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   background-color: #00b7ac;
   align-items: center;
   justify-content: center;
@@ -313,3 +313,20 @@ height: 100%; /* Allow the image height to adjust proportionally */
 .text-inputr button:hover {
   background-color: #45a049; /* Darker shade of button color on hover */
 }
+
+.tab-buttonsr button {
+  position: relative; /* Set the position of the button to relative */
+}
+
+.tab-buttonsr .red-notification {
+  position: absolute; /* Set the position of the red notification to absolute */
+  top: -10px;
+  right: -10px;
+  padding: 5px 10px;
+  border-radius: 50%;
+  background: red;
+  color: white;
+}
+
+
+ 
