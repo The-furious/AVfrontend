@@ -17,11 +17,15 @@ const PatientDashboard = ({ handleValueTileClick }) => {
   const [startConfirmation, setStartConfirmation] = useState(false);
   const [doctorId, setDoctorId] = useState("");
   const [radiologistId, setRadiologistId] = useState("");
+  const [pendingConsultations, setPendingConsultations] = useState(null); // New state for pending consultations
+  const [doctors, setDoctors] = useState([]);
+  const [radiologists, setRadiologists] = useState([]);
 
   const isPatientLoggedIn =
     sessionStorage.getItem("isPatientLoggedIn") === "true";
   const PatientId = sessionStorage.getItem("PatientId");
   let userId = sessionStorage.getItem("userId");
+  console.log(userId);
 
   userId = parseInt(userId);
 
@@ -34,6 +38,7 @@ const PatientDashboard = ({ handleValueTileClick }) => {
     try {
       // Fetch data using Axios
       const token = sessionStorage.getItem("jwtToken");
+      console.log(token);
       const response = await axios.get(
         `http://localhost:8090/consultation/get/present/${userId}`,
         {
@@ -47,7 +52,8 @@ const PatientDashboard = ({ handleValueTileClick }) => {
       const consultancyDetails = response.data.map((consultancy) => ({
         consultationId: consultancy.consultationId,
         doctorName: consultancy.doctor.name,
-        startDate: consultancy.startDate,
+        startDate: consultancy.startDate.slice(0,10),
+        doctorId : consultancy.doctor.userId,
         status: "Work in Progress",
       }));
 
@@ -89,6 +95,8 @@ const PatientDashboard = ({ handleValueTileClick }) => {
       const consultancyDetails = response.data.map((consultancy) => ({
         consultationId: consultancy.consultationId,
         doctorName: consultancy.doctor.name,
+      
+        
         startDate: consultancy.startDate.slice(0, 10),
         status: "Completed",
       }));
@@ -110,6 +118,88 @@ const PatientDashboard = ({ handleValueTileClick }) => {
       }
     }
   };
+  const handlePendingConsultationClick = async () => {
+    setSelectedTab(3); // Update selected tab for pending consultations
+
+    try {
+      // Fetch pending consultation data using Axios
+      const token = sessionStorage.getItem("jwtToken");
+      const response = await axios.get(
+        `http://localhost:8090/patient/notification/non-consents/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Attach the JWT token to the Authorization header
+          },
+        }
+      );
+
+      // Extract relevant data from the response and update state
+      const pendingConsultationsData = response.data.map((consultation) => ({
+        consultationId: consultation.consultationId,
+        radiologistName: consultation.name,
+        radiologistId: consultation.userId,
+        status: "Pending",
+      }));
+
+      console.log(pendingConsultationsData);
+
+      setPendingConsultations(pendingConsultationsData);
+      setActiveButton(3); // Set active button for pending consultations
+    } catch (error) {
+      console.error("Error fetching pending consultations:", error);
+      // Handle error (e.g., display an error message to the user)
+      // Similar error handling as other functions
+    }
+  };
+
+  const handleYesClick = async (radiologistId, consultationId) => {
+    try {
+      const token = sessionStorage.getItem("jwtToken");
+      await axios.post(
+        "http://localhost:8090/patient/notification/giveConsent",
+        {
+          userId: radiologistId,
+          consultationId: consultationId,
+          consentGiven: true,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      await handlePendingConsultationClick();
+      console.log("Yes clicked");
+      // Add logic to update UI or handle success message
+    } catch (error) {
+      console.error("Error giving consent:", error);
+      // Handle error (e.g., display an error message to the user)
+    }
+  };
+  const handleNoClick = async (radiologistId, consultationId) => {
+    try {
+      const token = sessionStorage.getItem("jwtToken");
+      await axios.post(
+        "http://localhost:8090/patient/notification/giveConsent",
+        {
+          userId: radiologistId,
+          consultationId: consultationId,
+          consentGiven: false,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      await handlePendingConsultationClick();
+      console.log("No clicked");
+      // Add logic to update UI or handle success message
+    } catch (error) {
+      console.error("Error giving consent:", error);
+      // Handle error (e.g., display an error message to the user)
+    }
+  };
 
   const handleStartConsultationClick = () => {
     // Handle Start New Consultation button click
@@ -124,7 +214,17 @@ const PatientDashboard = ({ handleValueTileClick }) => {
     const requestBody = {
       patientId: parseInt(userId),
       doctorId: parseInt(doctorId),
+
+      // radiologistId:parseInt(radiologistId)
     };
+    console.log(doctorId);
+    console.log(requestBody);
+    if (!startConfirmation) {
+      alert(
+        "Please confirm starting the consultation by checking the checkbox."
+      );
+      return;
+    }
 
     try {
       // Send POST request using Axios
@@ -162,20 +262,48 @@ const PatientDashboard = ({ handleValueTileClick }) => {
     }
   }, [isPatientLoggedIn, navigate]);
 
-  const handleChange = (event) => {
-    // Handle form input changes
-    const { name, value } = event.target;
-    if (name === "doctorId") {
-      setDoctorId(value);
-    } else if (name === "radiologistId") {
-      setRadiologistId(value);
-    }
+  // const handleChange = (event) => {
+  //   // Handle form input changes
+  //   const { name, value } = event.target;
+  //   if (name === "doctorId") {
+  //     setDoctorId(value);
+  //   } else if (name === "radiologistId") {
+  //     setRadiologistId(value);
+  //   }
+  // };
+
+  const handleValueClick = (consultationId, patientName) => {
+    // Handle the click event for the value tile
+    console.log(`Clicked value: ${consultationId}`);
+    
+    // Set the selected consultationId in sessionStorage
+    sessionStorage.setItem("selectedConsultationId", consultationId);
+
+    // Navigate to the doctor-consultancy-view page
+    navigate(`/patient-consultancy-view/${userId}`);
   };
 
-  const handleValueClick = (value) => {
-    console.log(`Clicked value: ${value}`);
-    handleValueTileClick();
-  };
+  useEffect(() => {
+    const fetchRadiologistsAndDoctors = async () => {
+      try {
+        const radiologistsResponse = await axios.get(
+          "http://localhost:8090/admin/getAllRadiologist"
+        );
+        setRadiologists(radiologistsResponse.data);
+        console.log(radiologistsResponse);
+
+        const doctorsResponse = await axios.get(
+          "http://localhost:8090/admin/getAllDoctors"
+        );
+        setDoctors(doctorsResponse.data);
+      } catch (error) {
+        console.error("Error fetching radiologists and doctors:", error);
+        // Handle error (e.g., display an error message to the user)
+      }
+    };
+
+    fetchRadiologistsAndDoctors();
+  }, []);
 
   return (
     <>
@@ -227,6 +355,19 @@ const PatientDashboard = ({ handleValueTileClick }) => {
                 )}
               </button>
             </li>
+            <li>
+              <button
+                onClick={handlePendingConsultationClick} // Call the new function for pending consultations
+                className={`tab-buttons ${
+                  selectedTab === 3 && activeButton === 3 ? "active" : ""
+                }`}
+              >
+                <span>
+                  <EditCalendarIcon />
+                </span>
+                Pending Consultation
+              </button>
+            </li>
           </ul>
         </div>
         <div className="patient-dashboard-content">
@@ -245,33 +386,77 @@ const PatientDashboard = ({ handleValueTileClick }) => {
                   <form onSubmit={handleSubmit}>
                     <h2>Fill in the Details</h2>
                     <div className="form-group">
-                      <label htmlFor="doctorId">Doctor ID:</label>
-                      <input
-                        type="text"
+                      <label htmlFor="doctorId">Doctor Name :</label>
+                      <select
                         id="doctorId"
-                        name="doctorId"
-                        value={doctorId}
-                        onChange={handleChange}
-                        required // Adding required attribute for mandatory field
-                      />
+                        onChange={(e) => {
+                          const selectedDoctorName = e.target.value; // Get the selected doctor's name
+                          console.log(
+                            "Selected Doctor Name:",
+                            selectedDoctorName
+                          );
+
+                          // Find the doctor object based on the selected name
+                          const selectedDoctor = doctors.find(
+                            (doctor) => doctor.name === selectedDoctorName
+                          );
+
+                          if (selectedDoctor) {
+                            console.log(
+                              "Selected Doctor ID:",
+                              selectedDoctor.userId
+                            );
+                            setDoctorId(selectedDoctor.userId); // Set doctorId with the ID of the selected doctor
+                          }
+                        }}
+                        // Set the value attribute of the select element to doctorId
+                        required
+                      >
+                        <option value="">Select Doctor</option>
+                        {doctors.map((doctor) => (
+                          <option key={doctor.userId} value={doctor.name}>
+                            {doctor.name}
+                          </option>
+                        ))}
+                      </select>
                     </div>
                     <div className="form-group">
-                      <label htmlFor="radiologistId">
-                        Radiologist ID (Optional):
-                      </label>
-                      <input
-                        type="text"
-                        id="radiologistId"
-                        name="radiologistId"
-                        value={radiologistId}
-                        onChange={handleChange}
-                        // You can omit 'required' attribute for optional fields
-                      />
+                      <label htmlFor="radiologistId">Radiologist Name :</label>
+                      <div className="form-group">
+                        <label htmlFor="radiologistId">Radiologist Name:</label>
+                        <select
+                          id="radiologistId"
+                          onChange={(e) => {
+                            const selectedRadiologistName = e.target.value;
+                            const selectedRadiologist = radiologists.find(
+                              (radiologist) =>
+                                radiologist.name === selectedRadiologistName
+                            );
+                            if (selectedRadiologist) {
+                              setRadiologistId(selectedRadiologist.userId);
+                            } else {
+                              setRadiologistId(""); // Handle the case when no radiologist is selected
+                            }
+                          }}
+                          
+                        >
+                          <option value="">Select Radiologist</option>
+                          {radiologists.map((radiologist) => (
+                            <option
+                              key={radiologist.userId}
+                              value={radiologist.userId}
+                            >
+                              {radiologist.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
                     </div>
                     <div className="form-group">
                       <div className="form-group">
                         <label
                           style={{ display: "flex", alignItems: "center" }}
+                          htmlFor="startConfirmation"
                         >
                           <input
                             type="checkbox"
@@ -311,7 +496,7 @@ const PatientDashboard = ({ handleValueTileClick }) => {
                               </div>
                               <button
                                 className="value-tile"
-                                onClick={() => handleValueClick()}
+                                onClick={() => handleValueClick(detail.consultationId,detail.doctorId)}
                               >
                                 <div>{detail.consultationId}</div>
                                 <div>{detail.doctorName}</div>
@@ -349,6 +534,58 @@ const PatientDashboard = ({ handleValueTileClick }) => {
                                 <div>{detail.startDate}</div>
                                 <div>{detail.status}</div>
                               </button>
+                            </div>
+                          </div>
+                        ))}
+                    </div>
+                  )}
+                  {selectedTab === 3 && (
+                    <div>
+                      <h2>Pending Consultations</h2>
+                      {pendingConsultations &&
+                        pendingConsultations.map((consultation, index) => (
+                          <div className="tile" key={index}>
+                            <div className="consultancy-details">
+                              <div className="attribute-tile">
+                                <div className="attribute-name">
+                                  Consultation Number:
+                                </div>
+                                <div className="attribute-name">
+                                  Radiologist Name:
+                                </div>
+                                <div className="attribute-name">Status:</div>
+                                <div className="attribute-name">Approve:</div>
+                              </div>
+                              <div className="value-tile">
+                                <div>{consultation.consultationId}</div>
+                                <div>{consultation.radiologistName}</div>
+                                <div>{consultation.status}</div>
+                                <div className="button-container">
+                                  {/* Add Yes and No buttons */}
+                                  <button
+                                    className="yes-button "
+                                    onClick={() =>
+                                      handleYesClick(
+                                        consultation.radiologistId,
+                                        consultation.consultationId
+                                      )
+                                    }
+                                  >
+                                    Yes
+                                  </button>
+                                  <button
+                                    className="no-button"
+                                    onClick={() =>
+                                      handleNoClick(
+                                        consultation.radiologistId,
+                                        consultation.consultationId
+                                      )
+                                    }
+                                  >
+                                    No
+                                  </button>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         ))}

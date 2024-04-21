@@ -548,6 +548,31 @@ height: 100%; /* Allow the image height to adjust proportionally */
   justify-content: flex-end;
 }
 
+/* .tab-buttonsd .green-dot {
+  position: absolute;
+  top: 19px;
+  left: 65px;
+  width: 10px;
+  height: 10px;
+  background-color: #0beb0b;
+  border-radius: 50%;
+} */
+.green-dot {
+  position: absolute;
+  top: 2px; /* Position the dot vertically at 50% of the button's height */
+ left: 65px; /* Adjust the horizontal position as needed */
+  transform: translate(0, -50%); /* Center the dot vertically */
+  width: 10px;
+  height: 10px;
+  background-color: #0beb0b;
+  border-radius: 50%;
+}
+.zoom-buttons {
+  display: flex;
+  flex-direction: column;
+}
+
+
 
 
 

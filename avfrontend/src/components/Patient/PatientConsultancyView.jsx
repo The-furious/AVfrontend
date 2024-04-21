@@ -1,64 +1,50 @@
-import React, { useContext, useState, useEffect, useRef } from "react";
+import React, { useContext,useState, useEffect, useRef } from "react";
 import { FaDownload } from "react-icons/fa";
-import "./DoctorConsultancyView.css";
+import "./PatientConsultancyView.css";
 import image1 from "../images/image1.jpg";
 import image2 from "../images/image2.jpg";
 import image3 from "../images/image3.jpg";
 import patient from "../images/patient.jpeg";
 import radiologist from "../images/radiologist.jpg";
-import doctor from "../images/doctor.jpg";
+import doctor from "../images/doctor.jpg"
 import axios from "axios";
 import useMousePosition from "../Utility/useMousePosition";
 import SockJS from "sockjs-client";
 import StompJs from "stompjs";
 import { UserDetailContext } from "../UserDetailContext";
-import useOnlineStatus from "../Utility/CloseWindowUtility";
-import UserProfile from "../Utility/UserProfile";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faChevronLeft,
-  faChevronRight,
-  faTimes,
-  faSearchPlus,
-  faSearchMinus,
-} from "@fortawesome/free-solid-svg-icons";
-import { FcNext } from "react-icons/fc";
+import useOnlineStatus  from "../Utility/CloseWindowUtility"
+import UserProfile from '../Utility/UserProfile';
+
+
+
 
 import { useNavigate } from "react-router-dom";
 
-export const DoctorConsultancyView = () => {
+
+export const PatientConsultancyView = () => {
   const [selectedTab, setSelectedTab] = useState();
   const [sidebarImages, setSidebarImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
   const [textInputValue, setTextInputValue] = useState("");
   const [overlayImages, setOverlayImages] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [zoomLevel, setZoomLevel] = useState(1);
   const [overlayPosition, setOverlayPosition] = useState({ x: 0, y: 0 });
-  const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+
   const navigate = useNavigate();
-  const isDoctorLoggedIn =
-    sessionStorage.getItem("isDoctorLoggedIn") === "true";
+  const isPatientLoggedIn =
+    sessionStorage.getItem("isPatientLoggedIn") === "true";
   const [showDropdown, setShowDropdown] = useState(false);
-  const [Radiologists, setRadiologists] = useState([]);
   const [tabButtons, setTabButtons] = useState([]);
   const [defaultSelectedTab, setDefaultSelectedTab] = useState();
   const [socketUrl, setSocketUrl] = useState("http://localhost:8090/ws"); // Change this to your WebSocket server URL
   const [stompClient, setStompClient] = useState(null);
+  
 
-  const [addRadiologist, setAddRadiologist] = useState({});
+  const { token, isLoggedIn, setToken, setUserId, setIsLoggedIn,connectedUser, setConnectedUser  } =
+  useContext(UserDetailContext);
+  let [prevConnectedUser,setPrevConnectedUser]=useState([]);
 
-  const {
-    token,
-    isLoggedIn,
-    setToken,
-    setUserId,
-    setIsLoggedIn,
-    connectedUser,
-    setConnectedUser,
-  } = useContext(UserDetailContext);
-  let [prevConnectedUser, setPrevConnectedUser] = useState([]);
 
   const chatBoxRef = useRef(null);
 
@@ -75,6 +61,10 @@ export const DoctorConsultancyView = () => {
   const [chatMessages, setChatMessages] = useState([]);
 
   const isUserConnected = (userId) => connectedUser.includes(userId);
+  const [isDragging, setIsDragging] = useState(false);
+  const [zoomLevel, setZoomLevel] = useState(1);
+
+
 
   useEffect(() => {
     const screenWidth = window.innerWidth;
@@ -92,10 +82,7 @@ export const DoctorConsultancyView = () => {
         const response = await axios.get("http://localhost:8090/activeUsers");
         const newUserArray = response.data; // Assuming response.data is an array of userIds
 
-        setPrevConnectedUser((prevConnectedUser) => [
-          ...prevConnectedUser,
-          ...newUserArray,
-        ]);
+        setPrevConnectedUser((prevConnectedUser) => [...prevConnectedUser, ...newUserArray]);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -104,27 +91,29 @@ export const DoctorConsultancyView = () => {
     fetchData();
   }, []);
 
+
   useOnlineStatus(stompClient, userId);
 
   useEffect(() => {
-    if (!isDoctorLoggedIn) {
+    if (!isPatientLoggedIn) {
       navigate("/");
     }
-  }, [isDoctorLoggedIn, navigate]);
+  }, [isPatientLoggedIn, navigate]);
 
-  let left;
 
-  if (RecipientUserType === "PATIENT") {
-    left = patient;
-  } else if (RecipientUserType === "RADIOLOGIST") {
-    left = radiologist;
-  }
+
+
+
+
+
+
+
 
   const handleTabClick = (tabname, tabid, tabUserType) => {
     const updatedTabButtons = tabButtons.map((button) =>
-      button.userId === tabid ? { ...button, unreadMessages: 0 } : button
-    );
-    setTabButtons(updatedTabButtons);
+    button.userId === tabid ? { ...button, unreadMessages: 0 } : button
+  );
+  setTabButtons(updatedTabButtons);
     setRecipientName(tabname);
     setRecipientUserType(tabUserType);
     setRecipientId(tabid);
@@ -176,25 +165,9 @@ export const DoctorConsultancyView = () => {
     setSelectedImage(overlayImages[currentIndex]);
   };
 
-  const handleMouseDown = (e) => {
-    setIsDragging(true);
-    setDragStart({
-      x: e.clientX - overlayPosition.x,
-      y: e.clientY - overlayPosition.y,
-    });
-  };
+ 
 
-  const handleMouseMove = (e) => {
-    if (isDragging) {
-      const newX = e.clientX - dragStart.x;
-      const newY = e.clientY - dragStart.y;
-      setOverlayPosition({ x: newX, y: newY });
-    }
-  };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
-  };
+ 
 
   const overlayContainerStyle = {
     transform: `scale(${zoomLevel})`,
@@ -233,12 +206,16 @@ export const DoctorConsultancyView = () => {
                 : button
             );
             setTabButtons(updatedTabButtons);
-          } else {
-            setChatMessages((prevMessages) => [...prevMessages, newMessage]);
           }
+          else{
+           
+  
+          setChatMessages((prevMessages) => [...prevMessages, newMessage]);
+          }
+          
         }
       );
-
+  
       return () => {
         subscription.unsubscribe();
       };
@@ -254,8 +231,8 @@ export const DoctorConsultancyView = () => {
       prevConnectedUser.filter((userId) => userId !== userIdToRemove)
     );
   };
-
-  let temp = false;
+  
+let temp=false;
   useEffect(() => {
     if (stompClient && temp === false) {
       const subscription = stompClient.subscribe(
@@ -263,11 +240,11 @@ export const DoctorConsultancyView = () => {
         (message) => {
           var user = JSON.parse(message.body);
           console.log("Received message:", message.body);
-          if (user.status === "ONLINE") {
-            handleSetConnectedUser(user.userId);
-          } else {
-            handleRemoveConnectedUser(user.userId);
+          if(user.status==='ONLINE'){
+          handleSetConnectedUser(user.userId);
           }
+          else{
+            handleRemoveConnectedUser(user.userId);          }
         }
       );
       temp = true;
@@ -276,12 +253,14 @@ export const DoctorConsultancyView = () => {
         subscription.unsubscribe();
       };
     }
-  }, [connectedUser, stompClient, temp]);
+  }, [connectedUser, stompClient, temp]); 
   useEffect(() => {
     // Update connectedUser after prevConnectedUser has been updated
     setConnectedUser(prevConnectedUser);
-  }, [prevConnectedUser, setConnectedUser]);
+  }, [prevConnectedUser, setConnectedUser]); 
 
+  
+  
   useEffect(() => {
     const fetchMessages = async () => {
       try {
@@ -347,25 +326,7 @@ export const DoctorConsultancyView = () => {
     }
   }, [selectedConsultationId]);
 
-  const handleAddButtonClick = async () => {
-    try {
-      const token = sessionStorage.getItem("jwtToken");
 
-      const response = await axios.get(
-        "http://localhost:8090/admin/getAllRadiologist",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setRadiologists(response.data); // Update state with fetched radiologists
-      setShowDropdown(!showDropdown);
-    } catch (error) {
-      console.error("Error fetching radiologists:", error);
-      // Handle error, maybe show a message to the user
-    }
-  };
 
   useEffect(() => {
     const fetchConsultationData = async () => {
@@ -386,7 +347,7 @@ export const DoctorConsultancyView = () => {
           userId: data.userId,
           givenConsent: data.givenConsent,
           userType: data.userType,
-          unreadMessages: data.unreadMessages,
+          unreadMessages:data.unreadMessages,
         }));
         // Filter the tabButtons array based on givenConsent value
         // const filteredTabButtons = tabButtons.filter(
@@ -408,37 +369,13 @@ export const DoctorConsultancyView = () => {
     if (selectedConsultationId) {
       fetchConsultationData();
     }
-  }, [selectedConsultationId, addRadiologist, userId]);
+  }, [selectedConsultationId,userId]);
 
   useEffect(() => {
     setSelectedTab(defaultSelectedTab);
   }, [defaultSelectedTab]);
 
-  const handleSelectButtonClick = async (RadiologistId) => {
-    try {
-      const token = sessionStorage.getItem("jwtToken");
-
-      const response = await axios.post(
-        `http://localhost:8090/doctor/add/radiologist/${selectedConsultationId}/${RadiologistId}`,
-        {}, // Add an empty object or the data you want to send in the request body
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      // Handle the response as needed
-      console.log("Radiologist assigned:", response.data);
-      setAddRadiologist(response);
-      setShowDropdown(false);
-
-      // Optionally, you can update some state or show a success message
-    } catch (error) {
-      console.error("Error assigning radiologist:", error);
-      // Handle error, maybe show a message to the user
-    }
-  };
+  
   const handleEnterKeyPress = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault(); // Prevent new line on Enter
@@ -446,19 +383,33 @@ export const DoctorConsultancyView = () => {
     }
   };
 
+  const handleMouseDown = (e) => {
+    setIsDragging(true);
+    setDragStart({
+      x: e.clientX - overlayPosition.x,
+      y: e.clientY - overlayPosition.y,
+    });
+  };
+
+  const handleMouseMove = (e) => {
+    if (isDragging) {
+      const newX = e.clientX - dragStart.x;
+      const newY = e.clientY - dragStart.y;
+      setOverlayPosition({ x: newX, y: newY });
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+
   return (
     <div className="doctor-consulancy-view">
       <div className="scrollable-main">
         <main>
           <div className="sidebard">
-            <div className="right-button">
-              <button
-                className="plus-button-inner"
-                onClick={handleAddButtonClick}
-              >
-                +
-              </button>
-            </div>
+            
             <div className="tab-buttonsd">
               {tabButtons.map((button) => (
                 <button
@@ -478,37 +429,16 @@ export const DoctorConsultancyView = () => {
                   disabled={!button.givenConsent}
                 >
                   {button.name}
+                  
+              {button.unreadMessages > 0 && (
+                <span className="red-notification">{button.unreadMessages}</span>
+               )}
+                {isUserConnected(button.userId) && <span className="green-dot" />}
 
-                  {button.unreadMessages > 0 && (
-                    <span className="red-notification">
-                      {button.unreadMessages}
-                    </span>
-                  )}
-                  {isUserConnected(button.userId) && (
-                    <span className="green-dot" />
-                  )}
                 </button>
               ))}
             </div>
-            <div className="dropdown">
-              {showDropdown && (
-                <div className="dropdown-menu">
-                  <select
-                    onChange={(e) => handleSelectButtonClick(e.target.value)}
-                  >
-                    <option value="">Select Radiologist</option>
-                    {Radiologists.map((radiologist) => (
-                      <option
-                        key={radiologist.userId}
-                        value={radiologist.userId}
-                      >
-                        {radiologist.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
-            </div>
+            
           </div>
           <div className="content1">
             <div className="user-profile-section">
@@ -518,6 +448,7 @@ export const DoctorConsultancyView = () => {
                   userType={RecipientUserType}
                   RecipientId={RecipientId}
                   photoUrl=""
+                  
                 />
               )}
             </div>
@@ -529,9 +460,7 @@ export const DoctorConsultancyView = () => {
                     <div
                       key={message.chatId}
                       className={`message ${
-                        message.senderId.toString() === senderId
-                          ? "right"
-                          : "left"
+                        message.senderId.toString() === senderId ? "right" : "left"
                       }`}
                     >
                       {message.content}
@@ -558,6 +487,7 @@ export const DoctorConsultancyView = () => {
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
+               
               >
                 <div className="image-overlay">
                   <span className="close-btn" onClick={handleCloseImage}>
@@ -571,22 +501,6 @@ export const DoctorConsultancyView = () => {
                     />
                   </div>
                   <div className="overlay-buttons">
-                    <div className="zoom-buttons">
-                      <FontAwesomeIcon
-                        icon={faSearchPlus}
-                        className="zoom-icon"
-                        onClick={() =>
-                          setZoomLevel((prevZoomLevel) => prevZoomLevel + 0.1)
-                        }
-                      />
-                      <FontAwesomeIcon
-                        icon={faSearchMinus}
-                        className="zoom-icon"
-                        onClick={() =>
-                          setZoomLevel((prevZoomLevel) => prevZoomLevel - 0.1)
-                        }
-                      />
-                    </div>
                     <button className="prev-btn" onClick={handlePrevImage}>
                       &lt; Previous
                     </button>
@@ -594,10 +508,7 @@ export const DoctorConsultancyView = () => {
                       Next &gt;
                     </button>
                   </div>
-                  <div className="annotations">
-                    {/* Add your annotation content here */}
-                    <p>This is an annotation for the selected image.</p>
-                  </div>
+                  
                 </div>
               </div>
             )}
@@ -624,4 +535,4 @@ export const DoctorConsultancyView = () => {
   );
 };
 
-export default DoctorConsultancyView;
+export default PatientConsultancyView;

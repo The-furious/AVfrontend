@@ -1,0 +1,583 @@
+/* App.css */
+
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background-color: #f5f5f5;
+    overflow-y: auto; /* Allow vertical scrolling for the entire page */
+  }
+  
+  
+  
+  
+  
+  
+  main {
+    display: flex;
+    flex: 1;
+    padding-top: 0px; /* Adjusted padding-top to provide space for fixed header */
+    padding-bottom: 0px; /* Adjusted padding-bottom to provide space for fixed footer */
+  }
+  .scrollable-main {
+    flex: 1; /* Make the main content area take up remaining space */
+    overflow-y: auto; /* Add vertical scrolling for content overflow */
+  }
+  
+  .sidebard {
+    list-style: none; 
+    width: 20%;
+    /* Sidebar background color */
+    background-color:  #f5f5f5;
+   
+    
+    position: sticky; /* Make the sidebar fixed */
+    /* Position the sidebar below the navbar */
+    overflow-y: auto; /* Enable vertical scrolling if content exceeds the height */
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 120px);
+    border-right: 5px solid #ddd;
+   
+  }
+  .sidebar2d {
+    width: 20%;
+    background-color: #f5f5f5;
+    border-left: 4px solid #ccc;
+    
+    overflow-y: auto; /* Allow vertical scrolling for sidebar2 */
+    height: calc(100vh - 120px)
+  }
+  
+  .sidebar1 button {
+    margin-bottom: 10px; /* Add space between buttons */
+  }
+  
+  .tab-buttonsd {
+    max-width: 300px;
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap:2;
+    align-items: center;
+    margin-left: 10px;
+    
+    
+  
+  }
+  
+  .tab-buttonsd button {
+    width: 80%!important;
+    padding: 2px 2px;
+    margin-top: 30px!important;
+    margin-left: 30px!important;
+    display: flex;
+    flex-direction: row;
+    background-color: #00b7ac;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .tab-buttonsd button:hover {
+    background-color: #0d8aea; /* Darker shade of blue on hover */
+  }
+  .tab-buttonsd button.active {
+    background-color: #006861;
+  }
+  
+  .content1 {
+    display:flex;
+   align-items: end;
+    position: relative; /* Ensure relative positioning for absolutely positioned elements */
+    height: calc(100vh - 120px)
+  }
+  
+  
+  
+  
+  
+  .image-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .image-container img {
+    width: 100px; /* Fixed width for images */
+    height: 100px; /* Fixed height for images */
+    margin-bottom: 10px;
+     
+  }
+  
+  
+  
+  .message-history {
+    flex: 1;
+    overflow-y: auto; /* Allow vertical scrolling for message history */
+  }
+  
+  .message {
+    margin-bottom: 10px;
+    padding: 5px;
+    background-color: #f0f0f0;
+  }
+  
+  textarea {
+    resize: none;
+    padding: 10px;
+    
+    width: 1000px;
+  }
+  
+  
+  
+  .image-overlay-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .image-overlay {
+    position: relative;
+  }
+  
+  .overlay-content {
+    margin-bottom: 20px;
+  }
+  
+  .overlay-image {
+    width: 500px; /* Set the width of the image */
+    height: 400px; /* Set the height of the image */
+  }
+  
+  .overlay-buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+  }
+  
+  .close-btn:hover{
+    color: rgb(209, 18, 18);
+    transform: scale(1.1);
+    transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
+    
+  
+  }
+  .annotations {
+    margin-top: 20px; /* Adjust margin as needed */
+    background-color: #f9f9f9; /* Background color for annotations */
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  
+  .tab-buttons2 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .tab-buttons2 button {
+  margin-bottom: 10px !important; /* Add space between buttons */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 200px !important; /* Set the width of the button */
+  height: 200px !important; /* Set the height of the button */
+  background-color: transparent; /* Set treyhe background color to transparent */
+  border: none; /* Remove border */
+  padding: 0; /* Remove padding */
+  overflow: hidden; /* Hide any overflow from the image */
+  transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s !important; /* Add smooth transitions */
+  box-shadow: #f3ac14!important;
+  
+  }
+  
+  .tab-buttons2 button img {
+  width: 100%; /* Make the image width 100% of the button width */
+  height: 100%; /* Allow the image height to adjust proportionally */
+  
+  
+  }
+  .tab-buttons2 button:hover {
+    transform: scale(1.1); /* Scale the image slightly on hover */
+   
+    background-color : transparent!important;
+  }
+  
+  
+  .prev-btn,
+  .next-btn {
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    cursor: pointer;
+    padding: 10px 20px;
+    border: none;
+    transition: background 0.3s;
+  }
+  
+  
+  
+  .prev-btn {
+    left: 20px;
+  }
+  
+  .next-btn {
+    right: 20px;
+  }
+  
+  .prev-btn:hover,
+  .next-btn:hover {
+    background: rgba(0, 0, 0, 0.7);
+  }
+  .overlay-buttons {
+    display: flex;
+    justify-content: space-between !important;
+    width: 100% !important;
+   
+  }
+  
+  .scrollable-main {
+    display: flex;
+    flex: 1;
+    overflow-y: auto; /* Allow vertical scrolling for main content */
+  }
+  
+  
+  
+  
+  
+  
+  .message {
+    padding: 8px;
+    border-radius: 8px;
+    max-width: 70%; 
+    word-wrap: break-word; /* Allow long words to break and wrap */
+    overflow-wrap: break-word; /* Ensure words break at appropriate points */
+  }
+  
+  .message.right {
+    background-color: #e2f0cb;
+    align-self: flex-end; /* Aligns messages on the right to the left */
+  } 
+  
+  .message.left {
+    background-color: #bde0fe;
+    align-self: flex-start;
+  }
+  
+  .text-inputd {
+    display: flex;
+    align-items: center; /* Center items horizontally */
+    margin-top: 5px; /* Adjust the top margin */
+  }
+  
+  .text-inputd input {
+    padding: 10px;
+    margin-right: 10px; /* Add space between input and button */
+  }
+  
+  
+  .text-inputd {
+    display: flex;
+    align-items: center;
+    padding: 10px; /* Add padding to the text input container */
+    background-color: #fff; /* Set background color */
+    width: 970px;
+    position: sticky;
+    bottom: 0; /* Stick the text input to the bottom of the container */
+    margin-top: auto; /* Align the text input at the bottom */
+    margin-bottom: 20px;
+    flex-shrink: 0;
+  }
+  
+  .text-inputd input {
+    flex: 1; /* Allow input to grow and fill available space */
+    padding: 8px; /* Adjust input padding */
+    margin-right: 10px; /* Add space between input and button */
+    border: 1px solid #ccc; /* Add border */
+    border-radius: 5px; /* Add border radius */
+    height: 50px;
+    width: 83px;
+  }
+  
+  .text-inputd button {
+    padding: 8px 8px !important; /* Adjust button padding */
+    background-color: #4CAF50; /* Set button background color */
+    color: #fff; /* Set button text color */
+    border: none; /* Remove border */
+    border-radius: 5px!important; /* Add border radius */
+    cursor: pointer;
+    height: 100% !important;
+    width: 150px!important;
+    margin-left: 4px!important;
+  }
+  
+  .text-inputd button:hover {
+    background-color: #45a049; /* Darker shade of button color on hover */
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+  .chat-box {
+    position: absolute; /* Position chat box absolutely within content */
+    top: 93px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    overflow-y: auto; /* Enable vertical scrolling when content overflows */
+    max-height: calc(100% - 202px); /* Limit chat box height to fill available space within content and leave room for padding */
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .chat {
+  /* Allow chat box to grow and fill remaining space */
+    /* Enable vertical scrolling if content overflows */
+  
+  
+   display: flex;
+   
+  }
+  
+  .user-profile-section {
+    display: flex;
+    background-color: #9dd5ed;
+    
+   width:100%;
+   height:93px;
+    margin-bottom: 10px;
+  }
+  
+  .user-profile {
+    display: flex;
+    align-items: center;
+    
+    padding: 8px;
+    border-radius: 8px;
+    box-shadow: #ccc;
+  }
+  
+  .profile-photo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 8px;
+  }
+  
+  .profile-name {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  .content1 {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  
+  .plus-button-inner {
+      /* Adjust the distance from the bottom as needed */
+    /* Adjust the distance from the right as needed */
+    
+    display: flex;
+   margin-left:100px !important;
+    width: 40px !important;
+    height: 40px;
+    background-color: #007bff; /* Button background color */
+    color: #fff; /* Button text color */
+    border: none;
+    /* border-radius: 50%; */
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    
+    margin: 0px 0px 0px 0px !important;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s ease; /* Smooth transition for background color */
+  }
+  .right-button{
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+  }
+  
+  
+  
+  
+  
+  
+  
+  .dropdown-menu {
+    max-width: 200px !important;
+    width: 100%;
+    max-height: 200px;
+    
+   
+  
+    
+    z-index: 1;
+  }
+  
+  .dropdown-menu select {
+    width: 241px;
+    height: 48px;
+    border: none;
+    outline: none;
+    padding: 5px;
+    box-sizing: border-box;
+    font-size: 14px;
+    background-color: #00b7ac;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+    
+  }
+  
+  /* Style the options */
+  .dropdown-menu select option {
+    padding: 5px;
+    font-size: 14px;
+    background-color: #fff;
+    color: #8c6464;
+   
+  }
+  
+  /* Style when option is hovered */
+  /* .dropdown-menu select option:hover {
+    background-color: #b81e1e !important;
+  } */
+  
+  /* Style the dropdown button */
+  
+  
+  /* Style when dropdown button is hovered */
+  .dropdown-button:hover {
+    background-color: #ff2626;
+  }
+  .dropdown{
+    max-width: 300px;
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap:2;
+    align-items: flex-start;
+    margin-left: 40px;
+    
+    
+  
+  }
+  
+  .tab-buttonsd button.disabled {
+    background-color: #dc3545; /* Red color for disabled button */
+    color: #fff; /* White text color */
+    cursor: not-allowed; /* Show disabled cursor */
+  }
+  .tab-buttonsd button.disabled:hover {
+    background-color: #dc3545; /* Red color on hover for disabled button */
+  }
+  
+  .profile-container2 {
+    display: flex;
+    
+    justify-content: flex-end;
+  }
+  
+  /* .red-notification {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    padding: 5px 10px;
+    border-radius: 50%;
+    background: red;
+    color: white;
+  } */
+  
+  .tab-buttonsd button {
+    position: relative; /* Set the position of the button to relative */
+  }
+  
+  .tab-buttonsd .red-notification {
+    position: absolute; /* Set the position of the red notification to absolute */
+    top: -10px;
+    right: -10px;
+    padding: 5px 10px;
+    border-radius: 50%;
+    background: red;
+    color: white;
+  }
+  
+  .online-status {
+    margin-left: 5px; /* Adjust spacing between name and status */
+    color: green; /* Color for online status */
+    font-size: 18px;
+    font-style: italic;
+    justify-self: flex-end;
+   
+  }
+  .status{
+    display:flex;
+    justify-content: flex-end;
+  }
+  
+  /* .tab-buttonsd .green-dot {
+    position: absolute;
+    top: 19px;
+    left: 65px;
+    width: 10px;
+    height: 10px;
+    background-color: #0beb0b;
+    border-radius: 50%;
+  } */
+  .green-dot {
+    position: absolute;
+    top: 2px; /* Position the dot vertically at 50% of the button's height */
+   left: 65px; /* Adjust the horizontal position as needed */
+    transform: translate(0, -50%); /* Center the dot vertically */
+    width: 10px;
+    height: 10px;
+    background-color: #0beb0b;
+    border-radius: 50%;
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
