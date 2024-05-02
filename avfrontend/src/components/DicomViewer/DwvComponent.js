@@ -280,6 +280,7 @@ class DwvComponent extends React.Component {
       }
     });
     app.addEventListener("loaditem", (/*event*/) => {
+      console.log("load images")
       ++nLoadItem;
     });
     app.addEventListener("loaderror", (event) => {

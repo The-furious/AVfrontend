@@ -430,6 +430,14 @@ export const RadiologistConsultancyView = () => {
     }
   };
 
+  useEffect(()=>{
+    if(sendAnnotation===true)
+    {
+      navigate("/dicom-viewer")
+    }
+  },[navigate, sendAnnotation]
+  );
+
   
 
   useOnlineStatus(stompClient, userId);
@@ -606,7 +614,7 @@ export const RadiologistConsultancyView = () => {
                         <p>This is an annotation for the selected image.</p>
                       </div>
                     )}
-                {sendAnnotation && < DicomViewer  />}
+                {sendAnnotation }
                   </div>
                 </div>
               </div>
