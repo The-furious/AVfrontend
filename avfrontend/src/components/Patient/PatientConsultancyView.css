@@ -230,11 +230,11 @@ body {
     background: rgba(0, 0, 0, 0.5);
     color: white;
     cursor: pointer;
-    padding: 10px 20px;
+    padding: 10px 20px!important;
     border: none;
+    width: 40px !important;
     transition: background 0.3s;
   }
-  
   
   
   .prev-btn {
@@ -251,7 +251,7 @@ body {
   }
   .overlay-buttons {
     display: flex;
-    justify-content: space-between !important;
+    justify-content: space-between ;
     width: 100% !important;
    
   }

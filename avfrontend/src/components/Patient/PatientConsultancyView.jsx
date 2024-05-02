@@ -502,10 +502,10 @@ let temp=false;
                   </div>
                   <div className="overlay-buttons">
                     <button className="prev-btn" onClick={handlePrevImage}>
-                      &lt; Previous
+                      &lt;
                     </button>
                     <button className="next-btn" onClick={handleNextImage}>
-                      Next &gt;
+                      &gt;
                     </button>
                   </div>
                   

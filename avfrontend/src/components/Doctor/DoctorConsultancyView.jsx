@@ -22,7 +22,8 @@ import {
   faSearchPlus,
   faSearchMinus,
 } from "@fortawesome/free-solid-svg-icons";
-import { FcNext } from "react-icons/fc";
+import { FcNext, FcPrevious } from "react-icons/fc";
+import { RiSlideshowLine } from "react-icons/ri";
 
 import { useNavigate } from "react-router-dom";
 
@@ -48,6 +49,7 @@ export const DoctorConsultancyView = () => {
   const [stompClient, setStompClient] = useState(null);
 
   const [addRadiologist, setAddRadiologist] = useState({});
+  const [showAnnotations, setShowAnnotations] = useState(false);
 
   const {
     token,
@@ -85,6 +87,9 @@ export const DoctorConsultancyView = () => {
     const initialY = 200; // 200px from top
     setOverlayPosition({ x: initialX, y: initialY });
   }, []);
+  const handleToggleAnnotations = () => {
+    setShowAnnotations((prevShowAnnotations) => !prevShowAnnotations);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -112,13 +117,7 @@ export const DoctorConsultancyView = () => {
     }
   }, [isDoctorLoggedIn, navigate]);
 
-  let left;
 
-  if (RecipientUserType === "PATIENT") {
-    left = patient;
-  } else if (RecipientUserType === "RADIOLOGIST") {
-    left = radiologist;
-  }
 
   const handleTabClick = (tabname, tabid, tabUserType) => {
     const updatedTabButtons = tabButtons.map((button) =>
@@ -569,34 +568,65 @@ export const DoctorConsultancyView = () => {
                       alt="Selected"
                       className="overlay-image"
                     />
-                  </div>
-                  <div className="overlay-buttons">
-                    <div className="zoom-buttons">
-                      <FontAwesomeIcon
-                        icon={faSearchPlus}
-                        className="zoom-icon"
-                        onClick={() =>
-                          setZoomLevel((prevZoomLevel) => prevZoomLevel + 0.1)
-                        }
-                      />
-                      <FontAwesomeIcon
-                        icon={faSearchMinus}
-                        className="zoom-icon"
-                        onClick={() =>
-                          setZoomLevel((prevZoomLevel) => prevZoomLevel - 0.1)
-                        }
-                      />
+
+                    <div className="overlay-buttons">
+                      <div className="zoom-buttons">
+                        <FontAwesomeIcon
+                          icon={faSearchPlus}
+                          className="zoom-icon"
+                          onClick={() =>
+                            setZoomLevel((prevZoomLevel) => prevZoomLevel + 0.1)
+                          }
+                        />
+                        <FontAwesomeIcon
+                          icon={faSearchMinus}
+                          className="zoom-icon"
+                          onClick={() =>
+                            setZoomLevel((prevZoomLevel) => prevZoomLevel - 0.1)
+                          }
+                        />
+                      </div>
+                      <button className="prev-btn" onClick={handlePrevImage}>
+                        &lt; 
+                      </button>
+                      <button className="next-btn" onClick={handleNextImage}>
+                        &gt;
+                      </button>
+                      <div
+                        className="showana"
+                        style={{
+                          display: "flex",
+                          height: "50px",
+                          width: "50px",
+                        }}
+                      >
+                        <RiSlideshowLine
+                          className="slideshow-icon"
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            fontSize: "50px",
+                          }}
+                          onClick={handleToggleAnnotations}
+                        />
+                        {!showAnnotations && (
+                          <span className="showana-tooltip">
+                            Show Annotation
+                          </span>
+                        )}
+                        {showAnnotations && (
+                          <span className="showana-tooltip">
+                            unshow Annotation
+                          </span>
+                        )}
+                      </div>
                     </div>
-                    <button className="prev-btn" onClick={handlePrevImage}>
-                      &lt; Previous
-                    </button>
-                    <button className="next-btn" onClick={handleNextImage}>
-                      Next &gt;
-                    </button>
-                  </div>
-                  <div className="annotations">
-                    {/* Add your annotation content here */}
-                    <p>This is an annotation for the selected image.</p>
+                    {showAnnotations && (
+                      <div className="annotations">
+                        {/* Add your annotation content here */}
+                        <p>This is an annotation for the selected image.</p>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
