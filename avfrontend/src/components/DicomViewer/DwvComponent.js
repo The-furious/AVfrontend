@@ -10,7 +10,6 @@ import Link from "@mui/material/Link";
 import IconButton from "@mui/material/IconButton";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import ScreenshotButton from "./ScreenShot";
 
 // https://mui.com/material-ui/material-icons/
 import CloseIcon from "@mui/icons-material/Close";
@@ -21,7 +20,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import StraightenIcon from "@mui/icons-material/Straighten";
 import CameraswitchIcon from "@mui/icons-material/Cameraswitch";
-
+import ScreenshotButton from "./ScreenShot";
 import Dialog from "@mui/material/Dialog";
 import AppBar from "@mui/material/AppBar";
 import Slide from "@mui/material/Slide";
@@ -85,7 +84,6 @@ class DwvComponent extends React.Component {
       dropboxClassName: "dropBox",
       borderClassName: "dropBoxBorder",
       hoverClassName: "hover",
-      drawnLines: [],
     };
   }
 
@@ -114,7 +112,13 @@ class DwvComponent extends React.Component {
     return (
       <div id="dwv">
         <LinearProgress variant="determinate" value={loadProgress} />
-        <Stack direction="row" spacing={1} padding={1} justifyContent="center">
+        <Stack
+          direction="row"
+          spacing={1}
+          padding={1}
+          justifyContent="center"
+          flexWrap="wrap"
+        >
           <ToggleButtonGroup
             size="small"
             color="primary"
@@ -135,7 +139,6 @@ class DwvComponent extends React.Component {
             <RefreshIcon />
           </ToggleButton>
           <ScreenshotButton></ScreenshotButton>
-
           <ToggleButton
             size="small"
             value="toggleOrientation"
@@ -237,13 +240,6 @@ class DwvComponent extends React.Component {
       // hide drop box
       this.showDropbox(app, false);
     });
-    app.addEventListener("drawchange", (event) => {
-      const lineDetails = event.detail;
-      this.setState((prevState) => ({
-        drawnLines: [...prevState.drawnLines, lineDetails],
-      }));
-      console.log("hi");
-    });
     app.addEventListener("loadprogress", (event) => {
       this.setState({ loadProgress: event.loaded });
     });
@@ -280,7 +276,6 @@ class DwvComponent extends React.Component {
       }
     });
     app.addEventListener("loaditem", (/*event*/) => {
-      console.log("load images")
       ++nLoadItem;
     });
     app.addEventListener("loaderror", (event) => {
@@ -290,6 +285,7 @@ class DwvComponent extends React.Component {
     app.addEventListener("loadabort", (/*event*/) => {
       ++nReceivedLoadAbort;
     });
+
     // handle key events
     app.addEventListener("keydown", (event) => {
       app.defaultOnKeydown(event);
@@ -300,26 +296,11 @@ class DwvComponent extends React.Component {
     // store
     this.setState({ dwvApp: app });
 
-    fetch("https://arogya-vartha-torage.s3.ap-south-1.amazonaws.com/1714666807958_0002.DCM?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20240502T162403Z&X-Amz-SignedHeaders=host&X-Amz-Expires=3599&X-Amz-Credential=AKIAW3MEA5LQLAA6JS66%2F20240502%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=03c5421114a69b0d66e781442bad0421aa58e23a390d86ab8d01f7efb57a15e1")
-      .then((response) => response.arrayBuffer())
-      .then((data) => {
-        const binaryString = Array.from(new Uint8Array(data))
-          .map((byte) => String.fromCharCode(byte))
-          .join("");
-        const base64String = btoa(binaryString);
-        const urls = ["data:application/octet-stream;base64," + base64String];
-        app.loadURLs(urls);
-      })
-      .catch((error) => {
-        console.error("Error fetching image:", error);
-      });
+    // setup drop box
+    this.setupDropbox(app);
 
-    // const savedState = localStorage.getItem("state");
-
-    // // If there's a saved state, apply it to the app
-    // if (savedState) {
-    //   app.applyJsonState(savedState);
-    // }
+    // possible load from location
+    app.loadFromUri(window.location.href);
   }
 
   /**
@@ -378,95 +359,32 @@ class DwvComponent extends React.Component {
    * Toogle the viewer orientation.
    */
   toggleOrientation = () => {
-    // if (typeof this.state.orientation !== "undefined") {
-    //   if (this.state.orientation === "axial") {
-    //     this.state.orientation = "coronal";
-    //   } else if (this.state.orientation === "coronal") {
-    //     this.state.orientation = "sagittal";
-    //   } else if (this.state.orientation === "sagittal") {
-    //     this.state.orientation = "axial";
-    //   }
-    // } else {
-    //   // default is most probably axial
-    //   this.state.orientation = "coronal";
-    // }
-    // // update data view config
-    // const config = {
-    //   "*": [
-    //     {
-    //       divId: "layerGroup0",
-    //       orientation: this.state.orientation,
-    //     },
-    //   ],
-    // };
-    // this.state.dwvApp.setDataViewConfigs(config);
-    // // render data
-    // for (let i = 0; i < this.state.dwvApp.getNumberOfLoadedData(); ++i) {
-    //   this.state.dwvApp.render(i);
-    // }
-    // console.log(this.state.tools.Draw.options[0]);
-    // console.log(this.state.dwvApp);
-    // console.log(this.state.drawnLines););
-    // const obj = this.state.dwvApp.getJsonState();
-    // localStorage.setItem("state", obj);
-    // console.log(localStorage.getItem("state"));
-    // console.log(obj);
-    // // this.state.dwvApp.resetDisplay();
-    // this.state.dwvApp.setDrawings({ children: 4 }, {});
-    // const stateJson = this.state.dwvApp.getJsonState();
-    // // parse the JSON string to an object
-    // const state = JSON.parse(stateJson);
-    // console.log(state.drawings);
-    // const app = this.state.dwvApp;
-    // if (!app) return;
-    // // get the state of the viewer as a JSON string
-    // const stateJson = app.getJsonState();
-    // // parse the JSON string to an object
-    // const state = JSON.parse(stateJson);
-    // // check if the state has a 'drawings' property
-    // if (!state.drawings || !state.drawings.children) return;
-    // // find the 'ruler-group' group
-    // const rulerGroup = state.drawings.children.find(
-    //   (child) => child.attrs.name === "ruler-group"
-    // );
-    // if (!rulerGroup || !rulerGroup.children) return;
-    // // filter out the lines and labels
-    // const lines = rulerGroup.children.filter(
-    //   (child) => child.className === "Line"
-    // );
-    // const labels = rulerGroup.children.filter(
-    //   (child) => child.className === "Label"
-    // );
-    // // console.log(lines);
-    // // console.log(labels);
-    // // map the lines and labels to an array of lines with labels
-    // const linesWithLabels = lines.map((line, index) => ({
-    //   line: line.attrs.points,
-    //   label: labels[index] ? labels[index].children[0].attrs.text : "",
-    // }));
-    // console.log(linesWithLabels);
-    // // save the lines with labels to the state
-    // await this.setState({ drawnLines: linesWithLabels });
-    // // console.log(this.state.drawnLines);
-    // localStorage.setItem("lines", linesWithLabels);
-    // this.getAnnotations();
-    // const linesLocal = localStorage.getItem("lines");
-    // console.log(linesLocal);
-    // app.setDrawings(linesWithLabels, {});
-    // this.getAnnotations();
-
-    const lines = localStorage.getItem("state");
-    this.state.dwvApp.applyJsonState(lines);
+    if (typeof this.state.orientation !== "undefined") {
+      if (this.state.orientation === "axial") {
+        this.state.orientation = "coronal";
+      } else if (this.state.orientation === "coronal") {
+        this.state.orientation = "sagittal";
+      } else if (this.state.orientation === "sagittal") {
+        this.state.orientation = "axial";
+      }
+    } else {
+      // default is most probably axial
+      this.state.orientation = "coronal";
+    }
+    // update data view config
+    const config = {
+      "*": [
+        {
+          divId: "layerGroup0",
+          orientation: this.state.orientation,
+        },
+      ],
+    };
+    this.state.dwvApp.setDataViewConfigs(config);
+    // render data
     for (let i = 0; i < this.state.dwvApp.getNumberOfLoadedData(); ++i) {
       this.state.dwvApp.render(i);
     }
-    console.log(this.state.dwvApp.getDrawLayersByDataIndex(0));
-  };
-
-  getAnnotations = () => {
-    const lines = localStorage.getItem("state");
-    console.log(lines);
-    this.state.dwvApp.applyJsonState(lines);
   };
 
   /**
@@ -476,7 +394,6 @@ class DwvComponent extends React.Component {
   onChangeShape = (shape) => {
     if (this.state.dwvApp) {
       this.state.dwvApp.setToolFeatures({ shapeName: shape });
-      // console.log(shape);
     }
   };
 

@@ -20,7 +20,7 @@ export default function DicomViewer() {
       secondary: {
         main: pink[500],
       },
-      mode: prefersDarkMode ? "dark" : "light",
+      mode: prefersDarkMode ? "light" : "dark",
     },
   });
 
