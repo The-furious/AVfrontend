@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles, useTheme } from '@mui/styles';
 import Typography from '@mui/material/Typography';
+import ScreenshotButton from "./ScreenShot";
 
 import Stack from '@mui/material/Stack';
 import LinearProgress from '@mui/material/LinearProgress';
@@ -91,6 +92,7 @@ class DwvComponent extends React.Component {
   render() {
     const { classes } = this.props;
     const { versions, tools, loadProgress, dataLoaded, metaData } = this.state;
+    const { dicomImage } = this.props;
 
     const handleToolChange = (event, newTool) => {
       if (newTool) {
@@ -126,6 +128,8 @@ class DwvComponent extends React.Component {
             disabled={!dataLoaded}
             onChange={this.onReset}
           ><RefreshIcon /></ToggleButton>
+                    <ScreenshotButton  dicomImage={dicomImage}></ScreenshotButton>
+
 
           <ToggleButton size="small"
             value="toggleOrientation"

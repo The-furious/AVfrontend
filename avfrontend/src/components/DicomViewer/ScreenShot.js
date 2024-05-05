@@ -20,6 +20,7 @@ const ScreenshotButton = ({ dicomImage }) => {
 
   const saveImpression = async (impressionText, imgData) => {
     try {
+      console.log(dicomImage);
       const formData = new FormData();
       formData.append('imageId', dicomImage.imageId);
       formData.append('radiologistId', dicomImage.radiologistId);

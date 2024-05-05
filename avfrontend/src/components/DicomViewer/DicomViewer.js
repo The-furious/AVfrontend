@@ -33,7 +33,7 @@ export default function DicomViewer() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <div className="App">
+      <div className="Appp">
         <DwvComponent   dicomImage={dicomImage} />
       </div>
     </ThemeProvider>
