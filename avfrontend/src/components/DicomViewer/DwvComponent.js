@@ -297,10 +297,24 @@ class DwvComponent extends React.Component {
     this.setState({ dwvApp: app });
 
     // setup drop box
-    this.setupDropbox(app);
+    // this.setupDropbox(app);
 
     // possible load from location
-    app.loadFromUri(window.location.href);
+    // app.loadFromUri(window.location.href);
+    fetch("https://arogya-vartha-torage.s3.ap-south-1.amazonaws.com/1714666807958_0002.DCM?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20240505T061605Z&X-Amz-SignedHeaders=host&X-Amz-Expires=3599&X-Amz-Credential=AKIAW3MEA5LQLAA6JS66%2F20240505%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=67d7d7dbe353d4bc3f44adda4a89bebd339f3ac85f6278adb0311045d11e2b4d")
+      .then((response) => response.arrayBuffer())
+      .then((data) => {
+        const binaryString = Array.from(new Uint8Array(data))
+          .map((byte) => String.fromCharCode(byte))
+          .join("");
+        const base64String = btoa(binaryString);
+        const urls = ["data:application/octet-stream;base64," + base64String];
+        app.loadURLs(urls);
+      })
+      .catch((error) => {
+        console.error("Error fetching image:", error);
+      });
+
   }
 
   /**
