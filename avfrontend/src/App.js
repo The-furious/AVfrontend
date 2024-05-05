@@ -20,8 +20,9 @@ import DicomViewer from './components/DicomViewer/DicomViewer';
 function App() {
   
   return (
-    <UserDetailProvider>
+   
     <Router>
+       <UserDetailProvider>
 
       <div className="App">
         <Navbar/>
@@ -45,8 +46,9 @@ function App() {
         </Routes>
          
       </div>
-    </Router>
+    
     </UserDetailProvider>
+    </Router>
 
   );
 }

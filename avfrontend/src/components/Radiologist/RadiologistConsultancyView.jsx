@@ -34,10 +34,10 @@ import DicomViewer from "../DicomViewer/DicomViewer";
 export const RadiologistConsultancyView = () => {
   var [selectedTab, setSelectedTab] = useState();
   const [selectedImage, setSelectedImage] = useState(null);
-  const [sidebarImages, setSidebarImages] = useState([]);
+  const [sidebarImages, setSidebarImages] = useState([{}]);
   const [textInputValue, setTextInputValue] = useState("");
   const [overlayImages, setOverlayImages] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(null);
   const [tabButtons, setTabButtons] = useState([]);
   const [defaultSelectedTab, setDefaultSelectedTab] = useState();
   const [zoomLevel, setZoomLevel] = useState(1);
@@ -45,7 +45,9 @@ export const RadiologistConsultancyView = () => {
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [showAnnotations, setShowAnnotations] = useState(false);
   const [sendAnnotation, setSendAnnotation] = useState(false);
-  const [annotationText, setAnnotationText] = useState("");
+  const [impressionText, setImpressionText] = useState("");
+  const [doublyLL, setDoublyLL] = useState([]);
+  const [currentAnnotation,setCurrentAnnotation]=useState(0);
 
 
   const selectedConsultationId = sessionStorage.getItem(
@@ -63,6 +65,7 @@ export const RadiologistConsultancyView = () => {
   const [selectedImageId, setSelectedImageId] = useState(null);
 
   const {
+    dicomImage,setDicomImage,
     token,
     isLoggedIn,
     setToken,
@@ -76,6 +79,8 @@ export const RadiologistConsultancyView = () => {
   const isRadiologistLoggedIn =
     sessionStorage.getItem("isRadiologistLoggedIn") === "true";
   const chatBoxRef = useRef(null);
+
+ 
 
   useEffect(() => {
     const screenWidth = window.innerWidth;
@@ -93,51 +98,9 @@ export const RadiologistConsultancyView = () => {
   const handleToggleSendAnnotation = () => {
     setSendAnnotation((prevSendAnnotation) => !prevSendAnnotation);
     setShowAnnotations(false);
-    setAnnotationText(""); // Clear annotation text when hiding the annotation section
+    // Clear annotation text when hiding the annotation section
   };
 
-  const handleAnnotationSubmit = async () => {
-    const consultationId = sessionStorage.getItem("selectedConsultationId");
-    const senderId = sessionStorage.getItem("userId");
-    const recipientId = RecipientId;
-  
-    try {
-      // Get the file input element from the DOM
-      const fileInput = document.getElementById(selectedImage);
-      if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
-        console.error("No file selected.");
-        return;
-      }
-  
-      // Create FormData object to send data as multipart/form-data
-      const formData = new FormData();
-      formData.append("imageId", selectedImageId);
-      formData.append("radiologistId", senderId);
-      formData.append("impressionText", annotationText);
-      formData.append("imageFile", fileInput.files[0]); // Append the selected image file
-  
-      // Send annotation to backend using Axios with FormData
-      const token = sessionStorage.getItem("jwtToken");
-      const response = await axios.post(
-        "http://localhost:8090/annotations/add",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-  
-      console.log("Annotation sent to backend:", response.data);
-      // Optionally, show a success message or perform additional actions
-    } catch (error) {
-      console.error("Error sending annotation to backend:", error);
-      // Handle error, maybe show a message to the user
-    }
-  
-    setAnnotationText(""); // Clear the annotation text after sending
-  };
   
   const handleMouseDown = (e) => {
     setIsDragging(true);
@@ -187,7 +150,7 @@ export const RadiologistConsultancyView = () => {
     setSelectedImage(null);
   };
 
-  const handleImageClick = async (consultationId, index) => {
+  const handleImageClick = async (consultationId,imageId, index) => {
     try {
       const token = sessionStorage.getItem("jwtToken");
       const response = await axios.get(
@@ -200,10 +163,19 @@ export const RadiologistConsultancyView = () => {
       );
       const images = response.data.images;
       const selectedImage = images[index];
+      console.log(imageId);
+
+      setDicomImage({
+        ...dicomImage,
+        imageId: imageId,
+        radiologistId: userId,
+      });
+      console.log(dicomImage);
     
       
         
-        setSelectedImageId(selectedImage.id);
+        setSelectedImageId(imageId);
+        console.log("imaged",imageId)
      
         setSelectedImage(selectedImage.imageUrl);
         setCurrentIndex(index);
@@ -214,26 +186,55 @@ export const RadiologistConsultancyView = () => {
       // Handle error, maybe show a message to the user
     }
   };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8090/annotations/${userId}/${selectedImageId}`);
+        setDoublyLL(response.data); // Assuming the response data is an array of objects
+        console.log(doublyLL)
+
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        // Handle error, show error message to user, etc.
+      }
+    };
+
+    fetchData();
+  }, [currentIndex]);
 
   const handleCloseImage = () => {
     setSelectedImage(null);
   };
 
   const handlePrevImage = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? overlayImages.length - 1 : prevIndex - 1
-    );
-    setSelectedImage(overlayImages[currentIndex].imageUrl);
-    console.log(selectedImage);
-  };
 
-  const handleNextImage = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === overlayImages.length - 1 ? 0 : prevIndex + 1
+    if(doublyLL.length >= 1){
+    if(currentAnnotation!==0){
+    setCurrentAnnotation((currentAnnotation) =>
+    currentAnnotation === doublyLL.length - 1 ? 0 : currentAnnotation - 1
     );
-    setSelectedImage(overlayImages[currentIndex].imageUrl);
-    console.log(selectedImage);
-  };
+  
+  }
+    setSelectedImage(doublyLL[currentAnnotation].imageUrl);
+    setImpressionText(doublyLL[currentAnnotation].impressionText)
+}
+};
+
+const handleNextImage = () => {
+    setCurrentAnnotation((currentAnnotation) =>
+    currentAnnotation=== doublyLL.length - 1 ? 0 : currentAnnotation + 1
+    );
+    setSelectedImage(doublyLL[currentAnnotation].imageUrl);
+    setImpressionText(doublyLL[currentAnnotation].impressionText)
+
+   
+};
+  useEffect(() => {
+
+    setCurrentAnnotation(0);
+    
+  },[currentIndex]);
+
 
   useEffect(() => {
     if (chatBoxRef.current) {
@@ -253,9 +254,12 @@ export const RadiologistConsultancyView = () => {
             },
           }
         );
-        const images = response.data.images.map(
-          (imageData) => imageData.imageUrl
-        );
+        const images = response.data.images.map((imageData) => ({
+          imageUrl: imageData.imageUrl,
+          imageId: imageData.id,
+        }));
+
+        console.log(images);
         setSidebarImages(images);
         console.log(sidebarImages);
       } catch (error) {
@@ -310,6 +314,7 @@ export const RadiologistConsultancyView = () => {
       fetchConsultationData();
     }
   }, [selectedConsultationId]);
+  
   useEffect(() => {
     setSelectedTab(defaultSelectedTab);
   }, [defaultSelectedTab]);
@@ -611,7 +616,7 @@ export const RadiologistConsultancyView = () => {
                     {showAnnotations && (
                       <div className="annotations">
                         {/* Add your annotation content here */}
-                        <p>This is an annotation for the selected image.</p>
+                        <p>{impressionText}</p>
                       </div>
                     )}
                 {sendAnnotation }
@@ -627,10 +632,10 @@ export const RadiologistConsultancyView = () => {
                   <button
                     key={index}
                     onClick={() =>
-                      handleImageClick(selectedConsultationId, index)
+                      handleImageClick(selectedConsultationId,image.imageId, index)
                     }
                   >
-                    <img src={image} alt={`Image ${index + 1}`} />
+                    <img src={image.imageUrl} alt={`Image ${index + 1}`} />
                   </button>
                 ))}
               </div>

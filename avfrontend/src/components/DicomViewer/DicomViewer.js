@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useContext} from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
@@ -6,8 +6,14 @@ import { indigo, pink } from "@mui/material/colors";
 
 import "./DicomViewer.css";
 import DwvComponent from "./DwvComponent";
+import { UserDetailContext } from "../UserDetailContext";
 
 export default function DicomViewer() {
+  const {
+    dicomImage,setDicomImage,
+    
+  } = useContext(UserDetailContext);
+  console.log(dicomImage)
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
   const theme = createTheme({
     typography: {
@@ -28,7 +34,7 @@ export default function DicomViewer() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <div className="App">
-        <DwvComponent />
+        <DwvComponent   dicomImage={dicomImage} />
       </div>
     </ThemeProvider>
   );

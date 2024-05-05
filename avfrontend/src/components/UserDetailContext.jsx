@@ -10,11 +10,14 @@ const UserDetailProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [connectedUser, setConnectedUser] = useState([]);
   const [stompClient, setStompClient] = useState(null);
+  const [dicomImage,setDicomImage]=useState({ radiologistId: "",
+  imageId: "",
+  imageUrl: "",});
 
 
   return (
     <UserDetailContext.Provider
-      value={{ token, setToken, userId, setUserId, isLoggedIn, setIsLoggedIn,connectedUser, setConnectedUser,stompClient, setStompClient }}
+      value={{dicomImage,setDicomImage, token, setToken, userId, setUserId, isLoggedIn, setIsLoggedIn,connectedUser, setConnectedUser,stompClient, setStompClient }}
     >
       {children}
     </UserDetailContext.Provider>
