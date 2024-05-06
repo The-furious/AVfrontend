@@ -14,6 +14,8 @@ import StompJs from "stompjs";
 import { UserDetailContext } from "../UserDetailContext";
 import useOnlineStatus  from "../Utility/CloseWindowUtility"
 import UserProfile from '../Utility/UserProfile';
+import { GrPrevious, GrNext } from "react-icons/gr";
+
 
 
 
@@ -501,12 +503,11 @@ let temp=false;
                     />
                   </div>
                   <div className="overlay-buttons">
-                    <button className="prev-btn" onClick={handlePrevImage}>
-                      &lt;
-                    </button>
-                    <button className="next-btn" onClick={handleNextImage}>
-                      &gt;
-                    </button>
+                  <GrPrevious
+                        className="prev-btn"
+                        onClick={handlePrevImage}
+                      />
+                      <GrNext className="next-btn" onClick={handleNextImage} />
                   </div>
                   
                 </div>

@@ -59,6 +59,11 @@ export const DoctorConsultancyView = () => {
   const [currentAnnotation,setCurrentAnnotation]=useState(0);
   const [selectedImageId, setSelectedImageId] = useState(null);
 
+  const [prescription,setPrescription]=useState(null);
+  const [doctorImpression,setDoctorImpression]=useState(null);
+  const [closeConsultancy,setCloseConsultancy]=useState(false);
+
+
 
   const {
     dicomImage,setDicomImage,
@@ -209,6 +214,7 @@ export const DoctorConsultancyView = () => {
 
   const handlePrevImage = () => {
 
+    if(radiologistId!==null){
     if(doublyLL.length >= 1){
     if(currentAnnotation!==0){
     setCurrentAnnotation((currentAnnotation) =>
@@ -219,14 +225,20 @@ export const DoctorConsultancyView = () => {
     setSelectedImage(doublyLL[currentAnnotation].imageUrl);
     setImpressionText(doublyLL[currentAnnotation].impressionText)
 }
+}
 };
 
 const handleNextImage = () => {
+  if(radiologistId!==null){
+    if(doublyLL.length>0){
   setCurrentAnnotation((currentAnnotation) =>
   currentAnnotation=== doublyLL.length - 1 ? 0 : currentAnnotation + 1
   );
   setSelectedImage(doublyLL[currentAnnotation].imageUrl);
   setImpressionText(doublyLL[currentAnnotation].impressionText)
+}
+
+}
 
  
 };
@@ -506,6 +518,10 @@ const handleNextImage = () => {
     }
   };
 
+  const handleCloseConsultancy= ()=>{
+    setCloseConsultancy(!closeConsultancy);
+  }
+
   return (
     <div className="doctor-consulancy-view">
       <div className="scrollable-main">
@@ -569,6 +585,11 @@ const handleNextImage = () => {
                 </div>
               )}
             </div>
+        
+  <div className="close-button">
+    <button onClick={handleCloseConsultancy}>Close Consultancy</button>
+  </div>
+
           </div>
           <div className="content1">
             <div className="user-profile-section">
@@ -582,7 +603,7 @@ const handleNextImage = () => {
               )}
             </div>
 
-            <div className="chat">
+           {!closeConsultancy &&( <div className="chat">
               {!selectedImage && selectedTab && (
                 <div className="chat-box" ref={chatBoxRef}>
                   {chatMessages.map((message) => (
@@ -599,8 +620,8 @@ const handleNextImage = () => {
                   ))}
                 </div>
               )}
-            </div>
-            <div className="text-inputd">
+            </div>)}
+            {!closeConsultancy &&(<div className="text-inputd">
               <textarea
                 type="text"
                 placeholder="Type your message here..."
@@ -609,7 +630,35 @@ const handleNextImage = () => {
                 onKeyDown={handleEnterKeyPress}
               />
               <button onClick={handleSendMessage}>Send</button>
-            </div>
+            </div>)}
+            {closeConsultancy && (
+  <div className="text-inputc">
+    <div className="heading">
+      <h2 style={{ paddingLeft: '20px' }} >Prescription</h2>
+      <h2 style={{ paddingLeft: '342px' }}>Impression</h2>
+      </div>
+    <div className="text-area">
+      
+      
+    <textarea
+      type="text"
+      placeholder="Prescription"
+      value={prescription}
+      onChange={(e) => setPrescription(e.target.value)}
+    />
+    <textarea
+      type="text"
+      placeholder="Impression"
+      value={doctorImpression}
+      onChange={(e) => setDoctorImpression(e.target.value)}
+    />
+    </div>
+    <div className="cancel-consultancy">
+    <button style={{ paddingLeft: '20px' }} >Cancel</button>
+    <button >Save</button>
+    </div>
+  </div>
+)}
 
             {selectedImage && (
               <div
