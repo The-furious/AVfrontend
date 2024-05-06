@@ -35,3 +35,13 @@
   height: 500px; /* Set a desired height for the container */
   width: 100%; /* Make the container take up the full width of its parent */
 }
+
+button {
+  width: 70px!important;
+  padding: 0px !important;
+  background-color: #757f89;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}

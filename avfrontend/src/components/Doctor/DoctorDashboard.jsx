@@ -464,6 +464,7 @@ const DoctorDashboard = ({ handleValueTileClick }) => {
                         <div className="attribute-name">Patient Name:</div>
                         <div className="attribute-name">Start Date:</div>
                         <div className="attribute-name">Status:</div>
+                        
                       </div>
                       <button
                         className="value-tile"

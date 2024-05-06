@@ -146,7 +146,7 @@ export const RadiologistConsultancyView = () => {
     setSelectedImage(null);
   };
 
-  const handleImageClick = async (consultationId, imageId, index) => {
+  const handleImageClick = async (consultationId, imageId,imageUrlDCM, index) => {
     try {
       const token = sessionStorage.getItem("jwtToken");
       const response = await axios.get(
@@ -164,6 +164,7 @@ export const RadiologistConsultancyView = () => {
       setDicomImage({
         ...dicomImage,
         imageId: imageId,
+        imageUrl:imageUrlDCM,
         radiologistId: userId,
       });
       console.log(dicomImage);
@@ -171,7 +172,7 @@ export const RadiologistConsultancyView = () => {
       setSelectedImageId(imageId);
       console.log("imaged", imageId);
 
-      setSelectedImage(selectedImage.imageUrl);
+      setSelectedImage(selectedImage.imageUrlDCM);
       setCurrentIndex(index);
       setOverlayImages(images);
     } catch (error) {
@@ -213,12 +214,13 @@ export const RadiologistConsultancyView = () => {
   };
 
   const handleNextImage = () => {
-    setCurrentAnnotation((currentAnnotation) =>
-      currentAnnotation === doublyLL.length - 1 ? 0 : currentAnnotation + 1
-    );
-    setSelectedImage(doublyLL[currentAnnotation].imageUrl);
-    setImpressionText(doublyLL[currentAnnotation].impressionText);
-  };
+    if (doublyLL.length > 0) {
+      setCurrentAnnotation((currentAnnotation) =>
+        currentAnnotation === doublyLL.length - 1 ? 0 : currentAnnotation + 1
+      );
+      setSelectedImage(doublyLL[currentAnnotation].imageUrl);
+      setImpressionText(doublyLL[currentAnnotation].impressionText);
+    }  };
   useEffect(() => {
     setCurrentAnnotation(0);
   }, [currentIndex]);
@@ -242,8 +244,9 @@ export const RadiologistConsultancyView = () => {
           }
         );
         const images = response.data.images.map((imageData) => ({
-          imageUrl: imageData.imageUrl,
+          imageUrl: imageData.imageUrlDCM,
           imageId: imageData.id,
+          imageUrlDCM:imageData.imageUrl
         }));
 
         console.log(images);
@@ -556,16 +559,13 @@ export const RadiologistConsultancyView = () => {
                           }}
                           onClick={handleToggleSendAnnotation}
                         />
-                        {sendAnnotation && (
+                        
                           <span className="showana-tooltip">
-                            Show Annotation
+                            Open Dicom-Viewer
                           </span>
-                        )}
-                        {!sendAnnotation && (
-                          <span className="showana-tooltip">
-                            unshow Annotation
-                          </span>
-                        )}
+                       
+                      
+                        
                       </div>
                       <div
                         className="showana"
@@ -618,6 +618,7 @@ export const RadiologistConsultancyView = () => {
                       handleImageClick(
                         selectedConsultationId,
                         image.imageId,
+                        image.imageUrlDCM,
                         index
                       )
                     }

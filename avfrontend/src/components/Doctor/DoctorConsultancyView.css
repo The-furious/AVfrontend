@@ -670,9 +670,23 @@ height: 100%; /* Allow the image height to adjust proportionally */
   margin-left: 39px !important;
   display: flex!important;
   flex-direction: row!important;
-  background-color: #00b7ac!important;
+  background-color: #00b7ac;
   align-items: center!important;
   justify-content: center!important;
+}
+
+.close-button button.active-button {
+  background-color:#006861;
+}
+
+.close-button button.inactive-button {
+  background-color: #00b7ac;
+}
+.close-button button.active-button:hover {
+  background-color:  #00b7ac; /* Change the color on hover for active state */
+}
+.close-button button.inactive-button:hover {
+  background-color: #006861; /* Change the color on hover for inactive state */
 }
 
 

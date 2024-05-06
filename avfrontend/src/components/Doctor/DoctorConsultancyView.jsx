@@ -15,6 +15,11 @@ import { UserDetailContext } from "../UserDetailContext";
 import useOnlineStatus from "../Utility/CloseWindowUtility";
 import UserProfile from "../Utility/UserProfile";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { FcNext, FcPrevious } from "react-icons/fc";
+import { RiSlideshowLine } from "react-icons/ri";
+import { LiaImagesSolid } from "react-icons/lia";
+import { GrPrevious, GrNext } from "react-icons/gr";
+import DicomViewer from "../DicomViewer/DicomViewer";
 import {
   faChevronLeft,
   faChevronRight,
@@ -22,9 +27,6 @@ import {
   faSearchPlus,
   faSearchMinus,
 } from "@fortawesome/free-solid-svg-icons";
-import { FcNext, FcPrevious } from "react-icons/fc";
-import { RiSlideshowLine } from "react-icons/ri";
-import { GrPrevious, GrNext } from "react-icons/gr";
 
 import { useNavigate } from "react-router-dom";
 
@@ -61,6 +63,7 @@ export const DoctorConsultancyView = () => {
   const [prescription, setPrescription] = useState(null);
   const [doctorImpression, setDoctorImpression] = useState(null);
   const [closeConsultancy, setCloseConsultancy] = useState(false);
+  const [sendAnnotation, setSendAnnotation] = useState(false);
 
   const {
     dicomImage,
@@ -149,7 +152,7 @@ export const DoctorConsultancyView = () => {
     setSelectedImage(null);
   };
 
-  const handleImageClick = async (consultationId, imageId, index) => {
+  const handleImageClick = async (consultationId, imageId ,imageUrlDCM, index) => {
     try {
       const token = sessionStorage.getItem("jwtToken");
       const response = await axios.get(
@@ -167,13 +170,14 @@ export const DoctorConsultancyView = () => {
       setDicomImage({
         ...dicomImage,
         imageId: imageId,
+        imageUrl:imageUrlDCM
       });
       console.log(dicomImage);
 
       setSelectedImageId(imageId);
       console.log("imaged", imageId);
 
-      setSelectedImage(selectedImage.imageUrl);
+      setSelectedImage(selectedImage.imageUrlDCM);
       setCurrentIndex(index);
       setOverlayImages(images);
     } catch (error) {
@@ -386,9 +390,11 @@ export const DoctorConsultancyView = () => {
             },
           }
         );
+        console.log(response);
         const images = response.data.images.map((imageData) => ({
-          imageUrl: imageData.imageUrl,
+          imageUrl: imageData.imageUrlDCM,
           imageId: imageData.id,
+          imageUrlDCM:imageData.imageUrl
         }));
 
         console.log(images);
@@ -507,6 +513,55 @@ export const DoctorConsultancyView = () => {
     setCloseConsultancy(!closeConsultancy);
   };
 
+  const handleSavePrescription=async ()=>{
+    try {
+
+      const data = {
+        consultationId: selectedConsultationId,
+        prescription: prescription,
+        impression: doctorImpression,
+      };
+      console.log(data);
+      const token = sessionStorage.getItem("jwtToken");
+
+      const response = await axios.post(
+        `https://localhost:8090/consultation/endConsultation`,
+        data, // Add an empty object or the data you want to send in the request body
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        const confirmed = window.confirm('Prescription saved successfully. Navigate to homepage ');
+       
+        if (confirmed) {
+          navigate("/doctor-dashboard/:doctorName")
+        }
+
+      } 
+      
+
+    }catch (error) {
+      console.error("Error while closing cunsultation", error);
+      // Handle error, maybe show a message to the user
+    }
+
+
+  };
+  const handleToggleSendAnnotation = () => {
+    setSendAnnotation((prevSendAnnotation) => !prevSendAnnotation);
+    setShowAnnotations(false);
+    // Clear annotation text when hiding the annotation section
+  };
+  useEffect(() => {
+    if (sendAnnotation === true) {
+      navigate("/dicom-viewer");
+    }
+  }, [navigate, sendAnnotation]);
+
   return (
     <div className="doctor-consulancy-view">
       <div className="scrollable-main">
@@ -572,7 +627,7 @@ export const DoctorConsultancyView = () => {
             </div>
 
             <div className="close-button">
-              <button onClick={handleCloseConsultancy}>
+              <button className={closeConsultancy ? 'active-button' : 'inactive-button'}onClick={handleCloseConsultancy}>
                 Close Consultancy
               </button>
             </div>
@@ -642,8 +697,8 @@ export const DoctorConsultancyView = () => {
                   />
                 </div>
                 <div className="cancel-consultancy">
-                  <button style={{ paddingLeft: "20px" }}>Cancel</button>
-                  <button>Save</button>
+                  <button style={{ paddingLeft: "20px" }} onClick={handleCloseConsultancy}>Cancel</button>
+                  <button onClick={handleSavePrescription}>Save</button>
                 </div>
               </div>
             )}
@@ -689,6 +744,31 @@ export const DoctorConsultancyView = () => {
                         onClick={handlePrevImage}
                       />
                       <GrNext className="next-btn" onClick={handleNextImage} />
+                      <div
+                        className="send-annotation"
+                        style={{
+                          display: "flex",
+                          height: "50px",
+                          width: "50px",
+                        }}
+                      >
+                        <LiaImagesSolid
+                          className="slideshow-icon"
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            fontSize: "50px",
+                          }}
+                          onClick={handleToggleSendAnnotation}
+                        />
+                        
+                          <span className="showana-tooltip">
+                            Open Dicom-Viewer
+                          </span>
+                       
+                      
+                        
+                      </div>
                       <div
                         className="showana"
                         style={{
@@ -739,6 +819,7 @@ export const DoctorConsultancyView = () => {
                       handleImageClick(
                         selectedConsultationId,
                         image.imageId,
+                        image.imageUrlDCM,
                         index
                       )
                     }

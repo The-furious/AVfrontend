@@ -282,6 +282,44 @@ const PatientDashboard = ({ handleValueTileClick }) => {
     navigate(`/patient-consultancy-view/${userId}`);
   };
 
+  const handleHistoryValueClick = async (consultationId) => {
+    try {
+      const token = sessionStorage.getItem("jwtToken");
+      const response = await axios.get(
+        `https://localhost:8090/consultation/generateReport/${consultationId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          responseType: 'blob', // Set the responseType to 'blob' for binary data (PDF)
+        }
+      );
+  
+      // Create a Blob from the response data
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+  
+      // Create a URL for the Blob object
+      const url = window.URL.createObjectURL(blob);
+  
+      // Create a link element to trigger the download
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'report.pdf'; // Set the filename for the downloaded file
+      document.body.appendChild(link);
+  
+      // Trigger the download
+      link.click();
+  
+      // Clean up by removing the link element and revoking the URL
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error while downloading", error);
+      // Handle error (e.g., display an error message to the user)
+    }
+  };
+  
+
   useEffect(() => {
     const fetchRadiologistsAndDoctors = async () => {
       try {
@@ -527,10 +565,11 @@ const PatientDashboard = ({ handleValueTileClick }) => {
                                   Start Date:
                                 </div>
                                 <div className="attribute-name">Status:</div>
+                               
                               </div>
                               <button
                                 className="value-tile"
-                                onClick={() => handleHistoryClick()}
+                                onClick={() => handleHistoryValueClick(detail.consultationId)}
                               >
                                 <div>{detail.consultationId}</div>
                                 <div>{detail.doctorName}</div>

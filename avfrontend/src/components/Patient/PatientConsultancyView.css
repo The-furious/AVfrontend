@@ -559,7 +559,7 @@ body {
   } */
   .green-dot {
     position: absolute;
-    top: 2px; /* Position the dot vertically at 50% of the button's height */
+    top: 24px; /* Position the dot vertically at 50% of the button's height */
    left: 65px; /* Adjust the horizontal position as needed */
     transform: translate(0, -50%); /* Center the dot vertically */
     width: 10px;

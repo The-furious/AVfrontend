@@ -59,7 +59,7 @@ const ScreenshotButton = ({ dicomImage }) => {
     return new Blob([ab], { type: mimeString });
   };
 
-  return <button onClick={takeScreenshot}>Save Screenshot</button>;
+  return <button onClick={takeScreenshot}>Save </button>;
 };
 
 

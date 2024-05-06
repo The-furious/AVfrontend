@@ -168,19 +168,7 @@ class DwvComponent extends React.Component {
           <div id="dropBox"></div>
         </div>
 
-        <div><p className="legend">
-          <Typography variant="caption">Powered by <Link
-              href="https://github.com/ivmartel/dwv"
-              title="dwv on github"
-              color="inherit">dwv
-            </Link> {versions.dwv} and <Link
-              href="https://github.com/facebook/react"
-              title="react on github"
-              color="inherit">React
-            </Link> {versions.react}
-          </Typography>
-        </p></div>
-
+        
       </div>
     );
   }
@@ -265,10 +253,13 @@ class DwvComponent extends React.Component {
     this.setState({dwvApp: app});
 
     // setup drop box
+    const { dicomImage } = this.props;
+    console.log(dicomImage);
+
+    const imageUrl = dicomImage.imageUrl;
   
 
-    fetch("https://arogya-vartha-torage.s3.ap-south-1.amazonaws.com/1714666807958_0002.DCM?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20240505T184201Z&X-Amz-SignedHeaders=host&X-Amz-Expires=3599&X-Amz-Credential=AKIAW3MEA5LQLAA6JS66%2F20240505%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=63968c1b89dfeab0c0bf0db3a7c82bcd2180d9b719350794a75c56bee87c17cf")
-      .then((response) => response.arrayBuffer())
+fetch(imageUrl).then((response) => response.arrayBuffer())
       .then((data) => {
         const binaryString = Array.from(new Uint8Array(data))
           .map((byte) => String.fromCharCode(byte))
