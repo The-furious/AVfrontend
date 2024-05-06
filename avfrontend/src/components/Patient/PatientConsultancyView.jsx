@@ -129,7 +129,7 @@ export const PatientConsultancyView = () => {
         }
       );
       const images = response.data.images.map(
-        (imageData) => imageData.imageUrl
+        (imageData) => imageData.imageUrlDCM
       ); // Assuming the API returns an array of image URLs
       setOverlayImages(images);
       setCurrentIndex(index);
@@ -293,9 +293,11 @@ export const PatientConsultancyView = () => {
             },
           }
         );
-        const images = response.data.images.map(
-          (imageData) => imageData.imageUrl
-        );
+        const images = response.data.images.map((imageData) => ({
+          imageUrl: imageData.imageUrlDCM,
+          imageId: imageData.id,
+          imageUrlDCM:imageData.imageUrl
+        }));
         setSidebarImages(images);
         console.log(sidebarImages);
       } catch (error) {
@@ -382,6 +384,18 @@ export const PatientConsultancyView = () => {
   const handleMouseUp = () => {
     setIsDragging(false);
   };
+
+  const handleDownload = () => {
+    sidebarImages.forEach((image) => {
+      const downloadLink = document.createElement('a');
+      downloadLink.href = image.imageUrlDCM;
+      downloadLink.download = `image_${image.imageId}.dcm`; // Set the download filename
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+    });
+  };
+
 
   return (
     <div className="doctor-consulancy-view">
@@ -486,6 +500,7 @@ export const PatientConsultancyView = () => {
                       onClick={handlePrevImage}
                     />
                     <GrNext className="next-btn" onClick={handleNextImage} />
+                    <button onClick={handleDownload}>Download</button>
                   </div>
                 </div>
               </div>
@@ -501,7 +516,7 @@ export const PatientConsultancyView = () => {
                       handleImageClick(selectedConsultationId, index)
                     }
                   >
-                    <img src={image} alt={`Image ${index + 1}`} />
+                    <img src={image.imageUrl} alt={`Image ${index + 1}`} />
                   </button>
                 ))}
               </div>

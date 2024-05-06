@@ -40,6 +40,7 @@ const LabHistoryDetails = ({ searchKeyword }) => {
   return (
     <div>
       <div className="consultancy-header"></div>
+      <div className="history-scroll">
       {searchKeyword.trim() === ""
         ? // Render the entire historyDetails if searchKeyword is empty
           historyDetails.map((detail, index) => (
@@ -79,6 +80,7 @@ const LabHistoryDetails = ({ searchKeyword }) => {
               </div>
             </div>
           ))}
+          </div>
     </div>
   );
 };
