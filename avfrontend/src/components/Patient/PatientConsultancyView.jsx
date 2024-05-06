@@ -1,4 +1,4 @@
-import React, { useContext,useState, useEffect, useRef } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import { FaDownload } from "react-icons/fa";
 import "./PatientConsultancyView.css";
 import image1 from "../images/image1.jpg";
@@ -6,22 +6,17 @@ import image2 from "../images/image2.jpg";
 import image3 from "../images/image3.jpg";
 import patient from "../images/patient.jpeg";
 import radiologist from "../images/radiologist.jpg";
-import doctor from "../images/doctor.jpg"
+import doctor from "../images/doctor.jpg";
 import axios from "axios";
 import useMousePosition from "../Utility/useMousePosition";
 import SockJS from "sockjs-client";
 import StompJs from "stompjs";
 import { UserDetailContext } from "../UserDetailContext";
-import useOnlineStatus  from "../Utility/CloseWindowUtility"
-import UserProfile from '../Utility/UserProfile';
+import useOnlineStatus from "../Utility/CloseWindowUtility";
+import UserProfile from "../Utility/UserProfile";
 import { GrPrevious, GrNext } from "react-icons/gr";
 
-
-
-
-
 import { useNavigate } from "react-router-dom";
-
 
 export const PatientConsultancyView = () => {
   const [selectedTab, setSelectedTab] = useState();
@@ -39,14 +34,19 @@ export const PatientConsultancyView = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [tabButtons, setTabButtons] = useState([]);
   const [defaultSelectedTab, setDefaultSelectedTab] = useState();
-  const [socketUrl, setSocketUrl] = useState("http://localhost:8090/ws"); // Change this to your WebSocket server URL
+  const [socketUrl, setSocketUrl] = useState("https://localhost:8090/wss"); // Change this to your WebSocket server URL
   const [stompClient, setStompClient] = useState(null);
-  
 
-  const { token, isLoggedIn, setToken, setUserId, setIsLoggedIn,connectedUser, setConnectedUser  } =
-  useContext(UserDetailContext);
-  let [prevConnectedUser,setPrevConnectedUser]=useState([]);
-
+  const {
+    token,
+    isLoggedIn,
+    setToken,
+    setUserId,
+    setIsLoggedIn,
+    connectedUser,
+    setConnectedUser,
+  } = useContext(UserDetailContext);
+  let [prevConnectedUser, setPrevConnectedUser] = useState([]);
 
   const chatBoxRef = useRef(null);
 
@@ -66,8 +66,6 @@ export const PatientConsultancyView = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [zoomLevel, setZoomLevel] = useState(1);
 
-
-
   useEffect(() => {
     const screenWidth = window.innerWidth;
     const screenHeight = window.innerHeight;
@@ -81,10 +79,13 @@ export const PatientConsultancyView = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:8090/activeUsers");
+        const response = await axios.get("https://localhost:8090/activeUsers");
         const newUserArray = response.data; // Assuming response.data is an array of userIds
 
-        setPrevConnectedUser((prevConnectedUser) => [...prevConnectedUser, ...newUserArray]);
+        setPrevConnectedUser((prevConnectedUser) => [
+          ...prevConnectedUser,
+          ...newUserArray,
+        ]);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -92,7 +93,6 @@ export const PatientConsultancyView = () => {
 
     fetchData();
   }, []);
-
 
   useOnlineStatus(stompClient, userId);
 
@@ -102,20 +102,11 @@ export const PatientConsultancyView = () => {
     }
   }, [isPatientLoggedIn, navigate]);
 
-
-
-
-
-
-
-
-
-
   const handleTabClick = (tabname, tabid, tabUserType) => {
     const updatedTabButtons = tabButtons.map((button) =>
-    button.userId === tabid ? { ...button, unreadMessages: 0 } : button
-  );
-  setTabButtons(updatedTabButtons);
+      button.userId === tabid ? { ...button, unreadMessages: 0 } : button
+    );
+    setTabButtons(updatedTabButtons);
     setRecipientName(tabname);
     setRecipientUserType(tabUserType);
     setRecipientId(tabid);
@@ -130,7 +121,7 @@ export const PatientConsultancyView = () => {
     try {
       const token = sessionStorage.getItem("jwtToken");
       const response = await axios.get(
-        `http://localhost:8090/consultation/labReport/${selectedConsultationId}`,
+        `https://localhost:8090/consultation/labReport/${selectedConsultationId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`, // Attach the JWT token to the Authorization header
@@ -166,10 +157,6 @@ export const PatientConsultancyView = () => {
     );
     setSelectedImage(overlayImages[currentIndex]);
   };
-
- 
-
- 
 
   const overlayContainerStyle = {
     transform: `scale(${zoomLevel})`,
@@ -208,16 +195,12 @@ export const PatientConsultancyView = () => {
                 : button
             );
             setTabButtons(updatedTabButtons);
+          } else {
+            setChatMessages((prevMessages) => [...prevMessages, newMessage]);
           }
-          else{
-           
-  
-          setChatMessages((prevMessages) => [...prevMessages, newMessage]);
-          }
-          
         }
       );
-  
+
       return () => {
         subscription.unsubscribe();
       };
@@ -233,8 +216,8 @@ export const PatientConsultancyView = () => {
       prevConnectedUser.filter((userId) => userId !== userIdToRemove)
     );
   };
-  
-let temp=false;
+
+  let temp = false;
   useEffect(() => {
     if (stompClient && temp === false) {
       const subscription = stompClient.subscribe(
@@ -242,11 +225,11 @@ let temp=false;
         (message) => {
           var user = JSON.parse(message.body);
           console.log("Received message:", message.body);
-          if(user.status==='ONLINE'){
-          handleSetConnectedUser(user.userId);
+          if (user.status === "ONLINE") {
+            handleSetConnectedUser(user.userId);
+          } else {
+            handleRemoveConnectedUser(user.userId);
           }
-          else{
-            handleRemoveConnectedUser(user.userId);          }
         }
       );
       temp = true;
@@ -255,19 +238,17 @@ let temp=false;
         subscription.unsubscribe();
       };
     }
-  }, [connectedUser, stompClient, temp]); 
+  }, [connectedUser, stompClient, temp]);
   useEffect(() => {
     // Update connectedUser after prevConnectedUser has been updated
     setConnectedUser(prevConnectedUser);
-  }, [prevConnectedUser, setConnectedUser]); 
+  }, [prevConnectedUser, setConnectedUser]);
 
-  
-  
   useEffect(() => {
     const fetchMessages = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8090/messages/${selectedConsultationId}/${userId}/${RecipientId}`
+          `https://localhost:8090/messages/${selectedConsultationId}/${userId}/${RecipientId}`
         );
         setChatMessages(response.data);
       } catch (error) {
@@ -305,7 +286,7 @@ let temp=false;
       try {
         const token = sessionStorage.getItem("jwtToken");
         const response = await axios.get(
-          `http://localhost:8090/consultation/labReport/${selectedConsultationId}`,
+          `https://localhost:8090/consultation/labReport/${selectedConsultationId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Attach the JWT token to the Authorization header
@@ -328,14 +309,12 @@ let temp=false;
     }
   }, [selectedConsultationId]);
 
-
-
   useEffect(() => {
     const fetchConsultationData = async () => {
       try {
         const token = sessionStorage.getItem("jwtToken");
         const response = await axios.get(
-          `http://localhost:8090/consultation/${selectedConsultationId}/${userId}`,
+          `https://localhost:8090/consultation/${selectedConsultationId}/${userId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Attach the JWT token to the Authorization header
@@ -349,7 +328,7 @@ let temp=false;
           userId: data.userId,
           givenConsent: data.givenConsent,
           userType: data.userType,
-          unreadMessages:data.unreadMessages,
+          unreadMessages: data.unreadMessages,
         }));
         // Filter the tabButtons array based on givenConsent value
         // const filteredTabButtons = tabButtons.filter(
@@ -371,13 +350,12 @@ let temp=false;
     if (selectedConsultationId) {
       fetchConsultationData();
     }
-  }, [selectedConsultationId,userId]);
+  }, [selectedConsultationId, userId]);
 
   useEffect(() => {
     setSelectedTab(defaultSelectedTab);
   }, [defaultSelectedTab]);
 
-  
   const handleEnterKeyPress = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault(); // Prevent new line on Enter
@@ -405,13 +383,11 @@ let temp=false;
     setIsDragging(false);
   };
 
-
   return (
     <div className="doctor-consulancy-view">
       <div className="scrollable-main">
         <main>
           <div className="sidebard">
-            
             <div className="tab-buttonsd">
               {tabButtons.map((button) => (
                 <button
@@ -431,16 +407,18 @@ let temp=false;
                   disabled={!button.givenConsent}
                 >
                   {button.name}
-                  
-              {button.unreadMessages > 0 && (
-                <span className="red-notification">{button.unreadMessages}</span>
-               )}
-                {isUserConnected(button.userId) && <span className="green-dot" />}
 
+                  {button.unreadMessages > 0 && (
+                    <span className="red-notification">
+                      {button.unreadMessages}
+                    </span>
+                  )}
+                  {isUserConnected(button.userId) && (
+                    <span className="green-dot" />
+                  )}
                 </button>
               ))}
             </div>
-            
           </div>
           <div className="content1">
             <div className="user-profile-section">
@@ -450,7 +428,6 @@ let temp=false;
                   userType={RecipientUserType}
                   RecipientId={RecipientId}
                   photoUrl=""
-                  
                 />
               )}
             </div>
@@ -462,7 +439,9 @@ let temp=false;
                     <div
                       key={message.chatId}
                       className={`message ${
-                        message.senderId.toString() === senderId ? "right" : "left"
+                        message.senderId.toString() === senderId
+                          ? "right"
+                          : "left"
                       }`}
                     >
                       {message.content}
@@ -489,7 +468,6 @@ let temp=false;
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
-               
               >
                 <div className="image-overlay">
                   <span className="close-btn" onClick={handleCloseImage}>
@@ -503,13 +481,12 @@ let temp=false;
                     />
                   </div>
                   <div className="overlay-buttons">
-                  <GrPrevious
-                        className="prev-btn"
-                        onClick={handlePrevImage}
-                      />
-                      <GrNext className="next-btn" onClick={handleNextImage} />
+                    <GrPrevious
+                      className="prev-btn"
+                      onClick={handlePrevImage}
+                    />
+                    <GrNext className="next-btn" onClick={handleNextImage} />
                   </div>
-                  
                 </div>
               </div>
             )}

@@ -1,4 +1,10 @@
-import React, { useContext, useState, useEffect, useRef, useCallback } from "react";
+import React, {
+  useContext,
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+} from "react";
 import Navbar from "../Navbar/Navbar";
 import axios from "axios"; // Import Axios
 import "./DoctorDashboard.css";
@@ -10,8 +16,7 @@ import HoverPatientDetails from "../Patient/HoverPatientDetails";
 import SockJS from "sockjs-client";
 import StompJs from "stompjs";
 import { UserDetailContext } from "../UserDetailContext";
-import useOnlineStatus  from "../Utility/CloseWindowUtility"
-
+import useOnlineStatus from "../Utility/CloseWindowUtility";
 
 const DoctorDashboard = ({ handleValueTileClick }) => {
   const [selectedTab, setSelectedTab] = useState(1);
@@ -21,14 +26,20 @@ const DoctorDashboard = ({ handleValueTileClick }) => {
 
   const [newConsultancyUpdates, setNewConsultancyUpdates] = useState(false);
   const [newHistoryUpdates, setNewHistoryUpdates] = useState(false);
-  const{ token, isLoggedIn, setToken, setUserId, setIsLoggedIn,connectedUser, setConnectedUser,stompClient, setStompClient  } =
-  useContext(UserDetailContext);
-  let [prevConnectedUser,setPrevConnectedUser]=useState([]);
+  const {
+    token,
+    isLoggedIn,
+    setToken,
+    setUserId,
+    setIsLoggedIn,
+    connectedUser,
+    setConnectedUser,
+    stompClient,
+    setStompClient,
+  } = useContext(UserDetailContext);
+  let [prevConnectedUser, setPrevConnectedUser] = useState([]);
 
-
-
-  const isDoctorLoggedIn =
-    sessionStorage.getItem("isDoctorLoggedIn");
+  const isDoctorLoggedIn = sessionStorage.getItem("isDoctorLoggedIn");
   const DoctorId = sessionStorage.getItem("DoctorId");
   const userId = sessionStorage.getItem("userId");
   const navigate = useNavigate();
@@ -42,16 +53,19 @@ const DoctorDashboard = ({ handleValueTileClick }) => {
     useState(null);
   const [filteredHistoryDetails, setFilteredHistoryDetails] = useState(null); // Add state for filtered history details
 
-  const [socketUrl, setSocketUrl] = useState("http://localhost:8090/ws"); // Change this to your WebSocket server URL
+  const [socketUrl, setSocketUrl] = useState("https://localhost:8090/wss"); // Change this to your WebSocket server URL
   let temp = false;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:8090/activeUsers");
+        const response = await axios.get("https://localhost:8090/activeUsers");
         const newUserArray = response.data; // Assuming response.data is an array of userIds
 
-        setPrevConnectedUser((prevConnectedUser) => [...prevConnectedUser, ...newUserArray]);
+        setPrevConnectedUser((prevConnectedUser) => [
+          ...prevConnectedUser,
+          ...newUserArray,
+        ]);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -63,9 +77,7 @@ const DoctorDashboard = ({ handleValueTileClick }) => {
   useEffect(() => {
     // Update connectedUser after prevConnectedUser has been updated
     setConnectedUser(prevConnectedUser);
-  }, [prevConnectedUser, setConnectedUser]); 
-
-
+  }, [prevConnectedUser, setConnectedUser]);
 
   useEffect(() => {
     const socket = new SockJS(socketUrl);
@@ -82,11 +94,10 @@ const DoctorDashboard = ({ handleValueTileClick }) => {
   };
 
   const handleRemoveConnectedUser = (userIdToRemove) => {
-    setConnectedUser((prevConnectedUser) =>{
-      prevConnectedUser.filter((userId) => userId !== userIdToRemove );
-      console.log("remove",prevConnectedUser);
-    }
-    );
+    setConnectedUser((prevConnectedUser) => {
+      prevConnectedUser.filter((userId) => userId !== userIdToRemove);
+      console.log("remove", prevConnectedUser);
+    });
   };
 
   useEffect(() => {
@@ -96,11 +107,11 @@ const DoctorDashboard = ({ handleValueTileClick }) => {
         (message) => {
           var user = JSON.parse(message.body);
           console.log("Received message:", message.body);
-          if(user.status==='ONLINE'){
-          handleSetConnectedUser(user.userId);
+          if (user.status === "ONLINE") {
+            handleSetConnectedUser(user.userId);
+          } else {
+            handleRemoveConnectedUser(user.userId);
           }
-          else{
-            handleRemoveConnectedUser(user.userId);          }
         }
       );
       temp = true;
@@ -109,23 +120,14 @@ const DoctorDashboard = ({ handleValueTileClick }) => {
         subscription.unsubscribe();
       };
     }
-  }, [connectedUser, stompClient, temp]); 
-  
+  }, [connectedUser, stompClient, temp]);
+
   useEffect(() => {
-   
-      if (stompClient) {
-        var user = { userId: userId, status: 'ONLINE' };
-        stompClient.send("/app/topic/addUser", {}, JSON.stringify(user));
-      }
-  
-     
-    
-  }, [stompClient,userId]);
-
-  
-
-  
-  
+    if (stompClient) {
+      var user = { userId: userId, status: "ONLINE" };
+      stompClient.send("/app/topic/addUser", {}, JSON.stringify(user));
+    }
+  }, [stompClient, userId]);
 
   const timerRef = useRef(null);
   const mousePosition = useMousePosition();
@@ -148,7 +150,7 @@ const DoctorDashboard = ({ handleValueTileClick }) => {
       // Fetch data using Axios
       const token = sessionStorage.getItem("jwtToken");
       const response = await axios.get(
-        `http://localhost:8090/consultation/get/present/${userId}`,
+        `https://localhost:8090/consultation/get/present/${userId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`, // Attach the JWT token to the Authorization header
@@ -186,7 +188,7 @@ const DoctorDashboard = ({ handleValueTileClick }) => {
     try {
       const token = sessionStorage.getItem("jwtToken");
       const response = await axios.get(
-        `http://localhost:8090/consultation/get/history/${userId}`,
+        `https://localhost:8090/consultation/get/history/${userId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`, // Attach the JWT token to the Authorization header

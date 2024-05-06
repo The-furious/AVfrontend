@@ -1,25 +1,25 @@
-import React, { useState } from 'react';
-import './Login.css';
-import { useNavigate } from 'react-router-dom';
-import AdminIcon from '../images/admin.jpeg';
-import axios from 'axios'; // Import Axios
+import React, { useState } from "react";
+import "./Login.css";
+import { useNavigate } from "react-router-dom";
+import AdminIcon from "../images/admin.jpeg";
+import axios from "axios"; // Import Axios
 
 function AdminLogin({ setShowForgotPassword }) {
   const navigate = useNavigate();
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
   const [isAdminLoggedIn, setAdminLoggedIn] = useState(false);
 
   const [formData, setFormData] = useState({
-    username: '',
-    password: '',
-    userType: 'ADMIN'
+    username: "",
+    password: "",
+    userType: "ADMIN",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
       ...prevState,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -27,33 +27,35 @@ function AdminLogin({ setShowForgotPassword }) {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:8090/auth/login', formData);
-      
+      const response = await axios.post(
+        "https://localhost:8090/auth/login",
+        formData
+      );
+
       console.log(response);
-       
 
       if (!response.data || !response.data.token) {
-        throw new Error('Invalid username or password');
+        throw new Error("Invalid username or password");
       }
 
       const { token } = response.data;
-      sessionStorage.setItem('userId',response.data.userId)
+      sessionStorage.setItem("userId", response.data.userId);
 
-      sessionStorage.setItem('jwtToken', token);
-      
-      sessionStorage.setItem('isAdminLoggedIn', 'true');
-      sessionStorage.setItem('adminId', formData.username);
+      sessionStorage.setItem("jwtToken", token);
+
+      sessionStorage.setItem("isAdminLoggedIn", "true");
+      sessionStorage.setItem("adminId", formData.username);
       setAdminLoggedIn(true);
-      console.log('Login successful');
+      console.log("Login successful");
 
-      sessionStorage.setItem('adminname', formData.username);
+      sessionStorage.setItem("adminname", formData.username);
 
       // Navigate to the admin dashboard or any other desired route
       navigate(`/admin-dashboard/${formData.username}`);
     } catch (error) {
       console.error(error);
-     
-      setErrorMessage('Invalid username or password');
+
+      setErrorMessage("Invalid username or password");
     }
   };
 
@@ -63,8 +65,8 @@ function AdminLogin({ setShowForgotPassword }) {
 
   return (
     <div className="login-container">
-      <div className='logo'>
-        <img src={AdminIcon} alt='admin' />
+      <div className="logo">
+        <img src={AdminIcon} alt="admin" />
       </div>
       <h2>Admin Login</h2>
       <form onSubmit={handleSubmit}>
@@ -89,12 +91,13 @@ function AdminLogin({ setShowForgotPassword }) {
           />
         </div>
         <button type="submit">Login</button>
-        <button className="forgot-password-button" onClick={handleForgotPasswordClick}>
+        <button
+          className="forgot-password-button"
+          onClick={handleForgotPasswordClick}
+        >
           Forgot Password?
-
         </button>
         {errorMessage && <div className="error-message">{errorMessage}</div>}
-
       </form>
     </div>
   );

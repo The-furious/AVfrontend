@@ -10,7 +10,6 @@ import useMousePosition from "../Utility/useMousePosition";
 import axios from "axios";
 import DwvComponent from "../DicomViewer/DwvComponent";
 
-
 // import io from "socket.io-client";
 import SockJS from "sockjs-client";
 import StompJs from "stompjs";
@@ -47,14 +46,13 @@ export const RadiologistConsultancyView = () => {
   const [sendAnnotation, setSendAnnotation] = useState(false);
   const [impressionText, setImpressionText] = useState("");
   const [doublyLL, setDoublyLL] = useState([]);
-  const [currentAnnotation,setCurrentAnnotation]=useState(0);
-
+  const [currentAnnotation, setCurrentAnnotation] = useState(0);
 
   const selectedConsultationId = sessionStorage.getItem(
     "selectedConsultationId"
   );
 
-  const [socketUrl, setSocketUrl] = useState("http://localhost:8090/ws"); // Change this to your WebSocket server URL
+  const [socketUrl, setSocketUrl] = useState("https://localhost:8090/wss"); // Change this to your WebSocket server URL
   const [stompClient, setStompClient] = useState(null);
   const userId = sessionStorage.getItem("userId");
   const senderId = userId;
@@ -65,7 +63,8 @@ export const RadiologistConsultancyView = () => {
   const [selectedImageId, setSelectedImageId] = useState(null);
 
   const {
-    dicomImage,setDicomImage,
+    dicomImage,
+    setDicomImage,
     token,
     isLoggedIn,
     setToken,
@@ -79,8 +78,6 @@ export const RadiologistConsultancyView = () => {
   const isRadiologistLoggedIn =
     sessionStorage.getItem("isRadiologistLoggedIn") === "true";
   const chatBoxRef = useRef(null);
-
- 
 
   useEffect(() => {
     const screenWidth = window.innerWidth;
@@ -101,7 +98,6 @@ export const RadiologistConsultancyView = () => {
     // Clear annotation text when hiding the annotation section
   };
 
-  
   const handleMouseDown = (e) => {
     setIsDragging(true);
     setDragStart({
@@ -150,11 +146,11 @@ export const RadiologistConsultancyView = () => {
     setSelectedImage(null);
   };
 
-  const handleImageClick = async (consultationId,imageId, index) => {
+  const handleImageClick = async (consultationId, imageId, index) => {
     try {
       const token = sessionStorage.getItem("jwtToken");
       const response = await axios.get(
-        `http://localhost:8090/consultation/labReport/${selectedConsultationId}`,
+        `https://localhost:8090/consultation/labReport/${selectedConsultationId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`, // Attach the JWT token to the Authorization header
@@ -171,16 +167,13 @@ export const RadiologistConsultancyView = () => {
         radiologistId: userId,
       });
       console.log(dicomImage);
-    
-      
-        
-        setSelectedImageId(imageId);
-        console.log("imaged",imageId)
-     
-        setSelectedImage(selectedImage.imageUrl);
-        setCurrentIndex(index);
-        setOverlayImages(images); 
-    
+
+      setSelectedImageId(imageId);
+      console.log("imaged", imageId);
+
+      setSelectedImage(selectedImage.imageUrl);
+      setCurrentIndex(index);
+      setOverlayImages(images);
     } catch (error) {
       console.error("Error fetching images:", error);
       // Handle error, maybe show a message to the user
@@ -189,12 +182,13 @@ export const RadiologistConsultancyView = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8090/annotations/${userId}/${selectedImageId}`);
+        const response = await axios.get(
+          `https://localhost:8090/annotations/${userId}/${selectedImageId}`
+        );
         setDoublyLL(response.data); // Assuming the response data is an array of objects
-        console.log(doublyLL)
-
+        console.log(doublyLL);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
         // Handle error, show error message to user, etc.
       }
     };
@@ -207,34 +201,27 @@ export const RadiologistConsultancyView = () => {
   };
 
   const handlePrevImage = () => {
+    if (doublyLL.length >= 1) {
+      if (currentAnnotation !== 0) {
+        setCurrentAnnotation((currentAnnotation) =>
+          currentAnnotation === doublyLL.length - 1 ? 0 : currentAnnotation - 1
+        );
+      }
+      setSelectedImage(doublyLL[currentAnnotation].imageUrl);
+      setImpressionText(doublyLL[currentAnnotation].impressionText);
+    }
+  };
 
-    if(doublyLL.length >= 1){
-    if(currentAnnotation!==0){
+  const handleNextImage = () => {
     setCurrentAnnotation((currentAnnotation) =>
-    currentAnnotation === doublyLL.length - 1 ? 0 : currentAnnotation - 1
-    );
-  
-  }
-    setSelectedImage(doublyLL[currentAnnotation].imageUrl);
-    setImpressionText(doublyLL[currentAnnotation].impressionText)
-}
-};
-
-const handleNextImage = () => {
-    setCurrentAnnotation((currentAnnotation) =>
-    currentAnnotation=== doublyLL.length - 1 ? 0 : currentAnnotation + 1
+      currentAnnotation === doublyLL.length - 1 ? 0 : currentAnnotation + 1
     );
     setSelectedImage(doublyLL[currentAnnotation].imageUrl);
-    setImpressionText(doublyLL[currentAnnotation].impressionText)
-
-   
-};
+    setImpressionText(doublyLL[currentAnnotation].impressionText);
+  };
   useEffect(() => {
-
     setCurrentAnnotation(0);
-    
-  },[currentIndex]);
-
+  }, [currentIndex]);
 
   useEffect(() => {
     if (chatBoxRef.current) {
@@ -247,7 +234,7 @@ const handleNextImage = () => {
       try {
         const token = sessionStorage.getItem("jwtToken");
         const response = await axios.get(
-          `http://localhost:8090/consultation/labReport/${selectedConsultationId}`,
+          `https://localhost:8090/consultation/labReport/${selectedConsultationId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Attach the JWT token to the Authorization header
@@ -278,7 +265,7 @@ const handleNextImage = () => {
       try {
         const token = sessionStorage.getItem("jwtToken");
         const response = await axios.get(
-          `http://localhost:8090/consultation/${selectedConsultationId}/${userId}`,
+          `https://localhost:8090/consultation/${selectedConsultationId}/${userId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Attach the JWT token to the Authorization header
@@ -314,7 +301,7 @@ const handleNextImage = () => {
       fetchConsultationData();
     }
   }, [selectedConsultationId]);
-  
+
   useEffect(() => {
     setSelectedTab(defaultSelectedTab);
   }, [defaultSelectedTab]);
@@ -395,7 +382,7 @@ const handleNextImage = () => {
     const fetchMessages = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8090/messages/${selectedConsultationId}/${userId}/${RecipientId}`
+          `https://localhost:8090/messages/${selectedConsultationId}/${userId}/${RecipientId}`
         );
         setChatMessages(response.data);
       } catch (error) {
@@ -435,18 +422,14 @@ const handleNextImage = () => {
     }
   };
 
-  useEffect(()=>{
-    if(sendAnnotation===true)
-    {
-      navigate("/dicom-viewer")
+  useEffect(() => {
+    if (sendAnnotation === true) {
+      navigate("/dicom-viewer");
     }
-  },[navigate, sendAnnotation]
-  );
-
-  
+  }, [navigate, sendAnnotation]);
 
   useOnlineStatus(stompClient, userId);
-  
+
   return (
     <div className="radiologist-consulancy-view">
       <div className="scrollable-main">
@@ -619,7 +602,7 @@ const handleNextImage = () => {
                         <p>{impressionText}</p>
                       </div>
                     )}
-                {sendAnnotation }
+                    {sendAnnotation}
                   </div>
                 </div>
               </div>
@@ -632,7 +615,11 @@ const handleNextImage = () => {
                   <button
                     key={index}
                     onClick={() =>
-                      handleImageClick(selectedConsultationId,image.imageId, index)
+                      handleImageClick(
+                        selectedConsultationId,
+                        image.imageId,
+                        index
+                      )
                     }
                   >
                     <img src={image.imageUrl} alt={`Image ${index + 1}`} />

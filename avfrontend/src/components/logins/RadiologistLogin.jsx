@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import './Login.css';
-import { useNavigate } from 'react-router-dom';
-import RadiologistIcon from '../images/radiologist.jpg';
-import axios from 'axios'; // Import Axios
+import React, { useState } from "react";
+import "./Login.css";
+import { useNavigate } from "react-router-dom";
+import RadiologistIcon from "../images/radiologist.jpg";
+import axios from "axios"; // Import Axios
 
 function RadiologistLogin({ setShowForgotPassword }) {
   const [formData, setFormData] = useState({
-    username: '',
-    password: '',
-    userType: 'RADIOLOGIST'
+    username: "",
+    password: "",
+    userType: "RADIOLOGIST",
   });
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
   const [isRadiologistLoggedIn, setIsRadiologistLoggedIn] = useState(false);
   const navigate = useNavigate();
 
@@ -18,7 +18,7 @@ function RadiologistLogin({ setShowForgotPassword }) {
     const { name, value } = e.target;
     setFormData((prevState) => ({
       ...prevState,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -29,30 +29,33 @@ function RadiologistLogin({ setShowForgotPassword }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8090/auth/login', formData);
-      
+      const response = await axios.post(
+        "https://localhost:8090/auth/login",
+        formData
+      );
+
       if (!response.data || !response.data.token) {
-        throw new Error('Invalid username or password');
+        throw new Error("Invalid username or password");
       }
 
       const { token } = response.data;
 
-      sessionStorage.setItem('jwtToken', token);
+      sessionStorage.setItem("jwtToken", token);
       setIsRadiologistLoggedIn(true);
-      sessionStorage.setItem('isRadiologistLoggedIn', 'true');
-      sessionStorage.setItem('radiologistId', formData.username);
-      sessionStorage.setItem('userId',response.data.userId)
+      sessionStorage.setItem("isRadiologistLoggedIn", "true");
+      sessionStorage.setItem("radiologistId", formData.username);
+      sessionStorage.setItem("userId", response.data.userId);
       navigate(`/radiologist-dashboard/${formData.username}`);
     } catch (error) {
       console.error(error);
-      setErrorMessage('Invalid username or password');
+      setErrorMessage("Invalid username or password");
     }
   };
 
   return (
     <div className="login-container">
-      <div className='logo'>
-        <img src={RadiologistIcon} alt='admin' />
+      <div className="logo">
+        <img src={RadiologistIcon} alt="admin" />
       </div>
       <h2>Radiologist Login</h2>
       <form onSubmit={handleSubmit}>
@@ -77,7 +80,12 @@ function RadiologistLogin({ setShowForgotPassword }) {
           />
         </div>
         <button type="submit">Login</button>
-        <button className="forgot-password-button" onClick={handleForgotPasswordClick}>Forgot Password?</button>
+        <button
+          className="forgot-password-button"
+          onClick={handleForgotPasswordClick}
+        >
+          Forgot Password?
+        </button>
         {errorMessage && <div className="error-message">{errorMessage}</div>}
       </form>
     </div>

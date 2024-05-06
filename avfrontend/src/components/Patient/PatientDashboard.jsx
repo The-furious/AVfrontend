@@ -40,7 +40,7 @@ const PatientDashboard = ({ handleValueTileClick }) => {
       const token = sessionStorage.getItem("jwtToken");
       console.log(token);
       const response = await axios.get(
-        `http://localhost:8090/consultation/get/present/${userId}`,
+        `https://localhost:8090/consultation/get/present/${userId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`, // Attach the JWT token to the Authorization header
@@ -52,8 +52,8 @@ const PatientDashboard = ({ handleValueTileClick }) => {
       const consultancyDetails = response.data.map((consultancy) => ({
         consultationId: consultancy.consultationId,
         doctorName: consultancy.doctor.name,
-        startDate: consultancy.startDate.slice(0,10),
-        doctorId : consultancy.doctor.userId,
+        startDate: consultancy.startDate.slice(0, 10),
+        doctorId: consultancy.doctor.userId,
         status: "Work in Progress",
       }));
 
@@ -83,7 +83,7 @@ const PatientDashboard = ({ handleValueTileClick }) => {
       // Fetch data using Axios
       const token = sessionStorage.getItem("jwtToken");
       const response = await axios.get(
-        `http://localhost:8090/consultation/get/history/${userId}`,
+        `https://localhost:8090/consultation/get/history/${userId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`, // Attach the JWT token to the Authorization header
@@ -95,8 +95,7 @@ const PatientDashboard = ({ handleValueTileClick }) => {
       const consultancyDetails = response.data.map((consultancy) => ({
         consultationId: consultancy.consultationId,
         doctorName: consultancy.doctor.name,
-      
-        
+
         startDate: consultancy.startDate.slice(0, 10),
         status: "Completed",
       }));
@@ -125,7 +124,7 @@ const PatientDashboard = ({ handleValueTileClick }) => {
       // Fetch pending consultation data using Axios
       const token = sessionStorage.getItem("jwtToken");
       const response = await axios.get(
-        `http://localhost:8090/patient/notification/non-consents/${userId}`,
+        `https://localhost:8090/patient/notification/non-consents/${userId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`, // Attach the JWT token to the Authorization header
@@ -156,7 +155,7 @@ const PatientDashboard = ({ handleValueTileClick }) => {
     try {
       const token = sessionStorage.getItem("jwtToken");
       await axios.post(
-        "http://localhost:8090/patient/notification/giveConsent",
+        "https://localhost:8090/patient/notification/giveConsent",
         {
           userId: radiologistId,
           consultationId: consultationId,
@@ -180,7 +179,7 @@ const PatientDashboard = ({ handleValueTileClick }) => {
     try {
       const token = sessionStorage.getItem("jwtToken");
       await axios.post(
-        "http://localhost:8090/patient/notification/giveConsent",
+        "https://localhost:8090/patient/notification/giveConsent",
         {
           userId: radiologistId,
           consultationId: consultationId,
@@ -230,7 +229,7 @@ const PatientDashboard = ({ handleValueTileClick }) => {
       // Send POST request using Axios
       const token = sessionStorage.getItem("jwtToken");
       const response = await axios.post(
-        "http://localhost:8090/consultation/create",
+        "https://localhost:8090/consultation/create",
         requestBody,
         {
           headers: {
@@ -275,7 +274,7 @@ const PatientDashboard = ({ handleValueTileClick }) => {
   const handleValueClick = (consultationId, patientName) => {
     // Handle the click event for the value tile
     console.log(`Clicked value: ${consultationId}`);
-    
+
     // Set the selected consultationId in sessionStorage
     sessionStorage.setItem("selectedConsultationId", consultationId);
 
@@ -287,13 +286,13 @@ const PatientDashboard = ({ handleValueTileClick }) => {
     const fetchRadiologistsAndDoctors = async () => {
       try {
         const radiologistsResponse = await axios.get(
-          "http://localhost:8090/admin/getAllRadiologist"
+          "https://localhost:8090/admin/getAllRadiologist"
         );
         setRadiologists(radiologistsResponse.data);
         console.log(radiologistsResponse);
 
         const doctorsResponse = await axios.get(
-          "http://localhost:8090/admin/getAllDoctors"
+          "https://localhost:8090/admin/getAllDoctors"
         );
         setDoctors(doctorsResponse.data);
       } catch (error) {
@@ -438,7 +437,6 @@ const PatientDashboard = ({ handleValueTileClick }) => {
                               setRadiologistId(""); // Handle the case when no radiologist is selected
                             }
                           }}
-                          
                         >
                           <option value="">Select Radiologist</option>
                           {radiologists.map((radiologist) => (
@@ -496,7 +494,12 @@ const PatientDashboard = ({ handleValueTileClick }) => {
                               </div>
                               <button
                                 className="value-tile"
-                                onClick={() => handleValueClick(detail.consultationId,detail.doctorId)}
+                                onClick={() =>
+                                  handleValueClick(
+                                    detail.consultationId,
+                                    detail.doctorId
+                                  )
+                                }
                               >
                                 <div>{detail.consultationId}</div>
                                 <div>{detail.doctorName}</div>

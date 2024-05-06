@@ -26,7 +26,6 @@ import { FcNext, FcPrevious } from "react-icons/fc";
 import { RiSlideshowLine } from "react-icons/ri";
 import { GrPrevious, GrNext } from "react-icons/gr";
 
-
 import { useNavigate } from "react-router-dom";
 
 export const DoctorConsultancyView = () => {
@@ -47,26 +46,25 @@ export const DoctorConsultancyView = () => {
   const [Radiologists, setRadiologists] = useState([]);
   const [tabButtons, setTabButtons] = useState([]);
   const [defaultSelectedTab, setDefaultSelectedTab] = useState();
-  const [socketUrl, setSocketUrl] = useState("http://localhost:8090/ws"); // Change this to your WebSocket server URL
+  const [socketUrl, setSocketUrl] = useState("https://localhost:8090/wss"); // Change this to your WebSocket server URL
   const [stompClient, setStompClient] = useState(null);
 
-  const [radiologistId,setRadiologistsId]= useState(null);
+  const [radiologistId, setRadiologistsId] = useState(null);
 
   const [addRadiologist, setAddRadiologist] = useState({});
   const [showAnnotations, setShowAnnotations] = useState(false);
   const [impressionText, setImpressionText] = useState("");
   const [doublyLL, setDoublyLL] = useState([]);
-  const [currentAnnotation,setCurrentAnnotation]=useState(0);
+  const [currentAnnotation, setCurrentAnnotation] = useState(0);
   const [selectedImageId, setSelectedImageId] = useState(null);
 
-  const [prescription,setPrescription]=useState(null);
-  const [doctorImpression,setDoctorImpression]=useState(null);
-  const [closeConsultancy,setCloseConsultancy]=useState(false);
-
-
+  const [prescription, setPrescription] = useState(null);
+  const [doctorImpression, setDoctorImpression] = useState(null);
+  const [closeConsultancy, setCloseConsultancy] = useState(false);
 
   const {
-    dicomImage,setDicomImage,
+    dicomImage,
+    setDicomImage,
     token,
     isLoggedIn,
     setToken,
@@ -109,7 +107,7 @@ export const DoctorConsultancyView = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:8090/activeUsers");
+        const response = await axios.get("https://localhost:8090/activeUsers");
         const newUserArray = response.data; // Assuming response.data is an array of userIds
 
         setPrevConnectedUser((prevConnectedUser) => [
@@ -132,8 +130,6 @@ export const DoctorConsultancyView = () => {
     }
   }, [isDoctorLoggedIn, navigate]);
 
-
-
   const handleTabClick = (tabname, tabid, tabUserType) => {
     const updatedTabButtons = tabButtons.map((button) =>
       button.userId === tabid ? { ...button, unreadMessages: 0 } : button
@@ -143,10 +139,8 @@ export const DoctorConsultancyView = () => {
     setRecipientUserType(tabUserType);
     setRecipientId(tabid);
     setSelectedTab(tabid);
-   
 
-    if(tabUserType==='RADIOLOGIST')
-    {
+    if (tabUserType === "RADIOLOGIST") {
       setRadiologistsId(tabid);
     }
 
@@ -155,11 +149,11 @@ export const DoctorConsultancyView = () => {
     setSelectedImage(null);
   };
 
-  const handleImageClick = async (consultationId,imageId, index) => {
+  const handleImageClick = async (consultationId, imageId, index) => {
     try {
       const token = sessionStorage.getItem("jwtToken");
       const response = await axios.get(
-        `http://localhost:8090/consultation/labReport/${selectedConsultationId}`,
+        `https://localhost:8090/consultation/labReport/${selectedConsultationId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`, // Attach the JWT token to the Authorization header
@@ -173,19 +167,15 @@ export const DoctorConsultancyView = () => {
       setDicomImage({
         ...dicomImage,
         imageId: imageId,
-  
       });
       console.log(dicomImage);
-    
-      
-        
-        setSelectedImageId(imageId);
-        console.log("imaged",imageId)
-     
-        setSelectedImage(selectedImage.imageUrl);
-        setCurrentIndex(index);
-        setOverlayImages(images); 
-    
+
+      setSelectedImageId(imageId);
+      console.log("imaged", imageId);
+
+      setSelectedImage(selectedImage.imageUrl);
+      setCurrentIndex(index);
+      setOverlayImages(images);
     } catch (error) {
       console.error("Error fetching images:", error);
       // Handle error, maybe show a message to the user
@@ -195,13 +185,14 @@ export const DoctorConsultancyView = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log(radiologistId)
-        const response = await axios.get(`http://localhost:8090/annotations/${radiologistId}/${selectedImageId}`);
+        console.log(radiologistId);
+        const response = await axios.get(
+          `https://localhost:8090/annotations/${radiologistId}/${selectedImageId}`
+        );
         setDoublyLL(response.data); // Assuming the response data is an array of objects
-        console.log(doublyLL)
-
+        console.log(doublyLL);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
         // Handle error, show error message to user, etc.
       }
     };
@@ -213,35 +204,32 @@ export const DoctorConsultancyView = () => {
   };
 
   const handlePrevImage = () => {
+    if (radiologistId !== null) {
+      if (doublyLL.length >= 1) {
+        if (currentAnnotation !== 0) {
+          setCurrentAnnotation((currentAnnotation) =>
+            currentAnnotation === doublyLL.length - 1
+              ? 0
+              : currentAnnotation - 1
+          );
+        }
+        setSelectedImage(doublyLL[currentAnnotation].imageUrl);
+        setImpressionText(doublyLL[currentAnnotation].impressionText);
+      }
+    }
+  };
 
-    if(radiologistId!==null){
-    if(doublyLL.length >= 1){
-    if(currentAnnotation!==0){
-    setCurrentAnnotation((currentAnnotation) =>
-    currentAnnotation === doublyLL.length - 1 ? 0 : currentAnnotation - 1
-    );
-  
-  }
-    setSelectedImage(doublyLL[currentAnnotation].imageUrl);
-    setImpressionText(doublyLL[currentAnnotation].impressionText)
-}
-}
-};
-
-const handleNextImage = () => {
-  if(radiologistId!==null){
-    if(doublyLL.length>0){
-  setCurrentAnnotation((currentAnnotation) =>
-  currentAnnotation=== doublyLL.length - 1 ? 0 : currentAnnotation + 1
-  );
-  setSelectedImage(doublyLL[currentAnnotation].imageUrl);
-  setImpressionText(doublyLL[currentAnnotation].impressionText)
-}
-
-}
-
- 
-};
+  const handleNextImage = () => {
+    if (radiologistId !== null) {
+      if (doublyLL.length > 0) {
+        setCurrentAnnotation((currentAnnotation) =>
+          currentAnnotation === doublyLL.length - 1 ? 0 : currentAnnotation + 1
+        );
+        setSelectedImage(doublyLL[currentAnnotation].imageUrl);
+        setImpressionText(doublyLL[currentAnnotation].impressionText);
+      }
+    }
+  };
 
   const handleMouseDown = (e) => {
     setIsDragging(true);
@@ -353,7 +341,7 @@ const handleNextImage = () => {
     const fetchMessages = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8090/messages/${selectedConsultationId}/${userId}/${RecipientId}`
+          `https://localhost:8090/messages/${selectedConsultationId}/${userId}/${RecipientId}`
         );
         setChatMessages(response.data);
       } catch (error) {
@@ -386,15 +374,12 @@ const handleNextImage = () => {
     }
   };
 
-
-
-
   useEffect(() => {
     const fetchImages = async () => {
       try {
         const token = sessionStorage.getItem("jwtToken");
         const response = await axios.get(
-          `http://localhost:8090/consultation/labReport/${selectedConsultationId}`,
+          `https://localhost:8090/consultation/labReport/${selectedConsultationId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Attach the JWT token to the Authorization header
@@ -424,7 +409,7 @@ const handleNextImage = () => {
       const token = sessionStorage.getItem("jwtToken");
 
       const response = await axios.get(
-        "http://localhost:8090/admin/getAllRadiologist",
+        "https://localhost:8090/admin/getAllRadiologist",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -444,7 +429,7 @@ const handleNextImage = () => {
       try {
         const token = sessionStorage.getItem("jwtToken");
         const response = await axios.get(
-          `http://localhost:8090/consultation/${selectedConsultationId}/${userId}`,
+          `https://localhost:8090/consultation/${selectedConsultationId}/${userId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Attach the JWT token to the Authorization header
@@ -491,7 +476,7 @@ const handleNextImage = () => {
       const token = sessionStorage.getItem("jwtToken");
 
       const response = await axios.post(
-        `http://localhost:8090/doctor/add/radiologist/${selectedConsultationId}/${RadiologistId}`,
+        `https://localhost:8090/doctor/add/radiologist/${selectedConsultationId}/${RadiologistId}`,
         {}, // Add an empty object or the data you want to send in the request body
         {
           headers: {
@@ -518,9 +503,9 @@ const handleNextImage = () => {
     }
   };
 
-  const handleCloseConsultancy= ()=>{
+  const handleCloseConsultancy = () => {
     setCloseConsultancy(!closeConsultancy);
-  }
+  };
 
   return (
     <div className="doctor-consulancy-view">
@@ -585,11 +570,12 @@ const handleNextImage = () => {
                 </div>
               )}
             </div>
-        
-  <div className="close-button">
-    <button onClick={handleCloseConsultancy}>Close Consultancy</button>
-  </div>
 
+            <div className="close-button">
+              <button onClick={handleCloseConsultancy}>
+                Close Consultancy
+              </button>
+            </div>
           </div>
           <div className="content1">
             <div className="user-profile-section">
@@ -603,62 +589,64 @@ const handleNextImage = () => {
               )}
             </div>
 
-           {!closeConsultancy &&( <div className="chat">
-              {!selectedImage && selectedTab && (
-                <div className="chat-box" ref={chatBoxRef}>
-                  {chatMessages.map((message) => (
-                    <div
-                      key={message.chatId}
-                      className={`message ${
-                        message.senderId.toString() === senderId
-                          ? "right"
-                          : "left"
-                      }`}
-                    >
-                      {message.content}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>)}
-            {!closeConsultancy &&(<div className="text-inputd">
-              <textarea
-                type="text"
-                placeholder="Type your message here..."
-                value={textInputValue}
-                onChange={(e) => setTextInputValue(e.target.value)}
-                onKeyDown={handleEnterKeyPress}
-              />
-              <button onClick={handleSendMessage}>Send</button>
-            </div>)}
+            {!closeConsultancy && (
+              <div className="chat">
+                {!selectedImage && selectedTab && (
+                  <div className="chat-box" ref={chatBoxRef}>
+                    {chatMessages.map((message) => (
+                      <div
+                        key={message.chatId}
+                        className={`message ${
+                          message.senderId.toString() === senderId
+                            ? "right"
+                            : "left"
+                        }`}
+                      >
+                        {message.content}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+            {!closeConsultancy && (
+              <div className="text-inputd">
+                <textarea
+                  type="text"
+                  placeholder="Type your message here..."
+                  value={textInputValue}
+                  onChange={(e) => setTextInputValue(e.target.value)}
+                  onKeyDown={handleEnterKeyPress}
+                />
+                <button onClick={handleSendMessage}>Send</button>
+              </div>
+            )}
             {closeConsultancy && (
-  <div className="text-inputc">
-    <div className="heading">
-      <h2 style={{ paddingLeft: '20px' }} >Prescription</h2>
-      <h2 style={{ paddingLeft: '342px' }}>Impression</h2>
-      </div>
-    <div className="text-area">
-      
-      
-    <textarea
-      type="text"
-      placeholder="Prescription"
-      value={prescription}
-      onChange={(e) => setPrescription(e.target.value)}
-    />
-    <textarea
-      type="text"
-      placeholder="Impression"
-      value={doctorImpression}
-      onChange={(e) => setDoctorImpression(e.target.value)}
-    />
-    </div>
-    <div className="cancel-consultancy">
-    <button style={{ paddingLeft: '20px' }} >Cancel</button>
-    <button >Save</button>
-    </div>
-  </div>
-)}
+              <div className="text-inputc">
+                <div className="heading">
+                  <h2 style={{ paddingLeft: "20px" }}>Prescription</h2>
+                  <h2 style={{ paddingLeft: "342px" }}>Impression</h2>
+                </div>
+                <div className="text-area">
+                  <textarea
+                    type="text"
+                    placeholder="Prescription"
+                    value={prescription}
+                    onChange={(e) => setPrescription(e.target.value)}
+                  />
+                  <textarea
+                    type="text"
+                    placeholder="Impression"
+                    value={doctorImpression}
+                    onChange={(e) => setDoctorImpression(e.target.value)}
+                  />
+                </div>
+                <div className="cancel-consultancy">
+                  <button style={{ paddingLeft: "20px" }}>Cancel</button>
+                  <button>Save</button>
+                </div>
+              </div>
+            )}
 
             {selectedImage && (
               <div
@@ -748,7 +736,11 @@ const handleNextImage = () => {
                   <button
                     key={index}
                     onClick={() =>
-                      handleImageClick(selectedConsultationId,image.imageId, index)
+                      handleImageClick(
+                        selectedConsultationId,
+                        image.imageId,
+                        index
+                      )
                     }
                   >
                     <img src={image.imageUrl} alt={`Image ${index + 1}`} />

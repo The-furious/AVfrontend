@@ -21,21 +21,21 @@ function ImageUploadForm() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
+
     const formData = new FormData();
     formData.append("consultationId", consultationId);
     formData.append("labId", userId);
     formData.append("testName", testType);
     formData.append("remarks", remarks);
-  
+
     for (let i = 0; i < selectedImages.length; i++) {
       formData.append("files", selectedImages[i]);
     }
-  
+
     try {
       const token = sessionStorage.getItem("jwtToken");
       const response = await axios.post(
-        "http://localhost:8090/lab/upload",
+        "https://localhost:8090/lab/upload",
         formData,
         {
           headers: {

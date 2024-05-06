@@ -16,7 +16,7 @@ import HoverPatientDetails from "../Patient/HoverPatientDetails";
 import SockJS from "sockjs-client";
 import StompJs from "stompjs";
 import { UserDetailContext } from "../UserDetailContext";
-import useOnlineStatus  from "../Utility/CloseWindowUtility"
+import useOnlineStatus from "../Utility/CloseWindowUtility";
 
 const RadiologistDashboard = () => {
   const [selectedTab, setSelectedTab] = useState(1);
@@ -36,7 +36,7 @@ const RadiologistDashboard = () => {
   const [filteredHistoryDetails, setFilteredHistoryDetails] = useState(null);
 
   // const [connectedUser, setConnectedUser] = useState(null);
-  const [socketUrl, setSocketUrl] = useState("http://localhost:8090/ws"); // Change this to your WebSocket server URL
+  const [socketUrl, setSocketUrl] = useState("https://localhost:8090/wss"); // Change this to your WebSocket server URL
   // const [stompClient, setStompClient] = useState(null);
   const {
     token,
@@ -52,17 +52,18 @@ const RadiologistDashboard = () => {
   const RadiologistId = sessionStorage.getItem("radiologistId");
   const userId = sessionStorage.getItem("userId");
   const navigate = useNavigate();
-  let [prevConnectedUser,setPrevConnectedUser]=useState([]);
-
-
+  let [prevConnectedUser, setPrevConnectedUser] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:8090/activeUsers");
+        const response = await axios.get("https://localhost:8090/activeUsers");
         const newUserArray = response.data; // Assuming response.data is an array of userIds
 
-        setPrevConnectedUser((prevConnectedUser) => [...prevConnectedUser, ...newUserArray]);
+        setPrevConnectedUser((prevConnectedUser) => [
+          ...prevConnectedUser,
+          ...newUserArray,
+        ]);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -76,8 +77,6 @@ const RadiologistDashboard = () => {
     setConnectedUser(prevConnectedUser);
   }, [prevConnectedUser, setConnectedUser]);
 
-
-
   let temp = false;
   useEffect(() => {
     const socket = new SockJS(socketUrl);
@@ -87,9 +86,7 @@ const RadiologistDashboard = () => {
       setStompClient(stompClient);
     });
   }, [socketUrl]);
-  
-  
-  
+
   useEffect(() => {
     if (stompClient) {
       var user = { userId: userId, status: "ONLINE" };
@@ -121,7 +118,7 @@ const RadiologistDashboard = () => {
       // Fetch data using Axios
       const token = sessionStorage.getItem("jwtToken");
       const response = await axios.get(
-        `http://localhost:8090/consultation/get/present/${userId}`,
+        `https://localhost:8090/consultation/get/present/${userId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`, // Attach the JWT token to the Authorization header
@@ -160,7 +157,7 @@ const RadiologistDashboard = () => {
     try {
       const token = sessionStorage.getItem("jwtToken");
       const response = await axios.get(
-        `http://localhost:8090/consultation/get/history/${userId}`,
+        `https://localhost:8090/consultation/get/history/${userId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`, // Attach the JWT token to the Authorization header

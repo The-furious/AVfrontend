@@ -31,7 +31,7 @@ const ScreenshotButton = ({ dicomImage }) => {
       formData.append('imageFile', blob, 'screenshot.png'); // Append the blob with filename
       
       const token = sessionStorage.getItem('jwtToken');
-      const response = await axios.post('http://localhost:8090/annotations/add', formData, {
+      const response = await axios.post('https://localhost:8090/annotations/add', formData, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
