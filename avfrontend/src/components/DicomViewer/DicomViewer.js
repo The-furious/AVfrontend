@@ -10,7 +10,7 @@ import { UserDetailContext } from "../UserDetailContext";
 
 export default function DicomViewer() {
   const {
-    dicomImage,setDicomImage,
+    dicomImage,setDicomImage,isLoggedIn, setIsLoggedIn,
     
   } = useContext(UserDetailContext);
   console.log(dicomImage)
@@ -34,7 +34,7 @@ export default function DicomViewer() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <div className="Appp">
-        <DwvComponent   dicomImage={dicomImage} />
+        <DwvComponent   dicomImage={dicomImage} isLoggedIn={isLoggedIn} />
       </div>
     </ThemeProvider>
   );

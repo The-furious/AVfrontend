@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles, useTheme } from '@mui/styles';
 import Typography from '@mui/material/Typography';
 import ScreenshotButton from "./ScreenShot";
+import { useNavigate } from "react-router-dom";
 
 import Stack from '@mui/material/Stack';
 import LinearProgress from '@mui/material/LinearProgress';
@@ -107,9 +108,11 @@ class DwvComponent extends React.Component {
         </ToggleButton>
       );
     });
+    const { isLoggedIn} = this.props;
+   
 
     return (
-      <div id="dwv">
+      <div id="dwv" className='dwv'>
         <LinearProgress variant="determinate" value={loadProgress} />
         <Stack direction="row" spacing={1} padding={1}
           justifyContent="center" flexWrap="wrap">
@@ -128,7 +131,15 @@ class DwvComponent extends React.Component {
             disabled={!dataLoaded}
             onChange={this.onReset}
           ><RefreshIcon /></ToggleButton>
-                    <ScreenshotButton  dicomImage={dicomImage}></ScreenshotButton>
+          { !isLoggedIn &&(
+                    <ScreenshotButton  dicomImage={dicomImage}></ScreenshotButton>)
+          }
+          {/* {
+            isLoggedIn && (
+              <button > Back</button>
+            )
+
+          } */}
 
 
           <ToggleButton size="small"

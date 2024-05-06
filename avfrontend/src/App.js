@@ -16,6 +16,7 @@ import { UserDetailProvider } from './components/UserDetailContext';
 import UserProfile from './components/Utility/UserProfile';
 import PatientConsultancyView from './components/Patient/PatientConsultancyView';
 import DicomViewer from './components/DicomViewer/DicomViewer';
+import DwvComponent from './components/DicomViewer/DwvComponent';
 
 function App() {
   
@@ -41,6 +42,8 @@ function App() {
 
           <Route path="" element={<UserProfile />} />
           <Route path="/dicom-viewer" element={<DicomViewer />} />
+          <Route path="/dicom-viewer-component" element={<DwvComponent />} />
+          
 
 
         </Routes>

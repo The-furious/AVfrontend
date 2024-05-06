@@ -167,6 +167,8 @@ export const DoctorConsultancyView = () => {
       const selectedImage = images[index];
       console.log(imageId);
 
+      setIsLoggedIn(true);
+
       setDicomImage({
         ...dicomImage,
         imageId: imageId,

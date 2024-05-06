@@ -36,7 +36,7 @@
   width: 100%; /* Make the container take up the full width of its parent */
 }
 
-button {
+.dwv button {
   width: 70px!important;
   padding: 0px !important;
   background-color: #757f89;
