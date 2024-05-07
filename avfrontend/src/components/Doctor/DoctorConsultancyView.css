@@ -72,7 +72,7 @@ main {
   margin-top: 30px!important;
   margin-left: 30px!important;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   background-color: #00b7ac;
   align-items: center;
   justify-content: center;
@@ -161,7 +161,7 @@ textarea {
 
 .overlay-buttons {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start!important;
   width: 100%;
 }
 
@@ -228,30 +228,33 @@ height: 100%; /* Allow the image height to adjust proportionally */
 .prev-btn,
 .next-btn {
   background: rgba(0, 0, 0, 0.5);
-  color: white;
-  cursor: pointer;
-  padding: 10px 20px;
-  border: none;
-  transition: background 0.3s;
+    color: white;
+    cursor: pointer;
+    padding: 10px 20px !important;
+    border: none;
+    width: 40px !important;
+    transition: background 0.3s;
 }
 
 
 
 .prev-btn {
   left: 20px;
+  margin: 10px 10px;
 }
 
 .next-btn {
   right: 20px;
+  margin: 10px 10px;
 }
 
 .prev-btn:hover,
 .next-btn:hover {
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(27, 74, 194, 0.7)!important;
 }
 .overlay-buttons {
   display: flex;
-  justify-content: space-between !important;
+  justify-content: space-between ;
   width: 100% !important;
  
 }
@@ -367,7 +370,7 @@ height: 100%; /* Allow the image height to adjust proportionally */
 
 .user-profile-section {
   display: flex;
-  background-color: #e2f0cb;
+  background-color: #9dd5ed;
   
  width:100%;
  height:93px;
@@ -510,6 +513,187 @@ height: 100%; /* Allow the image height to adjust proportionally */
   
   justify-content: flex-end;
 }
+
+/* .red-notification {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  padding: 5px 10px;
+  border-radius: 50%;
+  background: red;
+  color: white;
+} */
+
+.tab-buttonsd button {
+  position: relative; /* Set the position of the button to relative */
+}
+
+.tab-buttonsd .red-notification {
+  position: absolute; /* Set the position of the red notification to absolute */
+  top: -10px;
+  right: -10px;
+  padding: 5px 10px;
+  border-radius: 50%;
+  background: red;
+  color: white;
+}
+
+.online-status {
+  margin-left: 5px; /* Adjust spacing between name and status */
+  color: green; /* Color for online status */
+  font-size: 18px;
+  font-style: italic;
+  justify-self: flex-end;
+ 
+}
+.status{
+  display:flex;
+  justify-content: flex-end;
+}
+
+/* .tab-buttonsd .green-dot {
+  position: absolute;
+  top: 19px;
+  left: 65px;
+  width: 10px;
+  height: 10px;
+  background-color: #0beb0b;
+  border-radius: 50%;
+} */
+.green-dot {
+  position: absolute;
+  top: 24px; /* Position the dot vertically at 50% of the button's height */
+ left: 65px; /* Adjust the horizontal position as needed */
+  transform: translate(0, -50%); /* Center the dot vertically */
+  width: 10px;
+  height: 10px;
+  background-color: #0beb0b;
+  border-radius: 50%;
+}
+.zoom-buttons {
+  display: flex;
+  flex-direction: column;
+  padding-top: 11px;
+}
+.showana{
+  display:flex;
+  height: 20px;
+  justify-self: flex-end;
+}
+
+
+.showana{
+  position: relative;
+}
+
+.showana-tooltip {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: white;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  transition-delay: 1.5s; /* Delay before showing the tooltip */
+}
+
+.showana:hover .showana-tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+
+.text-inputc {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+  width: 970px;
+}
+.text-area {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 10px;
+  width: 970px;
+}
+.heading{
+  display:flex;
+  flex-direction: row;
+
+}
+
+.text-inputc textarea {
+  width: 100%;
+  height: 500px;
+  padding: 5px;
+  margin-bottom: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  resize: vertical;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.text-inputc button {
+  width: 100px!important;
+  padding: 8px 12px!important;
+  margin-right: 10px!important;
+  border: none;
+  border-radius: 5px!important;
+  background-color: #007bff!important;
+  color: #fff!important;
+  cursor: pointer;
+}
+
+.text-inputc button:hover {
+  background-color: #0056b3;
+}
+.close-button{
+  position: fixed;
+  bottom: 0;
+  width: 320px;
+  background-color: #f0f0f0;
+  padding: 10px;
+  box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.1); /* Optional: Adds a shadow at the bottom */
+}
+.close-button > button{
+  width: 71% !important;
+  height:3rem!important;
+  padding: 2px 2px!important;
+  margin-top: 30px !important;
+  margin-left: 39px !important;
+  display: flex!important;
+  flex-direction: row!important;
+  background-color: #00b7ac;
+  align-items: center!important;
+  justify-content: center!important;
+}
+
+.close-button button.active-button {
+  background-color:#006861;
+}
+
+.close-button button.inactive-button {
+  background-color: #00b7ac;
+}
+.close-button button.active-button:hover {
+  background-color:  #00b7ac; /* Change the color on hover for active state */
+}
+.close-button button.inactive-button:hover {
+  background-color: #006861; /* Change the color on hover for inactive state */
+}
+
+
+
+
+
+
 
 
 

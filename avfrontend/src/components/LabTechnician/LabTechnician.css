@@ -23,6 +23,7 @@
     width: 80%;
     background-color: #ffffff; /* Content background color */
     height: calc(100vh - 120px);
+    overflow-y: auto;
   }
   
   .tab-button {
@@ -141,4 +142,10 @@
         width:80%; /* Override width to 100% for screens narrower than 992px */
       }
     
-  }     
+  }  
+  
+  .history-scroll{
+    overflow-y: auto;
+
+  }
+  

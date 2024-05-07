@@ -97,7 +97,7 @@ main {
   margin-top: 30px!important;
   margin-left: 30px!important;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   background-color: #00b7ac;
   align-items: center;
   justify-content: center;
@@ -111,10 +111,11 @@ main {
 }
 
 .image-overlay-container {
-  position: fixed;
+  position: fixed ;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  z-index: 1000;
 
   display: flex;
   flex-direction: column;
@@ -202,6 +203,7 @@ height: 100%; /* Allow the image height to adjust proportionally */
   cursor: pointer;
   padding: 10px 20px;
   border: none;
+  width: 20px !important;
   transition: background 0.3s;
 }
 
@@ -313,3 +315,81 @@ height: 100%; /* Allow the image height to adjust proportionally */
 .text-inputr button:hover {
   background-color: #45a049; /* Darker shade of button color on hover */
 }
+
+.tab-buttonsr button {
+  position: relative; /* Set the position of the button to relative */
+}
+
+.tab-buttonsr .red-notification {
+  position: absolute; /* Set the position of the red notification to absolute */
+  top: -10px;
+  right: -10px;
+  padding: 5px 10px;
+  border-radius: 50%;
+  background: red;
+  color: white;
+}
+
+.send-annotation{
+  position: relative;
+  display:flex;
+  height: 20px;
+  justify-self: flex-end;
+}
+.send-annotation:hover .showana-tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+.annotations {
+  margin-top: 20px;
+  background-color: #f9f9f9;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  display: flex;
+  position: relative !important;
+  flex-direction: column; /* Make annotations container a column */
+  align-items: flex-start; /* Align items to the start of the column */
+}
+
+.annotations .annotation-textarea {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  padding: 10px;
+  
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  max-width: 90%;
+  width: 100%; /* Ensure the textarea takes up full width */
+  transition: max-height 0.3s ease; /* Add smooth transition for max-height */
+}
+
+.annotations .annotation-textarea textarea {
+  flex: 1;
+  resize: vertical;
+  width: calc(100% - 85px); /* Adjust width to accommodate button */
+  min-height: 100px;
+  max-height: 200px;
+  margin-right: 10px;
+  overflow-y: auto; /* Add vertical scrolling if needed */
+}
+
+.annotations .annotation-textarea button {
+  padding: 8px 10px!important;
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.annotations .annotation-textarea button:hover {
+  background-color: #45a049;
+}
+
+/* Expand annotations container based on textarea height */
+.annotations.expanded .annotation-textarea {
+  max-height: calc(100vh - 250px); /* Adjust as needed */
+}
+ 

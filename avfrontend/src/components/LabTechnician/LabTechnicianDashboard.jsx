@@ -52,16 +52,7 @@ const LabTechnicianDashboard = () => {
   };
   
 
-  const handleSearch = () => {
-    if (selectedTab === 2) {
-      const filteredHistory = simulatedHistoryDetails.filter(
-        (detail) =>
-          detail.consultationNumber.includes(searchInput) ||
-          detail.patientName.toLowerCase().includes(searchInput.toLowerCase())
-      );
-      setHistoryDetails(filteredHistory);
-    }
-  };
+
   useEffect(() => {
     // Set filteredConsultancyDetails to all consultancy details when the component first renders
     setHistoryDetails(historyDetails);
@@ -75,7 +66,7 @@ const LabTechnicianDashboard = () => {
   return (
     <div className="container-fluid">
       <div className="lab-dashboard-sidebar">
-        <ul className="dashboard-sidebar-list">
+        <ul className="dashboard-sidebar-list" style={{ listStyle: 'none'}}>
           <li>
             <button
               onClick={() => setSelectedTab(1)}
@@ -116,12 +107,12 @@ const LabTechnicianDashboard = () => {
                   value={searchInput}
                   onChange={handleSearchInputChange}
                 />
-                <button className="search-button" onClick={handleSearch}>
+                <button className="search-button" >
                   Search
                 </button>
               </div>
             </div>
-            <LabHistoryDetails historyDetails={historyDetails} />
+            <LabHistoryDetails searchKeyword={searchInput} />
           </div>
         )}
       </div>

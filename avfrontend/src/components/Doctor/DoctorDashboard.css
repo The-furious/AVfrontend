@@ -175,23 +175,35 @@
   .consultancy-header {
     display: flex; /* Use flexbox */
     align-items: center; /* Center items vertically */
+    justify-content: space-between;
+    .consultancy-header h2 {
+      margin-right: 20px; /* Adjust margin between elements */
+    }
+
+
+
   }
   
-  .consultancy-header h2 {
-    margin-right: 20px; /* Adjust margin between elements */
-  }
+  
   
   .search-bar {
     display: flex; /* Use flexbox for search bar */
     align-items: center; /* Center items vertically */
-    padding-left: 910px;
+   margin-right: 30px;;
+   
+    
   }
   
   .search-bar input {
     margin-right: 10px; /* Adjust margin between input and button */
+    margin-bottom: 0px !important;
+   
+   
   }
   
   .search-button {
-    padding: 8px 12px; /* Adjust button padding */
+    padding: 0px 0px !important; /* Adjust button padding */
+    border-radius:34px!important;
+    
   }
   

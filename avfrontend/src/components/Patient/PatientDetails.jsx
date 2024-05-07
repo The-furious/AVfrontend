@@ -36,7 +36,9 @@ const PatientDetails = ({ id }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8090/patient/${id}`);
+        const response = await axios.get(
+          `https://localhost:8090/patient/${id}`
+        );
         setPatientData(response.data);
         setLoading(false);
       } catch (error) {

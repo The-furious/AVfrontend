@@ -1,26 +1,68 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { FaUser } from 'react-icons/fa';
-import { IoMenu } from 'react-icons/io5';
-import './navbar.css';
-import ArogyaVartaIcon from '../images/ArogyaVartaIcon.jpeg';
-import { useNavigate } from 'react-router-dom';
-import AdminLogin from '../logins/AdminLogin';
-import PatientLogin from '../logins/PatientLogin';
+import React, { useContext, useState, useEffect, useRef } from "react";
+import { FaUser } from "react-icons/fa";
+import { IoMenu } from "react-icons/io5";
+import "./navbar.css";
+import ArogyaVartaIcon from "../images/ArogyaVartaIcon.jpeg";
+import { useNavigate } from "react-router-dom";
+import AdminLogin from "../logins/AdminLogin";
+import PatientLogin from "../logins/PatientLogin";
+import { UserDetailContext } from "../UserDetailContext";
+import SockJS from "sockjs-client";
+import StompJs from "stompjs";
+import axios from "axios";
 
 const Navbar = ({ personName }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
+  const {
+    token,
+    isLoggedIn,
+    setToken,
+    setUserId,
+    setIsLoggedIn,
+    connectedUser,
+    setConnectedUser,
+    stompClient,
+    setStompClient,
+  } = useContext(UserDetailContext);
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
+  const [socketUrl, setSocketUrl] = useState("https://localhost:8090/wss"); // Change this to your WebSocket server URL
 
+  const userId = sessionStorage.getItem("userId");
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
   };
 
-  const handleLogoutClick = () => {
-    sessionStorage.clear(); // Clear all sessionStorage items
+  const handleLogoutClick = async() => {
+    if (stompClient) {
+      const user = { userId: userId, status: "OFFLINE" };
+      stompClient.send("/app/topic/disconnectUser", {}, JSON.stringify(user));
+      stompClient.disconnect();
+      console.log("Offline WebSocket disconnected");
+    }
+
+    try {
+      const token = sessionStorage.getItem("jwtToken");
+      const response = await axios.post(
+        'https://localhost:8090/auth/logout',
+        {}, // You can pass any data here if needed
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+    
+
+    sessionStorage.clear();
+
     setShowDropdown(false); // Close the dropdown on logout
-    navigate('/');
+    setIsLoggedIn(false);
+    navigate("/");
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
   };
 
   const handleProfileClick = (option) => {
@@ -29,13 +71,23 @@ const Navbar = ({ personName }) => {
   };
 
   useEffect(() => {
-    const isDoctorLoggedIn = sessionStorage.getItem('isDoctorLoggedIn') === 'true';
-    const isRadiologistLoggedIn = sessionStorage.getItem('isRadiologistLoggedIn') === 'true';
-    const isPatientLoggedIn = sessionStorage.getItem('isPatientLoggedIn') === 'true';
-    const isLabLoggedIn = sessionStorage.getItem('isLabLoggedIn') === 'true';
-    const isAdminLoggedIn = sessionStorage.getItem('isAdminLoggedIn') === 'true';
+    const isDoctorLoggedIn =
+      sessionStorage.getItem("isDoctorLoggedIn") === "true";
+    const isRadiologistLoggedIn =
+      sessionStorage.getItem("isRadiologistLoggedIn") === "true";
+    const isPatientLoggedIn =
+      sessionStorage.getItem("isPatientLoggedIn") === "true";
+    const isLabLoggedIn = sessionStorage.getItem("isLabLoggedIn") === "true";
+    const isAdminLoggedIn =
+      sessionStorage.getItem("isAdminLoggedIn") === "true";
 
-    if (!isDoctorLoggedIn && !isRadiologistLoggedIn && !isPatientLoggedIn && !isLabLoggedIn && !isAdminLoggedIn) {
+    if (
+      !isDoctorLoggedIn &&
+      !isRadiologistLoggedIn &&
+      !isPatientLoggedIn &&
+      !isLabLoggedIn &&
+      !isAdminLoggedIn
+    ) {
       setShowDropdown(false);
     }
   }, []);
@@ -47,23 +99,20 @@ const Navbar = ({ personName }) => {
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [dropdownRef]);
 
-
-
-  const fflag=sessionStorage.getItem('isPatientLoggedIn') === 'true';
-  
+  const fflag = sessionStorage.getItem("isPatientLoggedIn") === "true";
 
   const flag =
-    sessionStorage.getItem('isDoctorLoggedIn') === 'true' ||
-    sessionStorage.getItem('isRadiologistLoggedIn') === 'true' ||
-    sessionStorage.getItem('isLabLoggedIn') === 'true' ||
-    sessionStorage.getItem('isPatientLoggedIn') === 'true'||
-    sessionStorage.getItem('isAdminLoggedIn') === 'true';
+    sessionStorage.getItem("isDoctorLoggedIn") === "true" ||
+    sessionStorage.getItem("isRadiologistLoggedIn") === "true" ||
+    sessionStorage.getItem("isLabLoggedIn") === "true" ||
+    sessionStorage.getItem("isPatientLoggedIn") === "true" ||
+    sessionStorage.getItem("isAdminLoggedIn") === "true";
 
   return (
     <nav className="navbar">
@@ -72,24 +121,27 @@ const Navbar = ({ personName }) => {
         <span className="navbar__title">Arogya Varta</span>
       </div>
 
-
-
-      
-
-
-{fflag &&(
+      {fflag && (
         <div className="navbar__right insidenavbar">
-         <div className="navbar__user" onClick={toggleDropdown} ref={dropdownRef}>
+          <div
+            className="navbar__user"
+            onClick={toggleDropdown}
+            ref={dropdownRef}
+          >
             <span className="navbar__username">{personName}</span>
             <IoMenu className="navbar__user-icon" />
           </div>
           {showDropdown && (
             <div className="navbar__dropdown" ref={dropdownRef}>
               <ul>
-                <li onClick={() => handleProfileClick('Start New Consutation')}>Start New Consultaion</li>
-                <li onClick={() => handleProfileClick('Request')}>Request</li>
-                <li onClick={() => handleProfileClick('History')}>History</li>
-                <li onClick={() => handleProfileClick('Your Profile')}>Your Profile</li>
+                <li onClick={() => handleProfileClick("Start New Consutation")}>
+                  Start New Consultaion
+                </li>
+                <li onClick={() => handleProfileClick("Request")}>Request</li>
+                <li onClick={() => handleProfileClick("History")}>History</li>
+                <li onClick={() => handleProfileClick("Your Profile")}>
+                  Your Profile
+                </li>
                 <li onClick={handleLogoutClick}>Logout</li>
               </ul>
             </div>
@@ -97,18 +149,22 @@ const Navbar = ({ personName }) => {
         </div>
       )}
 
-
-
       {flag && (
         <div className="navbar__right outsidenavbar">
-          <div className="navbar__user" onClick={toggleDropdown} ref={dropdownRef}>
+          <div
+            className="navbar__user"
+            onClick={toggleDropdown}
+            ref={dropdownRef}
+          >
             <span className="navbar__username">{personName}</span>
             <FaUser className="navbar__user-icon" />
           </div>
           {showDropdown && (
             <div className="navbar__dropdown" ref={dropdownRef}>
               <ul>
-                <li onClick={() => handleProfileClick('Your Profile')}>Your Profile</li>
+                <li onClick={() => handleProfileClick("Your Profile")}>
+                  Your Profile
+                </li>
                 <li onClick={handleLogoutClick}>Logout</li>
               </ul>
             </div>
@@ -118,15 +174,19 @@ const Navbar = ({ personName }) => {
 
       {!flag && !fflag && (
         <div className="navbar__right iconphone">
-          <div className="navbar__user" onClick={toggleDropdown} ref={dropdownRef}>
+          <div
+            className="navbar__user"
+            onClick={toggleDropdown}
+            ref={dropdownRef}
+          >
             <span className="navbar__username">{personName}</span>
             <IoMenu className="navbar__user-icon" />
           </div>
           {showDropdown && (
             <div className="navbar__dropdown" ref={dropdownRef}>
               <ul>
-                <li onClick={() => handleProfileClick('Admin')}>Admin</li>
-                <li onClick={() => handleProfileClick('Patient')}>Patient</li>
+                <li onClick={() => handleProfileClick("Admin")}>Admin</li>
+                <li onClick={() => handleProfileClick("Patient")}>Patient</li>
               </ul>
             </div>
           )}
@@ -138,8 +198,6 @@ const Navbar = ({ personName }) => {
       {selectedOption === 'Patient' && <PatientLogin />} */}
     </nav>
   );
-
-  
 };
 
 export default Navbar;

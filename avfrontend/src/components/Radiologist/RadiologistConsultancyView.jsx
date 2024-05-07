@@ -1,5 +1,5 @@
 /* eslint-disable no-template-curly-in-string */
-import React, { useState, useEffect, useRef } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import "./RadiologistConsultancyView.css";
 import image1 from "../images/image1.jpg";
 import image2 from "../images/image2.jpg";
@@ -8,39 +8,71 @@ import { useNavigate } from "react-router-dom";
 import doctor from "../images/doctor.jpg";
 import useMousePosition from "../Utility/useMousePosition";
 import axios from "axios";
+import DwvComponent from "../DicomViewer/DwvComponent";
+
 // import io from "socket.io-client";
 import SockJS from "sockjs-client";
 import StompJs from "stompjs";
-
-const UserProfile = ({ name, photoUrl }) => (
-  <div className="user-profile">
-    <img src={doctor} alt="Profile" className="profile-photo" />
-    <div className="profile-name">{name}</div>
-  </div>
-);
+import { UserDetailContext } from "../UserDetailContext";
+import useOnlineStatus from "../Utility/CloseWindowUtility";
+import UserProfile from "../Utility/UserProfile";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faChevronLeft,
+  faChevronRight,
+  faTimes,
+  faSearchPlus,
+  faSearchMinus,
+} from "@fortawesome/free-solid-svg-icons";
+import { FcNext, FcPrevious } from "react-icons/fc";
+import { RiSlideshowLine } from "react-icons/ri";
+import { LiaImagesSolid } from "react-icons/lia";
+import { GrPrevious, GrNext } from "react-icons/gr";
+import DicomViewer from "../DicomViewer/DicomViewer";
 
 export const RadiologistConsultancyView = () => {
-  var [selectedTab, setSelectedTab] = useState("doctor1");
+  var [selectedTab, setSelectedTab] = useState();
   const [selectedImage, setSelectedImage] = useState(null);
-  const [sidebarImages, setSidebarImages] = useState([]);
+  const [sidebarImages, setSidebarImages] = useState([{}]);
   const [textInputValue, setTextInputValue] = useState("");
   const [overlayImages, setOverlayImages] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(null);
   const [tabButtons, setTabButtons] = useState([]);
   const [defaultSelectedTab, setDefaultSelectedTab] = useState();
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [showAnnotations, setShowAnnotations] = useState(false);
+  const [sendAnnotation, setSendAnnotation] = useState(false);
+  const [impressionText, setImpressionText] = useState("");
+  const [doublyLL, setDoublyLL] = useState([]);
+  const [currentAnnotation, setCurrentAnnotation] = useState(0);
 
   const selectedConsultationId = sessionStorage.getItem(
     "selectedConsultationId"
   );
 
-  const [socketUrl, setSocketUrl] = useState("http://localhost:8090/ws"); // Change this to your WebSocket server URL
+  const [socketUrl, setSocketUrl] = useState("https://localhost:8090/wss"); // Change this to your WebSocket server URL
   const [stompClient, setStompClient] = useState(null);
   const userId = sessionStorage.getItem("userId");
   const senderId = userId;
   const [RecipientName, setRecipientName] = useState();
-  const [RecipientId, setRecipientId] = useState();
+  let [RecipientId, setRecipientId] = useState();
   const [chatMessages, setChatMessages] = useState([]);
   const [overlayPosition, setOverlayPosition] = useState({ x: 0, y: 0 });
+  const [selectedImageId, setSelectedImageId] = useState(null);
+
+  const {
+    dicomImage,
+    setDicomImage,
+    token,
+    isLoggedIn,
+    setToken,
+    setUserId,
+    setIsLoggedIn,
+    connectedUser,
+    setConnectedUser,
+  } = useContext(UserDetailContext);
 
   const navigate = useNavigate();
   const isRadiologistLoggedIn =
@@ -56,6 +88,42 @@ export const RadiologistConsultancyView = () => {
     const initialY = 200; // 200px from top
     setOverlayPosition({ x: initialX, y: initialY });
   }, []);
+  const handleToggleAnnotations = () => {
+    setShowAnnotations((prevShowAnnotations) => !prevShowAnnotations);
+    setSendAnnotation(false);
+  };
+  const handleToggleSendAnnotation = () => {
+    setSendAnnotation((prevSendAnnotation) => !prevSendAnnotation);
+    setShowAnnotations(false);
+    // Clear annotation text when hiding the annotation section
+  };
+
+  const handleMouseDown = (e) => {
+    setIsDragging(true);
+    setDragStart({
+      x: e.clientX - overlayPosition.x,
+      y: e.clientY - overlayPosition.y,
+    });
+  };
+
+  const handleMouseMove = (e) => {
+    if (isDragging) {
+      const newX = e.clientX - dragStart.x;
+      const newY = e.clientY - dragStart.y;
+      setOverlayPosition({ x: newX, y: newY });
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const overlayContainerStyle = {
+    transform: `scale(${zoomLevel})`,
+    left: `${overlayPosition.x}px`,
+    top: `${overlayPosition.y}px`,
+    cursor: isDragging ? "grabbing" : "grab",
+  };
 
   useEffect(() => {
     if (!isRadiologistLoggedIn) {
@@ -64,55 +132,98 @@ export const RadiologistConsultancyView = () => {
   }, [isRadiologistLoggedIn, navigate]);
 
   const handleTabClick = (tabname, tabid) => {
-    setSelectedTab(tabid);
+    const updatedTabButtons = tabButtons.map((button) =>
+      button.userId === tabid ? { ...button, unreadMessages: 0 } : button
+    );
+    console.log(tabid);
+    setTabButtons(updatedTabButtons);
+
     setRecipientName(tabname);
     setRecipientId(tabid);
+    console.log(RecipientId);
 
-    console.log(selectedTab);
     // Reset selected image when switching tabs
     setSelectedImage(null);
   };
 
-  const handleImageClick = async (consultationId, index) => {
+  const handleImageClick = async (consultationId, imageId,imageUrlDCM, index) => {
     try {
       const token = sessionStorage.getItem("jwtToken");
       const response = await axios.get(
-        `http://localhost:8090/consultation/labReport/${selectedConsultationId}`,
+        `https://localhost:8090/consultation/labReport/${selectedConsultationId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`, // Attach the JWT token to the Authorization header
           },
         }
       );
-      const images = response.data.images.map(
-        (imageData) => imageData.imageUrl
-      ); // Assuming the API returns an array of image URLs
-      setOverlayImages(images);
+      const images = response.data.images;
+      const selectedImage = images[index];
+      console.log(imageId);
+
+      setDicomImage({
+        ...dicomImage,
+        imageId: imageId,
+        imageUrl:imageUrlDCM,
+        radiologistId: userId,
+      });
+      console.log(dicomImage);
+
+      setSelectedImageId(imageId);
+      console.log("imaged", imageId);
+
+      setSelectedImage(selectedImage.imageUrlDCM);
       setCurrentIndex(index);
-      setSelectedImage(images[index]);
+      setOverlayImages(images);
     } catch (error) {
       console.error("Error fetching images:", error);
       // Handle error, maybe show a message to the user
     }
   };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `https://localhost:8090/annotations/${userId}/${selectedImageId}`
+        );
+        setDoublyLL(response.data); // Assuming the response data is an array of objects
+        console.log(doublyLL);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        // Handle error, show error message to user, etc.
+      }
+    };
+
+    fetchData();
+  }, [currentIndex]);
 
   const handleCloseImage = () => {
     setSelectedImage(null);
   };
 
   const handlePrevImage = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? overlayImages.length - 1 : prevIndex - 1
-    );
-    setSelectedImage(overlayImages[currentIndex]);
+    if (doublyLL.length >= 1) {
+      if (currentAnnotation !== 0) {
+        setCurrentAnnotation((currentAnnotation) =>
+          currentAnnotation === doublyLL.length - 1 ? 0 : currentAnnotation - 1
+        );
+      }
+      setSelectedImage(doublyLL[currentAnnotation].imageUrl);
+      setImpressionText(doublyLL[currentAnnotation].impressionText);
+    }
   };
 
   const handleNextImage = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === overlayImages.length - 1 ? 0 : prevIndex + 1
-    );
-    setSelectedImage(overlayImages[currentIndex]);
-  };
+    if (doublyLL.length > 0) {
+      setCurrentAnnotation((currentAnnotation) =>
+        currentAnnotation === doublyLL.length - 1 ? 0 : currentAnnotation + 1
+      );
+      setSelectedImage(doublyLL[currentAnnotation].imageUrl);
+      setImpressionText(doublyLL[currentAnnotation].impressionText);
+    }  };
+  useEffect(() => {
+    setCurrentAnnotation(0);
+  }, [currentIndex]);
 
   useEffect(() => {
     if (chatBoxRef.current) {
@@ -125,16 +236,20 @@ export const RadiologistConsultancyView = () => {
       try {
         const token = sessionStorage.getItem("jwtToken");
         const response = await axios.get(
-          `http://localhost:8090/consultation/labReport/${selectedConsultationId}`,
+          `https://localhost:8090/consultation/labReport/${selectedConsultationId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Attach the JWT token to the Authorization header
             },
           }
         );
-        const images = response.data.images.map(
-          (imageData) => imageData.imageUrl
-        );
+        const images = response.data.images.map((imageData) => ({
+          imageUrl: imageData.imageUrlDCM,
+          imageId: imageData.id,
+          imageUrlDCM:imageData.imageUrl
+        }));
+
+        console.log(images);
         setSidebarImages(images);
         console.log(sidebarImages);
       } catch (error) {
@@ -153,7 +268,7 @@ export const RadiologistConsultancyView = () => {
       try {
         const token = sessionStorage.getItem("jwtToken");
         const response = await axios.get(
-          `http://localhost:8090/consultation/${selectedConsultationId}/${userId}`,
+          `https://localhost:8090/consultation/${selectedConsultationId}/${userId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Attach the JWT token to the Authorization header
@@ -166,6 +281,7 @@ export const RadiologistConsultancyView = () => {
           name: data.name,
           userId: data.userId,
           givenConsent: data.givenConsent,
+          unreadMessages: data.unreadMessages,
         }));
         // Filter the tabButtons array based on givenConsent value
         // const filteredTabButtons = tabButtons.filter(
@@ -188,6 +304,7 @@ export const RadiologistConsultancyView = () => {
       fetchConsultationData();
     }
   }, [selectedConsultationId]);
+
   useEffect(() => {
     setSelectedTab(defaultSelectedTab);
   }, [defaultSelectedTab]);
@@ -201,12 +318,24 @@ export const RadiologistConsultancyView = () => {
     });
   }, [socketUrl]);
 
+  // Inside the `useEffect` that sets up WebSocket connection
   useEffect(() => {
     if (stompClient) {
       const subscription = stompClient.subscribe(
         `/user/${userId}/queue/messages`,
         (message) => {
           const newMessage = JSON.parse(message.body);
+          // Check if the message is not from the currently selected tab
+          if (newMessage.senderId !== selectedTab) {
+            // Find the tab button corresponding to the senderId
+            const updatedTabButtons = tabButtons.map((button) =>
+              button.userId === newMessage.senderId
+                ? { ...button, unreadMessages: button.unreadMessages + 1 }
+                : button
+            );
+            setTabButtons(updatedTabButtons);
+          }
+
           setChatMessages((prevMessages) => [...prevMessages, newMessage]);
         }
       );
@@ -215,14 +344,48 @@ export const RadiologistConsultancyView = () => {
         subscription.unsubscribe();
       };
     }
-  }, [stompClient, userId]);
+  }, [stompClient, userId, selectedTab, tabButtons]);
 
+  const handleSetConnectedUser = (userId) => {
+    setConnectedUser((prevConnectedUser) => [...prevConnectedUser, userId]);
+    console.log(setConnectedUser);
+  };
+
+  const handleRemoveConnectedUser = (userIdToRemove) => {
+    setConnectedUser((prevConnectedUser) => {
+      prevConnectedUser.filter((userId) => userId !== userIdToRemove);
+      console.log("remove", prevConnectedUser);
+    });
+  };
+
+  let temp = false;
+  useEffect(() => {
+    if (stompClient && temp === false) {
+      const subscription = stompClient.subscribe(
+        `/topic/activeUser`,
+        (message) => {
+          var user = JSON.parse(message.body);
+          console.log("Received message:", message.body);
+          if (user.status === "ONLINE") {
+            handleSetConnectedUser(user.userId);
+          } else {
+            handleRemoveConnectedUser(user.userId);
+          }
+        }
+      );
+      temp = true;
+
+      return () => {
+        subscription.unsubscribe();
+      };
+    }
+  }, [connectedUser, stompClient, temp]);
 
   useEffect(() => {
     const fetchMessages = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8090/messages/${selectedConsultationId}/${userId}/${RecipientId}`
+          `https://localhost:8090/messages/${selectedConsultationId}/${userId}/${RecipientId}`
         );
         setChatMessages(response.data);
       } catch (error) {
@@ -255,6 +418,20 @@ export const RadiologistConsultancyView = () => {
       setTextInputValue("");
     }
   };
+  const handleEnterKeyPress = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault(); // Prevent new line on Enter
+      handleSendMessage(); // Call handleSendMessage when Enter is pressed
+    }
+  };
+
+  useEffect(() => {
+    if (sendAnnotation === true) {
+      navigate("/dicom-viewer");
+    }
+  }, [navigate, sendAnnotation]);
+
+  useOnlineStatus(stompClient, userId);
 
   return (
     <div className="radiologist-consulancy-view">
@@ -276,13 +453,25 @@ export const RadiologistConsultancyView = () => {
                   disabled={!button.givenConsent}
                 >
                   {button.name}
+                  {button.unreadMessages > 0 && (
+                    <span className="red-notification">
+                      {button.unreadMessages}
+                    </span>
+                  )}
                 </button>
               ))}
             </div>
           </div>
           <div className="content1">
             <div className="user-profile-section">
-              {selectedTab && <UserProfile name={RecipientName} photoUrl="" />}{" "}
+              {selectedTab && (
+                <UserProfile
+                  userType="DOCTOR"
+                  RecipientId={RecipientId}
+                  name={RecipientName}
+                  photoUrl=""
+                />
+              )}{" "}
             </div>
             <div className="chat">
               {!selectedImage && selectedTab && (
@@ -291,7 +480,9 @@ export const RadiologistConsultancyView = () => {
                     <div
                       key={message.chatId}
                       className={`message ${
-                        message.senderId.toString() === senderId ? "right" : "left"
+                        message.senderId.toString() === senderId
+                          ? "right"
+                          : "left"
                       }`}
                     >
                       {message.content}
@@ -306,11 +497,18 @@ export const RadiologistConsultancyView = () => {
                 placeholder="Type your message here..."
                 value={textInputValue}
                 onChange={(e) => setTextInputValue(e.target.value)}
+                onKeyDown={handleEnterKeyPress}
               />
               <button onClick={handleSendMessage}>Send</button>
             </div>
             {selectedImage && (
-              <div className="image-overlay-container">
+              <div
+                className="image-overlay-container"
+                style={overlayContainerStyle}
+                onMouseDown={handleMouseDown}
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleMouseUp}
+              >
                 <div className="image-overlay">
                   <span className="close-btn" onClick={handleCloseImage}>
                     &times;
@@ -321,14 +519,90 @@ export const RadiologistConsultancyView = () => {
                       alt="Selected"
                       className="overlay-image"
                     />
-                  </div>
-                  <div className="overlay-buttons">
-                    <button className="prev-btn" onClick={handlePrevImage}>
-                      &lt; Previous
-                    </button>
-                    <button className="next-btn" onClick={handleNextImage}>
-                      Next &gt;
-                    </button>
+
+                    <div className="overlay-buttons">
+                      <div className="zoom-buttons">
+                        <FontAwesomeIcon
+                          icon={faSearchPlus}
+                          className="zoom-icon"
+                          onClick={() =>
+                            setZoomLevel((prevZoomLevel) => prevZoomLevel + 0.1)
+                          }
+                        />
+                        <FontAwesomeIcon
+                          icon={faSearchMinus}
+                          className="zoom-icon"
+                          onClick={() =>
+                            setZoomLevel((prevZoomLevel) => prevZoomLevel - 0.1)
+                          }
+                        />
+                      </div>
+                      <GrPrevious
+                        className="prev-btn"
+                        onClick={handlePrevImage}
+                      />
+                      <GrNext className="next-btn" onClick={handleNextImage} />
+                      <div
+                        className="send-annotation"
+                        style={{
+                          display: "flex",
+                          height: "50px",
+                          width: "50px",
+                        }}
+                      >
+                        <LiaImagesSolid
+                          className="slideshow-icon"
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            fontSize: "50px",
+                          }}
+                          onClick={handleToggleSendAnnotation}
+                        />
+                        
+                          <span className="showana-tooltip">
+                            Open Dicom-Viewer
+                          </span>
+                       
+                      
+                        
+                      </div>
+                      <div
+                        className="showana"
+                        style={{
+                          display: "flex",
+                          height: "50px",
+                          width: "50px",
+                        }}
+                      >
+                        <RiSlideshowLine
+                          className="slideshow-icon"
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            fontSize: "50px",
+                          }}
+                          onClick={handleToggleAnnotations}
+                        />
+                        {!showAnnotations && (
+                          <span className="showana-tooltip">
+                            Show Annotation
+                          </span>
+                        )}
+                        {showAnnotations && (
+                          <span className="showana-tooltip">
+                            unshow Annotation
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    {showAnnotations && (
+                      <div className="annotations">
+                        {/* Add your annotation content here */}
+                        <p>{impressionText}</p>
+                      </div>
+                    )}
+                    {sendAnnotation}
                   </div>
                 </div>
               </div>
@@ -341,10 +615,15 @@ export const RadiologistConsultancyView = () => {
                   <button
                     key={index}
                     onClick={() =>
-                      handleImageClick(selectedConsultationId, index)
+                      handleImageClick(
+                        selectedConsultationId,
+                        image.imageId,
+                        image.imageUrlDCM,
+                        index
+                      )
                     }
                   >
-                    <img src={image} alt={`Image ${index + 1}`} />
+                    <img src={image.imageUrl} alt={`Image ${index + 1}`} />
                   </button>
                 ))}
               </div>
