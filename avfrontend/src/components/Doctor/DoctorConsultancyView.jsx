@@ -713,10 +713,13 @@ export const DoctorConsultancyView = () => {
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
               >
-                <div className="image-overlay">
-                  <span className="close-btn" onClick={handleCloseImage}>
+                <span className="close-btn" onClick={handleCloseImage}>
                     &times;
                   </span>
+                <div className="image-overlay">
+                  {/* <span className="close-btn" onClick={handleCloseImage}>
+                    &times;
+                  </span> */}
                   <div className="overlay-content">
                     <img
                       src={selectedImage}
