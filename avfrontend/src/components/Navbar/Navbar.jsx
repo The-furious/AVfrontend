@@ -9,6 +9,7 @@ import PatientLogin from "../logins/PatientLogin";
 import { UserDetailContext } from "../UserDetailContext";
 import SockJS from "sockjs-client";
 import StompJs from "stompjs";
+import axios from "axios";
 
 const Navbar = ({ personName }) => {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -33,18 +34,35 @@ const Navbar = ({ personName }) => {
     setShowDropdown(!showDropdown);
   };
 
-  const handleLogoutClick = () => {
+  const handleLogoutClick = async() => {
     if (stompClient) {
       const user = { userId: userId, status: "OFFLINE" };
       stompClient.send("/app/topic/disconnectUser", {}, JSON.stringify(user));
       stompClient.disconnect();
       console.log("Offline WebSocket disconnected");
     }
+
+    try {
+      const token = sessionStorage.getItem("jwtToken");
+      const response = await axios.post(
+        'https://localhost:8090/auth/logout',
+        {}, // You can pass any data here if needed
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+    
+
     sessionStorage.clear();
 
     setShowDropdown(false); // Close the dropdown on logout
     setIsLoggedIn(false);
     navigate("/");
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
   };
 
   const handleProfileClick = (option) => {
