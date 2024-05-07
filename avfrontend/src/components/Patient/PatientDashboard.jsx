@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import Navbar from "../Navbar/Navbar";
 import "./PatientDashboard.css";
 import EditCalendarIcon from "@mui/icons-material/EditCalendar";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { useNavigate } from "react-router-dom";
 import axios from "axios"; // Import Axios
+import useMousePosition from "../Utility/useMousePosition";
 
 const PatientDashboard = ({ handleValueTileClick }) => {
   const [selectedTab, setSelectedTab] = useState(1);
@@ -20,6 +21,7 @@ const PatientDashboard = ({ handleValueTileClick }) => {
   const [pendingConsultations, setPendingConsultations] = useState(null); // New state for pending consultations
   const [doctors, setDoctors] = useState([]);
   const [radiologists, setRadiologists] = useState([]);
+  const [showConsent,setShowConsent]=useState(false);
 
   const isPatientLoggedIn =
     sessionStorage.getItem("isPatientLoggedIn") === "true";
@@ -30,6 +32,18 @@ const PatientDashboard = ({ handleValueTileClick }) => {
   userId = parseInt(userId);
 
   const navigate = useNavigate();
+  const timerRef = useRef(null);
+  const mousePosition = useMousePosition();
+
+  const handleHoverTile = (details) => {
+    
+    timerRef.current = setTimeout(() => setShowConsent(true), 1000); // Set delay for 1 second
+  };
+
+  const handleMouseLeave = () => {
+    clearTimeout(timerRef.current);
+    setShowConsent(false);
+  };
 
   const handleRequestClick = async () => {
     setSelectedTab(1);
@@ -168,6 +182,8 @@ const PatientDashboard = ({ handleValueTileClick }) => {
         }
       );
       await handlePendingConsultationClick();
+      clearTimeout(timerRef.current); // Clear timeout on click
+    setShowConsent(false);
       console.log("Yes clicked");
       // Add logic to update UI or handle success message
     } catch (error) {
@@ -192,6 +208,8 @@ const PatientDashboard = ({ handleValueTileClick }) => {
         }
       );
       await handlePendingConsultationClick();
+      clearTimeout(timerRef.current); // Clear timeout on click
+      setShowConsent(false);
       console.log("No clicked");
       // Add logic to update UI or handle success message
     } catch (error) {
@@ -598,7 +616,8 @@ const PatientDashboard = ({ handleValueTileClick }) => {
                                 <div className="attribute-name">Status:</div>
                                 <div className="attribute-name">Approve:</div>
                               </div>
-                              <div className="value-tile">
+                              <div className="value-tile" onMouseEnter={() => handleHoverTile()}
+                                    onMouseLeave={handleMouseLeave}>
                                 <div>{consultation.consultationId}</div>
                                 <div>{consultation.radiologistName}</div>
                                 <div>{consultation.status}</div>
@@ -606,17 +625,21 @@ const PatientDashboard = ({ handleValueTileClick }) => {
                                   {/* Add Yes and No buttons */}
                                   <button
                                     className="yes-button "
+                                    onMouseEnter={handleMouseLeave}
                                     onClick={() =>
                                       handleYesClick(
                                         consultation.radiologistId,
                                         consultation.consultationId
                                       )
+                                     
                                     }
+                                    
                                   >
                                     Yes
                                   </button>
                                   <button
                                     className="no-button"
+                                    onMouseEnter={handleMouseLeave}
                                     onClick={() =>
                                       handleNoClick(
                                         consultation.radiologistId,
@@ -627,7 +650,18 @@ const PatientDashboard = ({ handleValueTileClick }) => {
                                     No
                                   </button>
                                 </div>
-                              </div>
+                              </div>{showConsent && (
+                        <div
+                          className="patient-details-box"
+                          style={{
+                            left: mousePosition.x,
+                            top: mousePosition.y,
+                          }}
+                        >
+                           <p>need a consent to add the radiologist</p>
+                         
+                        </div>
+                      )}
                             </div>
                           </div>
                         ))}

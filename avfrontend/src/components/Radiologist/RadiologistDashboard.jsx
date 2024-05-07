@@ -164,11 +164,13 @@ const RadiologistDashboard = () => {
           },
         }
       );
+      
       const updatedHistoryDetails = response.data.map((detail) => ({
         consultationId: detail.consultationId,
-        patientName: detail.patientName,
+        patientName: detail.patient.name,
         startDate: detail.startDate.slice(0, 10),
-        status: detail.status, // Assuming status is provided in the response
+        patientId: detail.patient.userId,
+        status: "Completed", // Assuming status is provided in the response
       }));
       setHistoryDetails(updatedHistoryDetails);
       setFilteredHistoryDetails(updatedHistoryDetails);
@@ -422,7 +424,7 @@ const RadiologistDashboard = () => {
                             top: mousePosition.y,
                           }}
                         >
-                          <div>Name: {detail.patientName}</div>
+                          <HoverPatientDetails patientId={detail.patientId} />
                           {/* Add more patient details here */}
                         </div>
                       )}
