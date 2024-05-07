@@ -3,7 +3,7 @@
   position :fixed;
   justify-content: space-between;
   align-items: center;
-  background-color: #00b7ac;
+  background: linear-gradient(90deg, #FFE3F1 0%, #3a47d5 100%);
   color: black;
   font-family: "Roboto", sans-serif;
   position: sticky;

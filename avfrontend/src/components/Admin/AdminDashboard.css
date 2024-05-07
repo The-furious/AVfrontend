@@ -74,3 +74,9 @@ button:hover {
   margin-bottom: 20px;
   color: white; /* Change text color to white */
 }
+.edit-profile-button {
+  background-color: #00b7ac;
+  width: 100% !important;
+  position: absolute;
+  bottom: 0;
+}

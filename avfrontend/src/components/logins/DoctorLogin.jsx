@@ -30,7 +30,9 @@ function DoctorLogin({ setShowForgotPassword }) {
         throw new Error('Invalid username or password');
       }
 
-      const { token } = response.data;
+      const { token,userId } = response.data;
+      console.log(userId);
+      sessionStorage.setItem('DoctorUserId',userId);
       sessionStorage.setItem('jwtToken', token);
       console.log('Login successful'); // For demo, log successful login
       sessionStorage.setItem('isDoctorLoggedIn', 'true');

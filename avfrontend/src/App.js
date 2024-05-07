@@ -11,7 +11,18 @@ import RadiologistConsultancyView from './components/Radiologist/RadiologistCons
 import Navbar from './components/Navbar/Navbar';
 import LabTechnicianDashboard  from './components/LabTechnician/LabTechnicianDashboard';
 import AdminDashboard from './components/Admin/AdminDashboard';
-import PatientDashboard from './components/Patient/PatientDashboard'
+import PatientDashboard from './components/Patient/PatientDashboard';
+import ViewDoctors from './components/Admin/ViewDoctors/ViewDoctors';
+import ViewRadiologists from './components/Admin/ViewRadiologists/ViewRadiologists';
+import ViewLabs from './components/Admin/ViewLabs/ViewLabs';
+import EditDoctorForm from './components/Admin/DoctorForm/EditDoctorForm';
+import EditRadiologistForm from './components/Admin/RadiologistForm/EditRadiologistForm';
+import EditLabForm from './components/Admin/LabForm/EditLabForm';
+import DoctorProfile from './components/Profile/DoctorProfile/DoctorProfile';
+import AdminProfile from './components/Profile/AdminProfile/AdminProfile';
+import RadiologistProfile from './components/Profile/RadiologistProfile/RadiologistProfile';
+import PatientProfile from './components/Profile/PatientProfile/PatientProfile';
+import LabProfile from './components/Profile/LabProfile/LabProfile';  
 
 function App() {
   
@@ -22,14 +33,25 @@ function App() {
         <Routes>
           <Route exact path="/" element={<SignupHomepage/>} />
           <Route path="/admin-dashboard/:adminName" element={<AdminDashboard />} />
+         
+         
+
+        
+
           <Route path="/doctor-dashboard/:doctorName" element={<DoctorDashboard />} />
-          <Route path="/doctor-consultancy-view/:doctorName" element={<DoctorConsultancyView/>} />
+          <Route path="/doctor-consultancy-view/:doctorId" element={<DoctorConsultancyView/>} />
           <Route path="/radiologist-dashboard/:radiologistName" element={<RadiologistDashboard />} />
           <Route path="/radiologist-consultancy-view/:radiologistName" element={<RadiologistConsultancyView/>} />
           <Route path="/patient-dashboard/:patientName" element={<PatientDashboard />} />
           <Route path="/lab-dashboard/:labName" element={<LabTechnicianDashboard />} />
           <Route path="/admin-dashboard/:adminName" element={<AdminDashboard />} />
           <Route path="/patient-dashboard/:patientName" element={<PatientDashboard />} />
+          <Route path="/profile/doctor" element={<DoctorProfile />} />
+        <Route path="/profile/admin" element={<AdminProfile />} />
+        <Route path="/profile/lab" element={<LabProfile />} />
+        <Route path="/profile/patient" element={<PatientProfile />} />
+        <Route path="/profile/radiologist" element={<RadiologistProfile />} />
+        <Route path="/profile/patient" element={<PatientProfile />} />
         </Routes>
          
       </div>
@@ -39,3 +61,4 @@ function App() {
 }
 
 export default App;
+

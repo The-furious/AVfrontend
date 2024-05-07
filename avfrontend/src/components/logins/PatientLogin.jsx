@@ -35,7 +35,8 @@ function PatientLogin({ setShowForgotPassword, setShowSignUp,setIsSignupOpen }) 
         throw new Error('Invalid username or password');
       }
 
-      const { token } = response.data;
+      const { token,userId } = response.data;
+      sessionStorage.setItem('PatientUserId',userId);
 
       sessionStorage.setItem('jwtToken', token);
       setIsPatientLoggedIn(true);

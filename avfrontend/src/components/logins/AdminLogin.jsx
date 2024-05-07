@@ -36,7 +36,8 @@ function AdminLogin({ setShowForgotPassword }) {
         throw new Error('Invalid username or password');
       }
 
-      const { token } = response.data;
+      const { token,userId } = response.data;
+      sessionStorage.setItem('AdminUserId',userId);
 
       sessionStorage.setItem('jwtToken', token);
       sessionStorage.setItem('isAdminLoggedIn', 'true');

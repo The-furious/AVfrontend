@@ -1,0 +1,66 @@
+.adminContainer {
+    height: 640px;
+    display: flex;
+  }
+  
+  .admin-profilepic-Column,
+  .admin-details-Column {
+    display: flex; /* To enable flex properties */
+    align-items: center; /* Align items vertically in the center */
+  }
+  
+  .admin-profilepic-Column {
+    text-align: center;
+    align-items: center;
+    background-color: #EAFDFB;
+    flex: 40; /* This makes it one third of the width */
+  }
+  
+  .adminProfilePhoto {
+    background-color: #DEE9F7;
+    align-items: center;
+    text-align: center;
+    width: 300px; /* Adjust the width as needed */
+    height: 300px; /* Adjust the height as needed */
+    border-radius: 50%; /* Make it round */
+  }
+  
+  .admin-details-Column {
+
+    padding-left: 350px;
+    background-color:#DEE9F7;
+    align-items: center !important;
+    flex: 60; /* This makes it two thirds of the width */
+  }
+  
+  .adminProfileEditButton {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .admin-image-Button {
+    width: auto !important;
+    background-color: blue;
+    color: white;
+  }
+  
+  .admin-Profile-EditButton {
+    background-color: green;
+    color: white;
+  }
+  
+  /* AdminProfile.css */
+  
+  .modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  .modal-buttons button {
+    padding: 8px 11px; /* Adjust the padding to decrease the button size */
+    font-size: 12px; /* Adjust the font-size to decrease the button size */
+  }
+  

@@ -30,7 +30,8 @@ function LabLogin({ setShowForgotPassword }) {
         throw new Error('Invalid username or password');
       }
 
-      const { token } = response.data;
+      const { token,userId } = response.data;
+      sessionStorage.setItem('LabUserId',userId);
 
       sessionStorage.setItem('jwtToken', token);
       console.log('Login successful'); // For demo, log successful login

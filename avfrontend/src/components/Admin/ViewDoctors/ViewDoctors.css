@@ -1,0 +1,87 @@
+.view-doctor-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+.doctor-card-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.doctor-card {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: hsl(176, 65%, 86%);
+  width: 300px; /* Adjusted width for three cards in a row */
+  transition: transform 0.3s ease;
+  margin: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  height:490px;
+  overflow: hidden;
+}
+.doctor-card:hover {
+  transform: scale(1.05); /* Scale up the card on hover */
+}
+
+.doctor-card-body {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.doctor-card-img-top {
+  padding-top: 2px;
+  width: 40%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 10px;
+  align-self: center;
+}
+
+
+.doctor-card-title {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.doctor-card-text {
+  margin-left: 10px;
+  margin-bottom: 5px;
+}
+
+.button-group {
+  display: flex;
+  justify-content: center;
+  margin-top: auto;
+}
+
+.update-doctor-button,
+.delete-doctor-button {
+  margin-top: 10px !important;
+  width: auto;
+  margin-top: 20px;
+  font-size: 14px;
+}
+.swal2-confirm{
+  margin-right: 6px;
+  padding: 10px 20px !important; /* Adjust padding as needed */
+  display: inline-block !important;
+  width: auto !important; /* Ensures the button expands to fit its content */
+  box-sizing: border-box !important; /* Include padding and border in the button's total width */
+
+}
+.swal2-cancel{
+  margin-left: 6px !important;
+  width: auto !important;
+}
